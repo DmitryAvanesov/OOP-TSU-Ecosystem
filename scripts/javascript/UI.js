@@ -4,7 +4,7 @@ var UI = /** @class */ (function () {
     }
     UI.prototype.CreateMap = function (cells) {
         var _a;
-        var currentMap = document.querySelector("#map");
+        var currentMap = document.querySelector("#map") || document.createElement("div");
         for (var i = 0; i < cells.length; i++) {
             var currentRow = document.createElement("tr");
             for (var j = 0; j < cells[i].length; j++) {

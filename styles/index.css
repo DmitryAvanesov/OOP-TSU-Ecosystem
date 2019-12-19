@@ -1,5 +1,13 @@
+:root {
+    --cell-side-length: 20px;
+}
+
 .cell {
-    width: 20px;
-    height: 20px;
-    background-color: green;
+    width: var(--cell-side-length);
+    height: var(--cell-side-length);
+    background-color: #9EF79E;
+}
+
+.tree {
+    width: var(--cell-side-length);
 }

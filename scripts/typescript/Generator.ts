@@ -1,5 +1,3 @@
-var a = new Map(100, 100);
-
 class Generator {
     private map : Map;
 
@@ -7,3 +5,5 @@ class Generator {
         this.map = new Map(20, 30);
     }
 }
+
+var generator : Generator = new Generator();
