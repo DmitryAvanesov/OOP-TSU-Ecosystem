@@ -3,7 +3,8 @@ var Map = /** @class */ (function () {
     function Map(width, height) {
         this.ui = new UI();
         this.cells = [];
-        this.numberOfTrees = 10;
+        this.entities = [];
+        this.numberOfTrees = 30;
         if (width === parseInt(width.toString()) && height === parseInt(height.toString()) &&
             width > 0 && height > 0) {
             for (var i = 0; i < height; i++) {
@@ -17,6 +18,10 @@ var Map = /** @class */ (function () {
         this.CreateEntities();
     }
     Map.prototype.CreateEntities = function () {
+        for (var i = 0; i < this.numberOfTrees; i++) {
+            this.entities.push(new Tree(this.cells));
+        }
+        this.ui.PlaceEntities(this.entities);
     };
     return Map;
 }());

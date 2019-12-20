@@ -1,12 +1,14 @@
 class Map {
     private ui : UI;
     private cells : Array<Array<Cell>>;
+    private entities : Array<Entity>;
     private numberOfTrees : number;
 
     constructor (width : number, height : number) {
         this.ui = new UI();
         this.cells = [];
-        this.numberOfTrees = 10;
+        this.entities = [];
+        this.numberOfTrees = 30;
 
         if (width === parseInt(width.toString()) && height === parseInt(height.toString()) &&
         width > 0 && height > 0) {    
@@ -25,6 +27,10 @@ class Map {
     }
 
     private CreateEntities () {
+        for (var i : number = 0; i < this.numberOfTrees; i++) {
+            this.entities.push(new Tree(this.cells));
+        }
 
+        this.ui.PlaceEntities(this.entities);
     }
 }

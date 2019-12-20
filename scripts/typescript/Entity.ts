@@ -1,10 +1,16 @@
-class Entity {
-    protected location : Cell;
+abstract class Entity {
+    public name : string;
+    public location : Cell;
 
     constructor (cells : Array<Array<Cell>>) {
-        var randomIndex : number =  Math.floor(Math.random() * cells.length);
+        this.name = "";
 
-        this.location = cells[randomIndex][randomIndex];
-        
+        do {
+            this.location =
+            cells[Math.floor(Math.random() * cells.length)][Math.floor(Math.random() * cells[0].length)];
+        }
+        while (this.location.occupied);
+
+        this.location.occupied = true;
     }
 }

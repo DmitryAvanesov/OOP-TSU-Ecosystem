@@ -1,8 +1,18 @@
 :root {
-    --cell-side-length: 20px;
+    --cell-side-length: 40px;
 }
 
-.cell {
+body {
+    width: max-content;
+    user-select: none;
+}
+
+#map {
+    border-spacing: 0px;
+}
+
+#map .cell {
+    display: inline-block;
     width: var(--cell-side-length);
     height: var(--cell-side-length);
     background-color: #9EF79E;
