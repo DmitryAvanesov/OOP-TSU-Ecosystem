@@ -1,7 +1,9 @@
-class Tree extends Plant {
+abstract class Herbivore extends Animal {
     constructor (currentField : Field) {
         super(currentField);
+    }
+
+    private EatPlant () {
         
-        this.name = "tree";
     }
 }

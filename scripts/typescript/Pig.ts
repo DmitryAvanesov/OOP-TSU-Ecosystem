@@ -1,5 +1,7 @@
-abstract class Plant extends Entity {
+class Pig extends Herbivore {
     constructor (currentField : Field) {
         super(currentField);
+
+        this.name = "pig";
     }
 }

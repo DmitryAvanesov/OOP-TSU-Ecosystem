@@ -7,17 +7,17 @@ body {
     user-select: none;
 }
 
-#map {
+#field {
     border-spacing: 0px;
 }
 
-#map .cell {
+#field .cell {
     display: inline-block;
     width: var(--cell-side-length);
     height: var(--cell-side-length);
     background-color: #9EF79E;
 }
 
-.tree {
+.cell > * {
     width: var(--cell-side-length);
 }

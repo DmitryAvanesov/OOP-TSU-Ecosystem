@@ -2,12 +2,13 @@ abstract class Entity {
     public name : string;
     public location : Cell;
 
-    constructor (cells : Array<Array<Cell>>) {
+    constructor (currentField : Field) {
         this.name = "";
 
         do {
-            this.location =
-            cells[Math.floor(Math.random() * cells.length)][Math.floor(Math.random() * cells[0].length)];
+            this.location = currentField.cells
+            [Math.floor(Math.random() *currentField.cells.length)]
+            [Math.floor(Math.random() * currentField.cells[0].length)];
         }
         while (this.location.occupied);
 

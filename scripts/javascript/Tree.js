@@ -14,8 +14,8 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var Tree = /** @class */ (function (_super) {
     __extends(Tree, _super);
-    function Tree(cells) {
-        var _this = _super.call(this, cells) || this;
+    function Tree(currentField) {
+        var _this = _super.call(this, currentField) || this;
         _this.name = "tree";
         return _this;
     }

@@ -12,10 +12,12 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var Plant = /** @class */ (function (_super) {
-    __extends(Plant, _super);
-    function Plant(currentField) {
-        return _super.call(this, currentField) || this;
+var Pig = /** @class */ (function (_super) {
+    __extends(Pig, _super);
+    function Pig(currentField) {
+        var _this = _super.call(this, currentField) || this;
+        _this.name = "pig";
+        return _this;
     }
-    return Plant;
-}(Entity));
+    return Pig;
+}(Herbivore));

@@ -40,8 +40,10 @@ var Field = /** @class */ (function () {
         this.ui = new UI();
         this.cells = [];
         this.plants = [];
+        this.animals = [];
         this.treeAmount = 30;
         this.grassAmount = 50;
+        this.pigAmount = 5;
         this.treeGrowInterval = 20000;
         this.grassGrowInterval = 5000;
         if (width === parseInt(width.toString()) && height === parseInt(height.toString()) &&
@@ -61,12 +63,15 @@ var Field = /** @class */ (function () {
     Field.prototype.CreateEntities = function () {
         var _this = this;
         for (var i = 0; i < this.treeAmount; i++) {
-            this.plants.push(new Tree(this.cells));
+            this.plants.push(new Tree(this));
         }
         for (var i = 0; i < this.grassAmount; i++) {
-            this.plants.push(new Grass(this.cells));
+            this.plants.push(new Grass(this));
         }
         this.plants.forEach(function (plantItem) { return _this.ui.PlacePlant(plantItem); });
+        for (var i = 0; i < this.pigAmount; i++) {
+            this.animals.push(new Pig(this));
+        }
     };
     Field.prototype.GrowTree = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -75,7 +80,7 @@ var Field = /** @class */ (function () {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, new Promise(function () {
                             setInterval(function () {
-                                var newTree = new Tree(_this.cells);
+                                var newTree = new Tree(_this);
                                 _this.plants.push(newTree);
                                 _this.ui.PlacePlant(newTree);
                             }, _this.treeGrowInterval);
@@ -94,7 +99,7 @@ var Field = /** @class */ (function () {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, new Promise(function () {
                             setInterval(function () {
-                                var newGrass = new Grass(_this.cells);
+                                var newGrass = new Grass(_this);
                                 _this.plants.push(newGrass);
                                 _this.ui.PlacePlant(newGrass);
                             }, _this.grassGrowInterval);
@@ -105,6 +110,12 @@ var Field = /** @class */ (function () {
                 }
             });
         });
+    };
+    Field.prototype.RemovePlant = function (currentPlant) {
+        this.plants.splice(this.plants.indexOf(currentPlant), 1);
+    };
+    Field.prototype.RemoveAnimal = function (currentAnimal) {
+        this.animals.splice(this.animals.indexOf(currentAnimal), 1);
     };
     return Field;
 }());
