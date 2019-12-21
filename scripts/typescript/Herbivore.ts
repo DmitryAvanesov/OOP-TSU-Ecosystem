@@ -1,9 +1,9 @@
 abstract class Herbivore extends Animal {
     constructor (currentField : Field) {
         super(currentField);
-    }
+    }    
 
-    private EatPlant () {
-        
+    protected Eat () : void {
+        alert(1);
     }
 }

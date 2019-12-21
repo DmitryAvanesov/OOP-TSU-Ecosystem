@@ -53,7 +53,8 @@ var Animal = /** @class */ (function (_super) {
     function Animal(currentField) {
         var _this = _super.call(this, currentField) || this;
         _this.field = currentField;
-        _this.satiety = 10;
+        _this.health = 1;
+        _this.maxHealth = 1;
         _this.starveInterval = 20000;
         _this.Starve();
         return _this;
@@ -65,8 +66,11 @@ var Animal = /** @class */ (function (_super) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, new Promise(function (resolve) {
                             setInterval(function () {
-                                _this.satiety--;
-                                if (_this.satiety == 0) {
+                                _this.health--;
+                                if (_this.health < _this.maxHealth / 2) {
+                                    _this.Eat();
+                                }
+                                if (_this.health == 0) {
                                     _this.field.RemoveAnimal(_this);
                                 }
                             }, _this.starveInterval);

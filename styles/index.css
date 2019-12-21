@@ -1,5 +1,5 @@
 :root {
-    --cell-side-length: 40px;
+    --cell-side-length: 50px;
 }
 
 body {
@@ -9,15 +9,22 @@ body {
 
 #field {
     border-spacing: 0px;
+    position: relative;
 }
 
 #field .cell {
     display: inline-block;
     width: var(--cell-side-length);
     height: var(--cell-side-length);
+    padding: 0;
     background-color: #9EF79E;
 }
 
 .cell > * {
     width: var(--cell-side-length);
+}
+
+#creatures > * {
+    width: var(--cell-side-length);
+    position: absolute;
 }

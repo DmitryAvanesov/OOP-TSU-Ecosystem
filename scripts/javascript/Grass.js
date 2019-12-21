@@ -17,6 +17,7 @@ var Grass = /** @class */ (function (_super) {
     function Grass(currentField) {
         var _this = _super.call(this, currentField) || this;
         _this.name = "grass";
+        _this.edible = true;
         return _this;
     }
     return Grass;

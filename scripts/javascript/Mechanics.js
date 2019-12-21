@@ -1,9 +1,9 @@
 "use strict";
 var Mechanics = /** @class */ (function () {
     function Mechanics() {
-        this.mapWidth = 100;
-        this.mapHeight = 100;
-        this.map = new Field(this.mapWidth, this.mapHeight);
+        this.fieldWidth = 100;
+        this.fieldHeight = 100;
+        this.field = new Field(this.fieldWidth, this.fieldHeight);
     }
     return Mechanics;
 }());

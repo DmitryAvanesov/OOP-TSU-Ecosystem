@@ -15,7 +15,9 @@ var __extends = (this && this.__extends) || (function () {
 var Plant = /** @class */ (function (_super) {
     __extends(Plant, _super);
     function Plant(currentField) {
-        return _super.call(this, currentField) || this;
+        var _this = _super.call(this, currentField) || this;
+        _this.edible = false;
+        return _this;
     }
     return Plant;
 }(Entity));

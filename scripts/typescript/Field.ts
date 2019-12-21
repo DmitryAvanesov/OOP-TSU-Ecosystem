@@ -1,8 +1,9 @@
 class Field {
-    private ui : UI;
     public cells : Array<Array<Cell>>;
     private plants : Array<Plant>;
     private animals : Array<Animal>;
+
+    private ui : UI;
     private treeAmount : number;
     private grassAmount : number;
     private pigAmount : number;
@@ -38,7 +39,7 @@ class Field {
         this.GrowGrass();
     }
 
-    private CreateEntities () {
+    private CreateEntities () : void {
         for (var i : number = 0; i < this.treeAmount; i++) {
             this.plants.push(new Tree(this));
         }
@@ -54,7 +55,7 @@ class Field {
         }
     }
 
-    private async GrowTree () {
+    private async GrowTree () : Promise<void> {
         await new Promise(() => {
             setInterval(() => {
                 var newTree : Tree = new Tree(this);
@@ -64,7 +65,7 @@ class Field {
         });
     }
 
-    private async GrowGrass () {
+    private async GrowGrass () : Promise<void> {
         await new Promise(() => {
             setInterval(() => {
                 var newGrass : Grass = new Grass(this);
@@ -74,11 +75,11 @@ class Field {
         });
     }
 
-    public RemovePlant (currentPlant : Plant) {
+    public RemovePlant (currentPlant : Plant) : void {
         this.plants.splice(this.plants.indexOf(currentPlant), 1);
     }
 
-    public RemoveAnimal (currentAnimal : Animal) {
+    public RemoveAnimal (currentAnimal : Animal) : void {
         this.animals.splice(this.animals.indexOf(currentAnimal), 1);
     }
 }

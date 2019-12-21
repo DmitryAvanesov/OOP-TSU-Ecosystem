@@ -1,5 +1,5 @@
 class UI {
-    public CreateMap (cells : Array<Array<Cell>>) {
+    public CreateMap (cells : Array<Array<Cell>>) : void {
         var currentMap : Element = document.querySelector("#field") || document.createElement("div");
 
         for (var i : number = 0; i < cells.length; i++) {
@@ -15,7 +15,7 @@ class UI {
         }
     }
 
-    public PlacePlant (plant : Plant) {
+    public PlacePlant (plant : Plant) : void {
         var currentCell : Element = document.querySelector(
             `#field > tr:nth-child(${plant.location.row}) >
             td:nth-child(${plant.location.col})`)

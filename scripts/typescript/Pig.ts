@@ -3,5 +3,7 @@ class Pig extends Herbivore {
         super(currentField);
 
         this.name = "pig";
+        this.health = 10;
+        this.maxHealth = 10;
     }
 }

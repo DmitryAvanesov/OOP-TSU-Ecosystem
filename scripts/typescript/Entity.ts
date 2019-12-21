@@ -7,7 +7,7 @@ abstract class Entity {
 
         do {
             this.location = currentField.cells
-            [Math.floor(Math.random() *currentField.cells.length)]
+            [Math.floor(Math.random() * currentField.cells.length)]
             [Math.floor(Math.random() * currentField.cells[0].length)];
         }
         while (this.location.occupied);

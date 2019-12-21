@@ -17,6 +17,8 @@ var Pig = /** @class */ (function (_super) {
     function Pig(currentField) {
         var _this = _super.call(this, currentField) || this;
         _this.name = "pig";
+        _this.health = 10;
+        _this.maxHealth = 10;
         return _this;
     }
     return Pig;

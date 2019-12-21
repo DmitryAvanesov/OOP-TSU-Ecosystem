@@ -3,5 +3,6 @@ class Grass extends Plant {
         super(currentField);
         
         this.name = "grass";
+        this.edible = true;
     }
 }
