@@ -37,13 +37,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var Field = /** @class */ (function () {
     function Field(width, height) {
+        this.currentIndex = 0;
         this.ui = new UI();
         this.cells = [];
         this.plants = [];
         this.animals = [];
         this.treeAmount = 30;
         this.grassAmount = 50;
-        this.pigAmount = 5;
+        this.pigAmount = 1;
         this.treeGrowInterval = 20000;
         this.grassGrowInterval = 5000;
         if (width === parseInt(width.toString()) && height === parseInt(height.toString()) &&
@@ -64,31 +65,29 @@ var Field = /** @class */ (function () {
         var _this = this;
         for (var i = 0; i < this.treeAmount; i++) {
             this.plants.push(new Tree(this));
+            this.currentIndex++;
         }
         for (var i = 0; i < this.grassAmount; i++) {
             this.plants.push(new Grass(this));
+            this.currentIndex++;
         }
-        this.plants.forEach(function (plantItem) { return _this.ui.PlacePlant(plantItem); });
+        this.plants.forEach(function (plantItem) { return _this.ui.PlaceEntity(plantItem); });
         for (var i = 0; i < this.pigAmount; i++) {
             this.animals.push(new Pig(this));
+            this.currentIndex++;
         }
+        this.animals.forEach(function (animalItem) { return _this.ui.PlaceEntity(animalItem); });
     };
     Field.prototype.GrowTree = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, new Promise(function () {
-                            setInterval(function () {
-                                var newTree = new Tree(_this);
-                                _this.plants.push(newTree);
-                                _this.ui.PlacePlant(newTree);
-                            }, _this.treeGrowInterval);
-                        })];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
+                setInterval(function () {
+                    var newTree = new Tree(_this);
+                    _this.plants.push(newTree);
+                    _this.ui.PlaceEntity(newTree);
+                }, this.treeGrowInterval);
+                return [2 /*return*/];
             });
         });
     };
@@ -96,18 +95,12 @@ var Field = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, new Promise(function () {
-                            setInterval(function () {
-                                var newGrass = new Grass(_this);
-                                _this.plants.push(newGrass);
-                                _this.ui.PlacePlant(newGrass);
-                            }, _this.grassGrowInterval);
-                        })];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
+                setInterval(function () {
+                    var newGrass = new Grass(_this);
+                    _this.plants.push(newGrass);
+                    _this.ui.PlaceEntity(newGrass);
+                }, this.grassGrowInterval);
+                return [2 /*return*/];
             });
         });
     };

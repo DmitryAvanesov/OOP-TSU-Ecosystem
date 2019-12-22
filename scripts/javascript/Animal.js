@@ -55,30 +55,70 @@ var Animal = /** @class */ (function (_super) {
         _this.field = currentField;
         _this.health = 1;
         _this.maxHealth = 1;
+        _this.pace = 0;
         _this.starveInterval = 20000;
+        _this.strollInterval = 10000;
+        _this.strolling = true;
+        _this.Stroll();
         _this.Starve();
         return _this;
     }
+    Animal.prototype.Stroll = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                setInterval(function () {
+                    if (_this.strolling) {
+                        _this.Move();
+                    }
+                }, this.strollInterval);
+                return [2 /*return*/];
+            });
+        });
+    };
+    Animal.prototype.Move = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var freeCells, i, j, newRow, newCol, currentCell, newLocation;
+            return __generator(this, function (_a) {
+                freeCells = [];
+                for (i = -1; i <= 1; i++) {
+                    for (j = -1; j <= 1; j++) {
+                        newRow = this.location.row + i;
+                        newCol = this.location.col + j;
+                        if (newRow < this.field.cells.length &&
+                            newRow >= 0 &&
+                            newCol < this.field.cells[0].length &&
+                            newCol >= 0) {
+                            currentCell = this.field.cells[newRow][newCol];
+                            if (!currentCell.occupied) {
+                                freeCells.push(currentCell);
+                            }
+                        }
+                    }
+                }
+                newLocation = freeCells[Math.floor(Math.random() * freeCells.length)];
+                this.location.occupied = false;
+                newLocation.occupied = true;
+                this.field.ui.Move(this, newLocation);
+                this.location = newLocation;
+                return [2 /*return*/];
+            });
+        });
+    };
     Animal.prototype.Starve = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, new Promise(function (resolve) {
-                            setInterval(function () {
-                                _this.health--;
-                                if (_this.health < _this.maxHealth / 2) {
-                                    _this.Eat();
-                                }
-                                if (_this.health == 0) {
-                                    _this.field.RemoveAnimal(_this);
-                                }
-                            }, _this.starveInterval);
-                        })];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
+                setInterval(function () {
+                    _this.health--;
+                    if (_this.health < _this.maxHealth / 2) {
+                        _this.Eat();
+                    }
+                    if (_this.health == 0) {
+                        _this.field.RemoveAnimal(_this);
+                    }
+                }, this.starveInterval);
+                return [2 /*return*/];
             });
         });
     };

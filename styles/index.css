@@ -1,5 +1,6 @@
 :root {
     --cell-side-length: 50px;
+    --pace-pig: 5s;
 }
 
 body {
@@ -9,11 +10,11 @@ body {
 
 #field {
     border-spacing: 0px;
-    position: relative;
 }
 
 #field .cell {
     display: inline-block;
+    position: relative;
     width: var(--cell-side-length);
     height: var(--cell-side-length);
     padding: 0;
@@ -22,9 +23,30 @@ body {
 
 .cell > * {
     width: var(--cell-side-length);
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
 }
 
-#creatures > * {
-    width: var(--cell-side-length);
-    position: absolute;
+.cell > .pig {
+    transition: top var(--pace-pig), right var(--pace-pig), bottom var(--pace-pig), left var(--pace-pig);
+}
+
+.moveTop {
+    bottom: var(--cell-side-length);
+}
+
+.moveRight {
+    left: var(--cell-side-length);
+}
+
+.moveBottom {
+    top: var(--cell-side-length);
+}
+
+.moveLeft {
+    right: var(--cell-side-length);
 }

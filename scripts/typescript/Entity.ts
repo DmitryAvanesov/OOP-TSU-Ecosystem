@@ -1,9 +1,11 @@
 abstract class Entity {
     public name : string;
+    public index : number;
     public location : Cell;
 
     constructor (currentField : Field) {
         this.name = "";
+        this.index = currentField.currentIndex;
 
         do {
             this.location = currentField.cells

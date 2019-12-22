@@ -5,5 +5,6 @@ class Pig extends Herbivore {
         this.name = "pig";
         this.health = 10;
         this.maxHealth = 10;
+        this.pace = 5000;
     }
 }

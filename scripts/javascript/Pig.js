@@ -19,6 +19,7 @@ var Pig = /** @class */ (function (_super) {
         _this.name = "pig";
         _this.health = 10;
         _this.maxHealth = 10;
+        _this.pace = 5000;
         return _this;
     }
     return Pig;
