@@ -18,7 +18,6 @@ var Herbivore = /** @class */ (function (_super) {
         return _super.call(this, currentField) || this;
     }
     Herbivore.prototype.Eat = function () {
-        alert(1);
     };
     return Herbivore;
 }(Animal));

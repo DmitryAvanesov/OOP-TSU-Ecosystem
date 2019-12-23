@@ -42,9 +42,9 @@ var Field = /** @class */ (function () {
         this.cells = [];
         this.plants = [];
         this.animals = [];
-        this.treeAmount = 30;
-        this.grassAmount = 50;
-        this.pigAmount = 1;
+        this.treeAmount = 10;
+        this.grassAmount = 15;
+        this.pigAmount = 5;
         this.treeGrowInterval = 20000;
         this.grassGrowInterval = 5000;
         if (width === parseInt(width.toString()) && height === parseInt(height.toString()) &&

@@ -4,6 +4,6 @@ abstract class Herbivore extends Animal {
     }    
 
     protected Eat () : void {
-        alert(1);
+        
     }
 }

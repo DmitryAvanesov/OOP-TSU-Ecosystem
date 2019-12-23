@@ -36,17 +36,21 @@ body {
 }
 
 .moveTop {
+    top: auto;
     bottom: var(--cell-side-length);
 }
 
 .moveRight {
+    right: auto;
     left: var(--cell-side-length);
 }
 
 .moveBottom {
+    bottom: auto;
     top: var(--cell-side-length);
 }
 
 .moveLeft {
+    left: auto;
     right: var(--cell-side-length);
 }
