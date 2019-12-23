@@ -17,9 +17,9 @@ class Field {
         this.cells = [];
         this.plants = [];
         this.animals = [];
-        this.treeAmount = 10;
-        this.grassAmount = 15;
-        this.pigAmount = 5;
+        this.treeAmount = 100;
+        this.grassAmount = 300;
+        this.pigAmount = 20;
         this.treeGrowInterval = 20000;
         this.grassGrowInterval = 5000;
 
@@ -84,5 +84,7 @@ class Field {
 
     public RemoveAnimal (currentAnimal : Animal) : void {
         this.animals.splice(this.animals.indexOf(currentAnimal), 1);
+        this.ui.removeEntity(currentAnimal);
+        console.log(this.animals.length);
     }
 }

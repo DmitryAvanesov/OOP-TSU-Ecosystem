@@ -56,9 +56,11 @@ var Animal = /** @class */ (function (_super) {
         _this.health = 1;
         _this.maxHealth = 1;
         _this.pace = 0;
-        _this.starveInterval = 20000;
+        _this.starveInterval = 10000;
         _this.strollInterval = 10000;
         _this.strolling = true;
+        _this.strollFunction = 0;
+        _this.starveFunction = 0;
         _this.Stroll();
         _this.Starve();
         return _this;
@@ -67,11 +69,12 @@ var Animal = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                setInterval(function () {
+                this.strollFunction = setTimeout(function () {
                     if (_this.strolling) {
                         _this.Move();
                     }
-                }, this.strollInterval);
+                    _this.Stroll();
+                }, this.strollInterval * (Math.random() / 5 + 0.9));
                 return [2 /*return*/];
             });
         });
@@ -109,18 +112,23 @@ var Animal = /** @class */ (function (_super) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
-                setInterval(function () {
+                this.starveFunction = setInterval(function () {
                     _this.health--;
                     if (_this.health < _this.maxHealth / 2) {
                         _this.Eat();
                     }
                     if (_this.health == 0) {
                         _this.field.RemoveAnimal(_this);
+                        _this.die();
                     }
                 }, this.starveInterval);
                 return [2 /*return*/];
             });
         });
+    };
+    Animal.prototype.die = function () {
+        clearTimeout(this.strollFunction);
+        clearInterval(this.starveFunction);
     };
     return Animal;
 }(Entity));

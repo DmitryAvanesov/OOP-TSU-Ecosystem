@@ -7,6 +7,9 @@ abstract class Animal extends Entity {
     private strollInterval : number;
     private strolling : boolean;
 
+    private strollFunction : number;
+    private starveFunction : number;
+
     constructor (currentField : Field) {
         super(currentField);
 
@@ -14,20 +17,25 @@ abstract class Animal extends Entity {
         this.health = 1;
         this.maxHealth = 1;
         this.pace = 0;
-        this.starveInterval = 20000;
+        this.starveInterval = 10000;
         this.strollInterval = 10000;
         this.strolling = true;
+
+        this.strollFunction = 0;
+        this.starveFunction = 0;
 
         this.Stroll();
         this.Starve();
     }
 
     private async Stroll() : Promise<void> {
-        setInterval(() => {
+        this.strollFunction = setTimeout(() => {
             if (this.strolling) {
                 this.Move();
             }
-        }, this.strollInterval);
+
+            this.Stroll();
+        }, this.strollInterval * (Math.random() / 5 + 0.9));
     }
 
     private async Move() : Promise<void> {
@@ -60,7 +68,7 @@ abstract class Animal extends Entity {
     }
 
     private async Starve() : Promise<void> {
-        setInterval(() => {
+        this.starveFunction = setInterval(() => {
             this.health--;
 
             if (this.health < this.maxHealth / 2) {
@@ -69,8 +77,14 @@ abstract class Animal extends Entity {
 
             if (this.health == 0) {
                 this.field.RemoveAnimal(this);
+                this.die();
             }
         }, this.starveInterval);
+    }
+
+    private die() {
+        clearTimeout(this.strollFunction);
+        clearInterval(this.starveFunction);
     }
 
     protected abstract Eat() : void;

@@ -55,18 +55,31 @@ var UI = /** @class */ (function () {
     UI.prototype.PlaceEntity = function (entity) {
         var currentCell = document.querySelector("[id=\"" + entity.location.row + ":" + entity.location.col + "\"]")
             || document.createElement("td");
-        var currentEntity = document.createElement("img");
-        currentEntity.setAttribute("src", "../media/" + entity.name + ".png");
+        var currentEntity = document.createElement("div");
         currentEntity.classList.add("" + entity.name);
         currentEntity.id = "" + entity.index;
         currentCell.appendChild(currentEntity);
+        var currentEntityImage = document.createElement("img");
+        currentEntityImage.classList.add("image");
+        currentEntityImage.setAttribute("src", "../media/" + entity.name + ".png");
+        currentEntity.appendChild(currentEntityImage);
+        if (entity instanceof Animal) {
+            this.AddEntityInfo(currentEntity);
+        }
+    };
+    UI.prototype.AddEntityInfo = function (currentEntity) {
+        var healthbar = document.createElement("div");
+        var healthbarInner = document.createElement("div");
+        healthbar.classList.add("healthbar");
+        healthbarInner.classList.add("healthbar-inner");
+        currentEntity.appendChild(healthbar);
+        healthbar.appendChild(healthbarInner);
     };
     UI.prototype.Move = function (animal, newLocation) {
         return __awaiter(this, void 0, void 0, function () {
             var currentAnimal, newLocationCell;
             return __generator(this, function (_a) {
                 currentAnimal = document.querySelector("[id=\"" + animal.index + "\"]") || document.createElement("img");
-                console.log(animal.location.row, animal.location.col, newLocation.row, newLocation.col);
                 if (newLocation.row < animal.location.row) {
                     currentAnimal.classList.add("moveTop");
                 }
@@ -75,19 +88,24 @@ var UI = /** @class */ (function () {
                 }
                 if (newLocation.col < animal.location.col) {
                     currentAnimal.classList.add("moveLeft");
+                    currentAnimal.classList.add("flipped");
                 }
                 else if (newLocation.col > animal.location.col) {
                     currentAnimal.classList.add("moveRight");
+                    currentAnimal.classList.remove("flipped");
                 }
                 newLocationCell = document.querySelector("[id=\"" + newLocation.row + ":" + newLocation.col + "\"]") || document.createElement("td");
                 setTimeout(function () {
-                    console.log("reeeeee");
                     currentAnimal.classList.remove("moveTop", "moveRight", "moveBottom", "moveLeft");
                     newLocationCell.appendChild(currentAnimal);
                 }, animal.pace);
                 return [2 /*return*/];
             });
         });
+    };
+    UI.prototype.removeEntity = function (entity) {
+        var currentAnimal = document.querySelector("[id=\"" + entity.index + "\"]") || document.createElement("img");
+        currentAnimal.remove();
     };
     return UI;
 }());

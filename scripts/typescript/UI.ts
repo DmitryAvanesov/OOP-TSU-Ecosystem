@@ -21,19 +21,35 @@ class UI {
             `[id="${entity.location.row}:${entity.location.col}"]`)
             || document.createElement("td");
 
-        var currentEntity : Element = document.createElement("img");
-        currentEntity.setAttribute("src", `../media/${entity.name}.png`);
+        var currentEntity : Element = document.createElement("div");    
         currentEntity.classList.add(`${entity.name}`);
         currentEntity.id = `${entity.index}`;
-
         currentCell.appendChild(currentEntity);
+
+        var currentEntityImage : Element = document.createElement("img");
+        currentEntityImage.classList.add("image");
+        currentEntityImage.setAttribute("src", `../media/${entity.name}.png`);
+        currentEntity.appendChild(currentEntityImage);
+
+        if (entity instanceof Animal) {
+            this.AddEntityInfo(currentEntity);
+        }
+    }
+
+    private AddEntityInfo (currentEntity : Element) : void {
+        var healthbar : Element = document.createElement("div");
+        var healthbarInner : Element = document.createElement("div");
+
+        healthbar.classList.add("healthbar");
+        healthbarInner.classList.add("healthbar-inner");
+
+        currentEntity.appendChild(healthbar);
+        healthbar.appendChild(healthbarInner);
     }
 
     public async Move (animal : Animal, newLocation : Cell) : Promise<void> {
         var currentAnimal : Element = document.querySelector(
             `[id="${animal.index}"]`) || document.createElement("img");
-
-        console.log(animal.location.row, animal.location.col, newLocation.row, newLocation.col);
 
         if (newLocation.row < animal.location.row) {
             currentAnimal.classList.add("moveTop");
@@ -44,18 +60,25 @@ class UI {
 
         if (newLocation.col < animal.location.col) {
             currentAnimal.classList.add("moveLeft");
+            currentAnimal.classList.add("flipped");
         }
         else if (newLocation.col > animal.location.col) {
             currentAnimal.classList.add("moveRight");
+            currentAnimal.classList.remove("flipped");
         }
 
         var newLocationCell : Element = document.querySelector(
             `[id="${newLocation.row}:${newLocation.col}"]`) || document.createElement("td");
 
         setTimeout(() => {
-            console.log("reeeeee");
             currentAnimal.classList.remove("moveTop", "moveRight", "moveBottom", "moveLeft");
             newLocationCell.appendChild(currentAnimal);
         }, animal.pace);
+    }
+
+    public removeEntity (entity : Entity) : void {
+        var currentAnimal : Element = document.querySelector(
+            `[id="${entity.index}"]`) || document.createElement("img");     
+        currentAnimal.remove();
     }
 }

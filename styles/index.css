@@ -1,6 +1,6 @@
 :root {
     --cell-side-length: 50px;
-    --pace-pig: 5s;
+    --pace-pig: 3s;
 }
 
 body {
@@ -29,6 +29,30 @@ body {
     bottom: 0;
     left: 0;
     z-index: 1;
+    background-size: cover;
+}
+
+.cell > * > .image {
+    width: var(--cell-side-length);
+}
+
+.cell > * > .healthbar {
+    position: absolute;
+    left: 5px;
+    bottom: 50px;
+    width: 40px;
+    height: 5px;
+    border: 1px black solid;
+}
+
+.cell > * > .healthbar > .healthbar-inner {
+    width: 100%;
+    height: 5px;
+    background-color: green;
+}
+
+.cell > .flipped {
+    transform: scaleX(-1);
 }
 
 .cell > .pig {
