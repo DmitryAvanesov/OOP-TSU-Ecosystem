@@ -67,19 +67,34 @@ var UI = /** @class */ (function () {
             this.AddEntityInfo(currentEntity);
         }
     };
-    UI.prototype.AddEntityInfo = function (currentEntity) {
+    UI.prototype.AddEntityInfo = function (currentAnimal) {
         var healthbar = document.createElement("div");
         var healthbarInner = document.createElement("div");
         healthbar.classList.add("healthbar");
         healthbarInner.classList.add("healthbar-inner");
-        currentEntity.appendChild(healthbar);
+        currentAnimal.appendChild(healthbar);
         healthbar.appendChild(healthbarInner);
+    };
+    UI.prototype.UpdateHealthbar = function (animal) {
+        var currentHealthbar = document.querySelector("[id=\"" + animal.index + "\"] > .healthbar > .healthbar-inner")
+            || document.createElement("div");
+        currentHealthbar.style.width = animal.health / animal.maxHealth * 100 + "%";
+        if (animal.health > animal.maxHealth / 2) {
+            currentHealthbar.style.backgroundColor = "green";
+        }
+        else if (animal.health > animal.maxHealth / 4) {
+            currentHealthbar.style.backgroundColor = "yellow";
+        }
+        else {
+            currentHealthbar.style.backgroundColor = "red";
+        }
     };
     UI.prototype.Move = function (animal, newLocation) {
         return __awaiter(this, void 0, void 0, function () {
-            var currentAnimal, newLocationCell;
+            var currentAnimal, currentAnimalImage, newLocationCell;
             return __generator(this, function (_a) {
-                currentAnimal = document.querySelector("[id=\"" + animal.index + "\"]") || document.createElement("img");
+                currentAnimal = document.querySelector("[id=\"" + animal.index + "\"]") || document.createElement("div");
+                currentAnimalImage = document.querySelector("[id=\"" + animal.index + "\"] > .image") || document.createElement("img");
                 if (newLocation.row < animal.location.row) {
                     currentAnimal.classList.add("moveTop");
                 }
@@ -88,11 +103,11 @@ var UI = /** @class */ (function () {
                 }
                 if (newLocation.col < animal.location.col) {
                     currentAnimal.classList.add("moveLeft");
-                    currentAnimal.classList.add("flipped");
+                    currentAnimalImage.classList.add("flipped");
                 }
                 else if (newLocation.col > animal.location.col) {
                     currentAnimal.classList.add("moveRight");
-                    currentAnimal.classList.remove("flipped");
+                    currentAnimal.classListImage.remove("flipped");
                 }
                 newLocationCell = document.querySelector("[id=\"" + newLocation.row + ":" + newLocation.col + "\"]") || document.createElement("td");
                 setTimeout(function () {

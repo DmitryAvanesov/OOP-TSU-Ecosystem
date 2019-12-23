@@ -56,8 +56,8 @@ var Animal = /** @class */ (function (_super) {
         _this.health = 1;
         _this.maxHealth = 1;
         _this.pace = 0;
-        _this.starveInterval = 10000;
-        _this.strollInterval = 10000;
+        _this.starveInterval = 5000;
+        _this.strollInterval = 8000;
         _this.strolling = true;
         _this.strollFunction = 0;
         _this.starveFunction = 0;
@@ -88,10 +88,8 @@ var Animal = /** @class */ (function (_super) {
                     for (j = -1; j <= 1; j++) {
                         newRow = this.location.row + i;
                         newCol = this.location.col + j;
-                        if (newRow < this.field.cells.length &&
-                            newRow >= 0 &&
-                            newCol < this.field.cells[0].length &&
-                            newCol >= 0) {
+                        if (newRow < this.field.cells.length && newRow >= 0 &&
+                            newCol < this.field.cells[0].length && newCol >= 0) {
                             currentCell = this.field.cells[newRow][newCol];
                             if (!currentCell.occupied) {
                                 freeCells.push(currentCell);
@@ -114,7 +112,9 @@ var Animal = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 this.starveFunction = setInterval(function () {
                     _this.health--;
+                    _this.field.ui.UpdateHealthbar(_this);
                     if (_this.health < _this.maxHealth / 2) {
+                        _this.strolling = false;
                         _this.Eat();
                     }
                     if (_this.health == 0) {

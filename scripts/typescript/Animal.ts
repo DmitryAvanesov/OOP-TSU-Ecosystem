@@ -1,7 +1,7 @@
 abstract class Animal extends Entity {
     public field : Field;
-    protected health : number;
-    protected maxHealth : number;
+    public health : number;
+    public maxHealth : number;
     public pace : number;
     private starveInterval : number;
     private strollInterval : number;
@@ -17,8 +17,8 @@ abstract class Animal extends Entity {
         this.health = 1;
         this.maxHealth = 1;
         this.pace = 0;
-        this.starveInterval = 10000;
-        this.strollInterval = 10000;
+        this.starveInterval = 5000;
+        this.strollInterval = 8000;
         this.strolling = true;
 
         this.strollFunction = 0;
@@ -46,10 +46,8 @@ abstract class Animal extends Entity {
                 var newRow : number = this.location.row + i;
                 var newCol : number = this.location.col + j;
 
-                if (newRow < this.field.cells.length &&
-                    newRow >= 0 &&
-                    newCol < this.field.cells[0].length &&
-                    newCol >= 0) {
+                if (newRow < this.field.cells.length && newRow >= 0 &&
+                    newCol < this.field.cells[0].length && newCol >= 0) {
                     var currentCell : Cell =
                     this.field.cells[newRow][newCol];
 
@@ -70,8 +68,10 @@ abstract class Animal extends Entity {
     private async Starve() : Promise<void> {
         this.starveFunction = setInterval(() => {
             this.health--;
+            this.field.ui.UpdateHealthbar(this);
 
             if (this.health < this.maxHealth / 2) {
+                this.strolling = false;
                 this.Eat();
             }
 

@@ -51,7 +51,7 @@ body {
     background-color: green;
 }
 
-.cell > .flipped {
+.cell > * > .flipped {
     transform: scaleX(-1);
 }
 
