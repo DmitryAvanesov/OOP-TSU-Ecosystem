@@ -1,10 +1,9 @@
 "use strict";
-var Mechanics = /** @class */ (function () {
-    function Mechanics() {
-        this.fieldWidth = 100;
-        this.fieldHeight = 100;
+class Mechanics {
+    constructor() {
+        this.fieldWidth = 20;
+        this.fieldHeight = 12;
         this.field = new Field(this.fieldWidth, this.fieldHeight);
     }
-    return Mechanics;
-}());
+}
 var mechanics = new Mechanics();

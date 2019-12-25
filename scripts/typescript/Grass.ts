@@ -4,5 +4,6 @@ class Grass extends Plant {
         
         this.name = "grass";
         this.edible = true;
+        this.foodValue = 3;
     }
 }

@@ -1,11 +1,15 @@
 abstract class Entity {
+    public field : Field;
     public name : string;
     public index : number;
+    public foodValue : number;
     public location : Cell;
 
     constructor (currentField : Field) {
+        this.field = currentField;
         this.name = "";
         this.index = currentField.currentIndex;
+        this.foodValue = 0;
 
         do {
             this.location = currentField.cells
@@ -16,4 +20,6 @@ abstract class Entity {
 
         this.location.occupied = true;
     }
+
+    public abstract die() : void;
 }

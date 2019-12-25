@@ -1,7 +1,7 @@
 class Field {
     public cells : Array<Array<Cell>>;
-    private plants : Array<Plant>;
-    private animals : Array<Animal>;
+    public plants : Array<Plant>;
+    public animals : Array<Animal>;
 
     public currentIndex : number;
     public ui : UI;
@@ -17,11 +17,11 @@ class Field {
         this.cells = [];
         this.plants = [];
         this.animals = [];
-        this.treeAmount = 100;
-        this.grassAmount = 300;
-        this.pigAmount = 20;
+        this.treeAmount = 10;
+        this.grassAmount = 20;
+        this.pigAmount = 3;
         this.treeGrowInterval = 20000;
-        this.grassGrowInterval = 5000;
+        this.grassGrowInterval = 30000;
 
         if (width === parseInt(width.toString()) && height === parseInt(height.toString()) &&
         width > 0 && height > 0) {
@@ -62,17 +62,19 @@ class Field {
         this.animals.forEach((animalItem : Animal) => this.ui.PlaceEntity(animalItem));
     }
 
-    private async GrowTree () : Promise<void> {
+    private GrowTree () : void {
         setInterval(() => {
             var newTree : Tree = new Tree(this);
+            this.currentIndex++;
             this.plants.push(newTree);
             this.ui.PlaceEntity(newTree);
         }, this.treeGrowInterval);
     }
 
-    private async GrowGrass () : Promise<void> {
+    private GrowGrass () : void {
         setInterval(() => {
             var newGrass : Grass = new Grass(this);
+            this.currentIndex++;
             this.plants.push(newGrass);
             this.ui.PlaceEntity(newGrass);
         }, this.grassGrowInterval);
@@ -80,11 +82,11 @@ class Field {
 
     public RemovePlant (currentPlant : Plant) : void {
         this.plants.splice(this.plants.indexOf(currentPlant), 1);
+        this.ui.removeEntity(currentPlant);
     }
 
     public RemoveAnimal (currentAnimal : Animal) : void {
         this.animals.splice(this.animals.indexOf(currentAnimal), 1);
         this.ui.removeEntity(currentAnimal);
-        console.log(this.animals.length);
     }
 }
