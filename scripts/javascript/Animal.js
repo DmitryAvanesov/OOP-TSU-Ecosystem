@@ -2,16 +2,14 @@
 class Animal extends Entity {
     constructor(currentField) {
         super(currentField);
-        this.pace = 10000;
         this.health = 100;
         this.maxHealth = 100;
-        this.starveInterval = 5000;
+        this.pace = 3000;
+        this.starveInterval = 12000;
         this.strollInterval = 8000;
         this.moving = false;
         this.strolling = true;
         this.eating = false;
-        this.visionRadius = 0;
-        this.moveDelayCoef = 1.05;
         this.strollFunction = 0;
         this.starveFunction = 0;
         this.eatFunction = 0;
@@ -44,7 +42,6 @@ class Animal extends Entity {
         this.Move(freeCells[Math.floor(Math.random() * freeCells.length)]);
     }
     Move(goalLocation) {
-        console.log(this.moving);
         if (!this.moving) {
             this.moving = true;
             this.location.occupied = false;
@@ -66,27 +63,29 @@ class Animal extends Entity {
                 this.strolling = true;
             }
             if (this.health == 0) {
-                this.die();
+                this.Die();
             }
         }, this.starveInterval);
     }
-    die() {
+    Die() {
         clearInterval(this.starveFunction);
         clearInterval(this.eatFunction);
         clearTimeout(this.strollFunction);
         this.field.RemoveAnimal(this);
     }
-    Eat() {
-        var minDistance = Math.sqrt(Math.pow(this.field.cells.length, 2) * 2);
+    Eat(entities) {
+        var minDistance = Math.sqrt(Math.pow(this.field.cells.length, 2) +
+            Math.pow(this.field.cells[0].length, 2));
         var curDistance;
         var goal;
         var stepX = 0;
         var stepY = 0;
-        this.field.plants.forEach((plant) => {
-            curDistance = Math.sqrt(Math.pow(this.location.row - plant.location.row, 2) +
-                Math.pow(this.location.col - plant.location.col, 2));
-            if (curDistance < minDistance && plant.edible) {
-                goal = plant;
+        entities.forEach((entity) => {
+            curDistance = Math.sqrt(Math.pow(this.location.row - entity.location.row, 2) +
+                Math.pow(this.location.col - entity.location.col, 2));
+            if (curDistance < minDistance &&
+                (entity instanceof Herbivore || (entity instanceof Plant && entity.edible))) {
+                goal = entity;
                 minDistance = curDistance;
             }
         });
@@ -119,9 +118,9 @@ class Animal extends Entity {
                 this.Stroll();
             }
             if (this.location == goal.location) {
-                this.health += goal.foodValue;
+                this.health = Math.min(this.health + goal.foodValue, this.maxHealth);
                 this.field.ui.UpdateHealthbar(this);
-                goal.die();
+                goal.Die();
             }
         }
     }

@@ -7,7 +7,7 @@ abstract class Plant extends Entity {
         this.edible = false;
     }
 
-    public die() {
+    public Die() {
         this.field.RemovePlant(this);
     }
 }

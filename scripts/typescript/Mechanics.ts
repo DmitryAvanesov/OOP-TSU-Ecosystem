@@ -4,8 +4,8 @@ class Mechanics {
     private field : Field;
 
     constructor () {
-        this.fieldWidth = 20;
-        this.fieldHeight = 12;
+        this.fieldWidth = 100;
+        this.fieldHeight = 100;
         this.field = new Field(this.fieldWidth, this.fieldHeight);
     }
 }

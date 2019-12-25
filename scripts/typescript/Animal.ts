@@ -1,14 +1,12 @@
 abstract class Animal extends Entity {
-    public health: number;
-    public maxHealth: number;
-    public pace: number = 10000;
+    public health: number = 100;
+    public maxHealth: number = 100;
+    public pace: number = 3000;
     private starveInterval: number;
     private strollInterval: number;
     public moving: boolean;
     protected strolling: boolean;
     protected eating: boolean;
-    protected visionRadius: number;
-    private moveDelayCoef: number;
 
     private strollFunction: number;
     private starveFunction: number;
@@ -17,16 +15,11 @@ abstract class Animal extends Entity {
     constructor(currentField: Field) {
         super(currentField);
 
-        this.health = 100;
-        this.maxHealth = 100;
-
-        this.starveInterval = 5000;
+        this.starveInterval = 12000;
         this.strollInterval = 8000;
         this.moving = false;
         this.strolling = true;
         this.eating = false;
-        this.visionRadius = 0;
-        this.moveDelayCoef = 1.05;
 
         this.strollFunction = 0;
         this.starveFunction = 0;
@@ -70,7 +63,6 @@ abstract class Animal extends Entity {
     }
 
     protected Move(goalLocation: Cell): void {
-        console.log(this.moving);
         if (!this.moving) {
             this.moving = true;
             this.location.occupied = false;
@@ -95,34 +87,38 @@ abstract class Animal extends Entity {
             }
 
             if (this.health == 0) {
-                this.die();
+                this.Die();
             }
         }, this.starveInterval);
     }
 
-    public die(): void {
+    public Die(): void {
         clearInterval(this.starveFunction);
         clearInterval(this.eatFunction);
         clearTimeout(this.strollFunction);
         this.field.RemoveAnimal(this);
     }
 
-    protected abstract CheckEating(): void;
+    protected abstract CheckEating () : void;
+    protected abstract LookForFood () : void;
 
-    protected Eat(): void {
-        var minDistance: number = Math.sqrt(Math.pow(this.field.cells.length, 2) * 2);
+    protected Eat (entities : Array<Entity>) : void {
+        var minDistance: number = Math.sqrt(
+            Math.pow(this.field.cells.length, 2) +
+            Math.pow(this.field.cells[0].length, 2));
         var curDistance: number;
-        var goal: Plant | undefined;
+        var goal: Entity | undefined;
         var stepX: number = 0;
         var stepY: number = 0;
 
-        this.field.plants.forEach((plant: Plant) => {
+        entities.forEach((entity: Entity) => {
             curDistance = Math.sqrt(
-                Math.pow(this.location.row - plant.location.row, 2) +
-                Math.pow(this.location.col - plant.location.col, 2));
+                Math.pow(this.location.row - entity.location.row, 2) +
+                Math.pow(this.location.col - entity.location.col, 2));
 
-            if (curDistance < minDistance && plant.edible) {
-                goal = plant;
+            if (curDistance < minDistance &&
+                (entity instanceof Herbivore || (entity instanceof Plant && entity.edible))) {
+                goal = entity;
                 minDistance = curDistance;
             }
         });
@@ -165,9 +161,9 @@ abstract class Animal extends Entity {
             }
 
             if (this.location == goal.location) {
-                this.health += goal.foodValue;
+                this.health = Math.min(this.health + goal.foodValue, this.maxHealth);
                 this.field.ui.UpdateHealthbar(this);
-                goal.die();
+                goal.Die();
             }
         }
     }

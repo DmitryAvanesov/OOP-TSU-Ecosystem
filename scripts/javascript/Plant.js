@@ -4,7 +4,7 @@ class Plant extends Entity {
         super(currentField);
         this.edible = false;
     }
-    die() {
+    Die() {
         this.field.RemovePlant(this);
     }
 }

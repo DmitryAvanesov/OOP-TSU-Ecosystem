@@ -6,11 +6,13 @@ class Field {
         this.cells = [];
         this.plants = [];
         this.animals = [];
-        this.treeAmount = 10;
-        this.grassAmount = 20;
-        this.pigAmount = 3;
-        this.treeGrowInterval = 20000;
-        this.grassGrowInterval = 30000;
+        this.treeAmount = 50;
+        this.grassAmount = 500;
+        this.pigAmount = 100;
+        this.bearAmount = 25;
+        this.humanAmount = 15;
+        this.treeGrowInterval = 10000;
+        this.grassGrowInterval = 3000;
         if (width === parseInt(width.toString()) && height === parseInt(height.toString()) &&
             width > 0 && height > 0) {
             for (var i = 0; i < height; i++) {
@@ -39,6 +41,14 @@ class Field {
             this.animals.push(new Pig(this));
             this.currentIndex++;
         }
+        for (var i = 0; i < this.bearAmount; i++) {
+            this.animals.push(new Bear(this));
+            this.currentIndex++;
+        }
+        for (var i = 0; i < this.humanAmount; i++) {
+            this.animals.push(new Human(this));
+            this.currentIndex++;
+        }
         this.animals.forEach((animalItem) => this.ui.PlaceEntity(animalItem));
     }
     GrowTree() {
@@ -58,11 +68,11 @@ class Field {
         }, this.grassGrowInterval);
     }
     RemovePlant(currentPlant) {
-        this.plants.splice(this.plants.indexOf(currentPlant), 1);
         this.ui.removeEntity(currentPlant);
+        this.plants.splice(this.plants.indexOf(currentPlant), 1);
     }
     RemoveAnimal(currentAnimal) {
-        this.animals.splice(this.animals.indexOf(currentAnimal), 1);
         this.ui.removeEntity(currentAnimal);
+        this.animals.splice(this.animals.indexOf(currentAnimal), 1);
     }
 }

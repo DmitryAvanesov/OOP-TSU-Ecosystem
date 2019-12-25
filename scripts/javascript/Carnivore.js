@@ -1,9 +1,9 @@
 "use strict";
-class Herbivore extends Animal {
+class Carnivore extends Animal {
     constructor(currentField) {
         super(currentField);
     }
     LookForFood() {
-        this.Eat(this.field.plants);
+        this.Eat(this.field.animals);
     }
 }

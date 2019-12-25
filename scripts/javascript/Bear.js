@@ -1,12 +1,11 @@
 "use strict";
-class Pig extends Herbivore {
+class Bear extends Carnivore {
     constructor(currentField) {
         super(currentField);
-        this.name = "pig";
-        this.foodValue = 5;
-        this.maxHealth = 10;
+        this.name = "bear";
+        this.maxHealth = 20;
         this.health = this.maxHealth;
-        this.pace = 3000;
+        this.pace = 1000;
         this.CheckEating();
     }
     CheckEating() {

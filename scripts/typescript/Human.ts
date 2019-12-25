@@ -1,15 +1,16 @@
-"use strict";
-class Pig extends Herbivore {
-    constructor(currentField) {
+class Human extends Omnivore {
+    constructor (currentField : Field) {
         super(currentField);
-        this.name = "pig";
-        this.foodValue = 5;
-        this.maxHealth = 10;
+
+        this.name = "human";
+        this.maxHealth = 15;
         this.health = this.maxHealth;
-        this.pace = 3000;
+        this.pace = 2000;
+
         this.CheckEating();
     }
-    CheckEating() {
+
+    protected CheckEating () {
         this.eatFunction = setInterval(() => {
             if (this.eating && !this.moving) {
                 this.LookForFood();
