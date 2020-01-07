@@ -6,11 +6,11 @@ class Field {
         this.cells = [];
         this.plants = [];
         this.animals = [];
-        this.treeAmount = 50;
-        this.grassAmount = 500;
-        this.pigAmount = 100;
-        this.bearAmount = 25;
-        this.humanAmount = 15;
+        this.treeAmount = 10;
+        this.grassAmount = 100;
+        this.pigAmount = 10;
+        this.bearAmount = 5;
+        this.humanAmount = 3;
         this.treeGrowInterval = 10000;
         this.grassGrowInterval = 3000;
         if (width === parseInt(width.toString()) && height === parseInt(height.toString()) &&
@@ -21,7 +21,6 @@ class Field {
                     this.cells[this.cells.length - 1].push(new Cell(i, j));
                 }
             }
-            this.ui.CreateMap(this.cells);
         }
         this.CreateEntities();
         this.GrowTree();

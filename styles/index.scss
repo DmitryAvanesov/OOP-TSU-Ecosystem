@@ -1,0 +1,56 @@
+$entity-size: 32px;
+$field-width: $entity-size * 100;
+$field-height: $entity-size * 90;
+$pace-pig: 3s;
+$pace-bear: 0.5s;
+$pace-human: 2s;
+
+body {
+    user-select: none;
+}
+
+#field {
+    width: $field-width;
+    height: $field-height;
+    position: relative;
+    background-color: #9EF79E;
+
+    * {
+        width: $entity-size;
+        position: absolute;
+        z-index: 1;
+        background-size: cover;
+
+        .healthbar {
+            position: absolute;
+            left: 1px;
+            bottom: 32px;
+            width: 30px;
+            height: 3px;
+            border: 1px black solid;
+
+            .healthbar-inner {
+                width: 100%;
+                height: 100%;
+                background-color: green;
+            }
+        }
+
+        .flipped {
+            transform: scaleX(-1);
+        }
+    }
+
+
+    .pig {
+        transition: top $pace-pig, left $pace-pig;
+    }
+
+    .bear {
+        transition: top $pace-bear, left $pace-bear;
+    }
+
+    .human {
+        transition: top $pace-human, left $pace-human;
+    }
+}

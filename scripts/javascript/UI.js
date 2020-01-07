@@ -1,26 +1,16 @@
 "use strict";
 class UI {
-    CreateMap(cells) {
-        var _a;
-        var currentMap = document.querySelector("#field") || document.createElement("div");
-        for (var i = 0; i < cells.length; i++) {
-            var currentRow = document.createElement("tr");
-            for (var j = 0; j < cells[i].length; j++) {
-                var currentCell = document.createElement("td");
-                currentCell.classList.add("cell");
-                currentCell.id = `${i}:${j}`;
-                currentRow.appendChild(currentCell);
-            }
-            (_a = currentMap) === null || _a === void 0 ? void 0 : _a.appendChild(currentRow);
-        }
+    constructor() {
+        this.entitySize = 32;
     }
     PlaceEntity(entity) {
-        var currentCell = document.querySelector(`[id="${entity.location.row}:${entity.location.col}"]`)
-            || document.createElement("td");
+        var currentMap = document.querySelector("#field");
         var currentEntity = document.createElement("div");
         currentEntity.classList.add(`${entity.name}`);
         currentEntity.id = `${entity.index}`;
-        currentCell.appendChild(currentEntity);
+        currentEntity.style.top = `${this.entitySize * entity.location.row}px`;
+        currentEntity.style.left = `${this.entitySize * entity.location.col}px`;
+        currentMap.appendChild(currentEntity);
         var currentEntityImage = document.createElement("img");
         currentEntityImage.classList.add("image");
         currentEntityImage.setAttribute("src", `../media/${entity.name}.png`);
@@ -38,8 +28,7 @@ class UI {
         healthbar.appendChild(healthbarInner);
     }
     UpdateHealthbar(animal) {
-        var currentHealthbar = document.querySelector(`[id="${animal.index}"] > .healthbar > .healthbar-inner`)
-            || document.createElement("div");
+        var currentHealthbar = document.querySelector(`[id="${animal.index}"] > .healthbar > .healthbar-inner`);
         currentHealthbar.style.width = `${animal.health / animal.maxHealth * 100}%`;
         if (animal.health > animal.maxHealth / 2) {
             currentHealthbar.style.backgroundColor = "green";
@@ -52,26 +41,17 @@ class UI {
         }
     }
     Move(animal, newLocation) {
-        var currentAnimal = document.querySelector(`[id="${animal.index}"]`) || document.createElement("div");
-        var currentAnimalImage = document.querySelector(`[id="${animal.index}"] > .image`) || document.createElement("img");
-        if (newLocation.row < animal.location.row) {
-            currentAnimal.classList.add("moveTop");
-        }
-        else if (newLocation.row > animal.location.row) {
-            currentAnimal.classList.add("moveBottom");
-        }
+        var currentAnimal = document.querySelector(`[id="${animal.index}"]`);
+        var currentAnimalImage = document.querySelector(`[id="${animal.index}"] > .image`);
+        currentAnimal.style.top = `${this.entitySize * newLocation.row}px`;
+        currentAnimal.style.left = `${this.entitySize * newLocation.col}px`;
         if (newLocation.col < animal.location.col) {
-            currentAnimal.classList.add("moveLeft");
             currentAnimalImage.classList.add("flipped");
         }
         else if (newLocation.col > animal.location.col) {
-            currentAnimal.classList.add("moveRight");
             currentAnimalImage.classList.remove("flipped");
         }
-        var newLocationCell = document.querySelector(`[id="${newLocation.row}:${newLocation.col}"]`) || document.createElement("td");
         setTimeout(() => {
-            currentAnimal.classList.remove("moveTop", "moveRight", "moveBottom", "moveLeft");
-            newLocationCell.appendChild(currentAnimal);
             animal.moving = false;
         }, animal.pace);
     }
