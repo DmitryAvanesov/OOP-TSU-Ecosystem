@@ -5,7 +5,7 @@ class Human extends Omnivore {
         this.name = "human";
         this.maxHealth = 15;
         this.health = this.maxHealth;
-        this.pace = 2000;
+        this.pace = 1000;
 
         this.CheckEating();
     }

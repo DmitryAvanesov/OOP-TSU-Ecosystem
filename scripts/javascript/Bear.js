@@ -5,7 +5,7 @@ class Bear extends Carnivore {
         this.name = "bear";
         this.maxHealth = 20;
         this.health = this.maxHealth;
-        this.pace = 1000;
+        this.pace = 500;
         this.CheckEating();
     }
     CheckEating() {

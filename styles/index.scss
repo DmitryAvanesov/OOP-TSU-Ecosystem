@@ -1,9 +1,9 @@
 $entity-size: 32px;
 $field-width: $entity-size * 100;
 $field-height: $entity-size * 90;
-$pace-pig: 3s;
+$pace-pig: 1.5s;
 $pace-bear: 0.5s;
-$pace-human: 2s;
+$pace-human: 1s;
 
 body {
     user-select: none;
@@ -24,7 +24,7 @@ body {
         .healthbar {
             position: absolute;
             left: 1px;
-            bottom: 32px;
+            bottom: 4px;
             width: 30px;
             height: 3px;
             border: 1px black solid;
