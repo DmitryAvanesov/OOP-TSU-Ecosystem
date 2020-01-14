@@ -5,7 +5,7 @@ class Animal extends Entity {
         this.health = 100;
         this.maxHealth = 100;
         this.pace = 3000;
-        this.starveInterval = 12000;
+        this.starveInterval = 6000;
         this.strollInterval = 8000;
         this.moving = false;
         this.strolling = true;
@@ -13,6 +13,8 @@ class Animal extends Entity {
         this.strollFunction = 0;
         this.starveFunction = 0;
         this.eatFunction = 0;
+        this.statusStrolling = "Strolling";
+        this.statusEating = "Eating";
         this.CheckStrolling();
         this.Starve();
     }
@@ -25,27 +27,20 @@ class Animal extends Entity {
         }, this.strollInterval * (Math.random() / 5 + 0.9));
     }
     Stroll() {
-        var freeCells = [];
-        for (var i = -1; i <= 1; i++) {
-            for (var j = -1; j <= 1; j++) {
-                var newRow = this.location.row + i;
-                var newCol = this.location.col + j;
-                if (newRow < this.field.cells.length && newRow >= 0 &&
-                    newCol < this.field.cells[0].length && newCol >= 0) {
-                    var currentCell = this.field.cells[newRow][newCol];
-                    if (!currentCell.occupied) {
-                        freeCells.push(currentCell);
-                    }
-                }
-            }
-        }
-        this.Move(freeCells[Math.floor(Math.random() * freeCells.length)]);
+        this.field.ui.UpdateStatus(this, this.statusStrolling);
+        var newRow;
+        var newCol;
+        do {
+            newRow = this.location.row + (Math.floor(Math.random() * 3) - 1);
+            newCol = this.location.col + (Math.floor(Math.random() * 3) - 1);
+        } while (newRow < 0 || newRow >= this.field.cells.length || newCol < 0 || newCol >= this.field.cells[0].length || this.field.cells[newRow][newCol].occupied);
+        this.Move(this.field.cells[newRow][newCol]);
     }
     Move(goalLocation) {
         if (!this.moving) {
-            this.moving = true;
             this.location.occupied = false;
             goalLocation.occupied = true;
+            this.moving = true;
             this.field.ui.Move(this, goalLocation);
             this.location = goalLocation;
         }
@@ -58,7 +53,7 @@ class Animal extends Entity {
                 this.strolling = false;
                 this.eating = true;
             }
-            else {
+            else if (this.maxHealth - this.health <= 1) {
                 this.eating = false;
                 this.strolling = true;
             }
@@ -71,24 +66,32 @@ class Animal extends Entity {
         clearInterval(this.starveFunction);
         clearInterval(this.eatFunction);
         clearTimeout(this.strollFunction);
-        this.field.RemoveAnimal(this);
+        if (this instanceof Herbivore) {
+            this.field.RemoveEntity(this, this.field.herbivoreAnimals);
+        }
+        else if (this instanceof Carnivore) {
+            this.field.RemoveEntity(this, this.field.carnivoreAnimals);
+        }
+        else {
+            this.field.RemoveEntity(this, this.field.omnivoreAnimals);
+        }
     }
     Eat(entities) {
-        var minDistance = Math.sqrt(Math.pow(this.field.cells.length, 2) +
-            Math.pow(this.field.cells[0].length, 2));
+        var _a, _b;
+        this.field.ui.UpdateStatus(this, this.statusEating);
+        var minDistance = this.field.cells.length + this.field.cells[0].length;
         var curDistance;
         var goal;
         var stepX = 0;
         var stepY = 0;
         entities.forEach((entity) => {
-            curDistance = Math.sqrt(Math.pow(this.location.row - entity.location.row, 2) +
-                Math.pow(this.location.col - entity.location.col, 2));
-            if (curDistance < minDistance &&
-                (entity instanceof Herbivore || (entity instanceof Plant && entity.edible))) {
+            curDistance = this.location.row - entity.location.row + this.location.col - entity.location.col;
+            if (curDistance < minDistance) {
                 goal = entity;
                 minDistance = curDistance;
             }
         });
+        console.log(`${(_a = goal) === null || _a === void 0 ? void 0 : _a.location.row}:${(_b = goal) === null || _b === void 0 ? void 0 : _b.location.col}`);
         if (goal !== undefined) {
             if (goal.location.row < this.location.row) {
                 stepY--;

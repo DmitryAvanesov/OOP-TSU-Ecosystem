@@ -4,6 +4,6 @@ class Omnivore extends Animal {
         super(currentField);
     }
     LookForFood() {
-        this.Eat(this.field.plants.concat(this.field.animals));
+        this.Eat(this.field.ediblePlants.concat(this.field.herbivoreAnimals));
     }
 }

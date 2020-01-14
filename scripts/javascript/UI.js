@@ -22,10 +22,13 @@ class UI {
     AddEntityInfo(currentAnimal) {
         var healthbar = document.createElement("div");
         var healthbarInner = document.createElement("div");
+        var status = document.createElement("div");
         healthbar.classList.add("healthbar");
         healthbarInner.classList.add("healthbar-inner");
+        status.classList.add("status");
         currentAnimal.appendChild(healthbar);
         healthbar.appendChild(healthbarInner);
+        currentAnimal.appendChild(status);
     }
     UpdateHealthbar(animal) {
         var currentHealthbar = document.querySelector(`[id="${animal.index}"] > .healthbar > .healthbar-inner`);
@@ -39,6 +42,10 @@ class UI {
         else {
             currentHealthbar.style.backgroundColor = "red";
         }
+    }
+    UpdateStatus(animal, newStatus) {
+        var currentStatus = document.querySelector(`[id="${animal.index}"] > .status`);
+        currentStatus.innerHTML = newStatus;
     }
     Move(animal, newLocation) {
         var currentAnimal = document.querySelector(`[id="${animal.index}"]`);
@@ -55,7 +62,7 @@ class UI {
             animal.moving = false;
         }, animal.pace);
     }
-    removeEntity(entity) {
+    RemoveEntity(entity) {
         var currentEntity = document.querySelector(`[id="${entity.index}"]`) || document.createElement("img");
         currentEntity.remove();
     }

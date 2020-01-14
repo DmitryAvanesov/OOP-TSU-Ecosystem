@@ -4,6 +4,6 @@ class Herbivore extends Animal {
         super(currentField);
     }
     LookForFood() {
-        this.Eat(this.field.plants);
+        this.Eat(this.field.ediblePlants);
     }
 }

@@ -12,10 +12,13 @@ abstract class Animal extends Entity {
     private starveFunction: number;
     protected eatFunction: number;
 
+    private statusStrolling: string;
+    private statusEating: string;
+
     constructor(currentField: Field) {
         super(currentField);
 
-        this.starveInterval = 12000;
+        this.starveInterval = 6000;
         this.strollInterval = 8000;
         this.moving = false;
         this.strolling = true;
@@ -24,6 +27,9 @@ abstract class Animal extends Entity {
         this.strollFunction = 0;
         this.starveFunction = 0;
         this.eatFunction = 0;
+
+        this.statusStrolling = "Strolling";
+        this.statusEating = "Eating";
 
         this.CheckStrolling();
         this.Starve();
@@ -40,33 +46,25 @@ abstract class Animal extends Entity {
     }
 
     private Stroll(): void {
-        var freeCells: Array<Cell> = [];
+        this.field.ui.UpdateStatus(this, this.statusStrolling);
 
-        for (var i: number = -1; i <= 1; i++) {
-            for (var j: number = -1; j <= 1; j++) {
-                var newRow: number = this.location.row + i;
-                var newCol: number = this.location.col + j;
+        var newRow: number;
+        var newCol: number;
 
-                if (newRow < this.field.cells.length && newRow >= 0 &&
-                    newCol < this.field.cells[0].length && newCol >= 0) {
-                    var currentCell: Cell =
-                        this.field.cells[newRow][newCol];
-
-                    if (!currentCell.occupied) {
-                        freeCells.push(currentCell);
-                    }
-                }
-            }
+        do {
+            newRow = this.location.row + (Math.floor(Math.random() * 3) - 1);
+            newCol = this.location.col + (Math.floor(Math.random() * 3) - 1);
         }
+        while (newRow < 0 || newRow >= this.field.cells.length || newCol < 0 || newCol >= this.field.cells[0].length || this.field.cells[newRow][newCol].occupied);
 
-        this.Move(freeCells[Math.floor(Math.random() * freeCells.length)]);
+        this.Move(this.field.cells[newRow][newCol]);
     }
 
     protected Move(goalLocation: Cell): void {
         if (!this.moving) {
-            this.moving = true;
             this.location.occupied = false;
             goalLocation.occupied = true;
+            this.moving = true;
             this.field.ui.Move(this, goalLocation);
             this.location = goalLocation;
         }
@@ -81,7 +79,7 @@ abstract class Animal extends Entity {
                 this.strolling = false;
                 this.eating = true;
             }
-            else {
+            else if (this.maxHealth - this.health <= 1) {
                 this.eating = false;
                 this.strolling = true;
             }
@@ -96,32 +94,40 @@ abstract class Animal extends Entity {
         clearInterval(this.starveFunction);
         clearInterval(this.eatFunction);
         clearTimeout(this.strollFunction);
-        this.field.RemoveAnimal(this);
+
+        if (this instanceof Herbivore) {
+            this.field.RemoveEntity(this, this.field.herbivoreAnimals);
+        }
+        else if (this instanceof Carnivore) {
+            this.field.RemoveEntity(this, this.field.carnivoreAnimals);
+        }
+        else {
+            this.field.RemoveEntity(this, this.field.omnivoreAnimals);
+        }
     }
 
-    protected abstract CheckEating () : void;
-    protected abstract LookForFood () : void;
+    protected abstract CheckEating(): void;
+    protected abstract LookForFood(): void;
 
-    protected Eat (entities : Array<Entity>) : void {
-        var minDistance: number = Math.sqrt(
-            Math.pow(this.field.cells.length, 2) +
-            Math.pow(this.field.cells[0].length, 2));
+    protected Eat(entities: Array<Entity>): void {
+        this.field.ui.UpdateStatus(this, this.statusEating);
+
+        var minDistance: number = this.field.cells.length + this.field.cells[0].length;
         var curDistance: number;
         var goal: Entity | undefined;
         var stepX: number = 0;
         var stepY: number = 0;
 
         entities.forEach((entity: Entity) => {
-            curDistance = Math.sqrt(
-                Math.pow(this.location.row - entity.location.row, 2) +
-                Math.pow(this.location.col - entity.location.col, 2));
+            curDistance = this.location.row - entity.location.row + this.location.col - entity.location.col;
 
-            if (curDistance < minDistance &&
-                (entity instanceof Herbivore || (entity instanceof Plant && entity.edible))) {
+            if (curDistance < minDistance) {
                 goal = entity;
                 minDistance = curDistance;
             }
         });
+
+        console.log(`${goal?.location.row}:${goal?.location.col}`);
 
         if (goal !== undefined) {
             if (goal.location.row < this.location.row) {
@@ -146,7 +152,7 @@ abstract class Animal extends Entity {
 
             var goodCellSecond: Cell =
                 this.field.cells[this.location.row + stepY][this.location.col];
-
+                
             if (!bestCell.occupied || bestCell == goal.location) {
                 this.Move(bestCell);
             }

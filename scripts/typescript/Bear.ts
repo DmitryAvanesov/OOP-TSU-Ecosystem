@@ -1,5 +1,5 @@
 class Bear extends Carnivore {
-    constructor (currentField : Field) {
+    constructor(currentField: Field) {
         super(currentField);
 
         this.name = "bear";
@@ -10,7 +10,7 @@ class Bear extends Carnivore {
         this.CheckEating();
     }
 
-    protected CheckEating () {
+    protected CheckEating() {
         this.eatFunction = setInterval(() => {
             if (this.eating && !this.moving) {
                 this.LookForFood();

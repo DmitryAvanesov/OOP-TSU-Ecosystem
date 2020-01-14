@@ -1,7 +1,10 @@
 class Field {
     public cells: Array<Array<Cell>>;
-    public plants: Array<Plant>;
-    public animals: Array<Animal>;
+    public trees: Array<Tree>;
+    public ediblePlants: Array<Plant>;
+    public herbivoreAnimals: Array<Herbivore>;
+    public carnivoreAnimals: Array<Carnivore>;
+    public omnivoreAnimals: Array<Omnivore>;
 
     public currentIndex: number;
     public ui: UI;
@@ -17,15 +20,18 @@ class Field {
         this.currentIndex = 0;
         this.ui = new UI();
         this.cells = [];
-        this.plants = [];
-        this.animals = [];
-        this.treeAmount = 10;
-        this.grassAmount = 100;
-        this.pigAmount = 10;
-        this.bearAmount = 5;
-        this.humanAmount = 3;
+        this.trees = [];
+        this.ediblePlants = [];
+        this.herbivoreAnimals = [];
+        this.carnivoreAnimals = [];
+        this.omnivoreAnimals = [];
+        this.treeAmount = 1;
+        this.grassAmount = 1;
+        this.pigAmount = 1;
+        this.bearAmount = 0;
+        this.humanAmount = 0;
         this.treeGrowInterval = 10000;
-        this.grassGrowInterval = 3000;
+        this.grassGrowInterval = 1500;
 
         if (width === parseInt(width.toString()) && height === parseInt(height.toString()) &&
             width > 0 && height > 0) {
@@ -45,60 +51,63 @@ class Field {
 
     private CreateEntities(): void {
         for (var i: number = 0; i < this.treeAmount; i++) {
-            this.plants.push(new Tree(this));
+            this.trees.push(new Tree(this));
             this.currentIndex++;
         }
+
+        this.trees.forEach((treeItem: Tree) => this.ui.PlaceEntity(treeItem));
 
         for (var i: number = 0; i < this.grassAmount; i++) {
-            this.plants.push(new Grass(this));
+            this.ediblePlants.push(new Grass(this));
             this.currentIndex++;
         }
 
-        this.plants.forEach((plantItem: Plant) => this.ui.PlaceEntity(plantItem));
+        this.ediblePlants.forEach((plantItem: Plant) => this.ui.PlaceEntity(plantItem));
 
         for (var i: number = 0; i < this.pigAmount; i++) {
-            this.animals.push(new Pig(this));
+            this.herbivoreAnimals.push(new Pig(this));
             this.currentIndex++;
         }
+
+        this.herbivoreAnimals.forEach((animalItem: Animal) => this.ui.PlaceEntity(animalItem));
 
         for (var i: number = 0; i < this.bearAmount; i++) {
-            this.animals.push(new Bear(this));
+            this.carnivoreAnimals.push(new Bear(this));
             this.currentIndex++;
         }
+
+        this.carnivoreAnimals.forEach((animalItem: Animal) => this.ui.PlaceEntity(animalItem));
 
         for (var i: number = 0; i < this.humanAmount; i++) {
-            this.animals.push(new Human(this));
+            this.omnivoreAnimals.push(new Human(this));
             this.currentIndex++;
         }
 
-        this.animals.forEach((animalItem: Animal) => this.ui.PlaceEntity(animalItem));
+        this.omnivoreAnimals.forEach((animalItem: Animal) => this.ui.PlaceEntity(animalItem));
     }
 
     private GrowTree(): void {
         setInterval(() => {
             var newTree: Tree = new Tree(this);
+            newTree.GrowNextTo();
             this.currentIndex++;
-            this.plants.push(newTree);
-            this.ui.PlaceEntity(newTree);
+            this.trees.push(newTree);
         }, this.treeGrowInterval);
     }
 
     private GrowGrass(): void {
         setInterval(() => {
             var newGrass: Grass = new Grass(this);
+            newGrass.GrowNextTo();
             this.currentIndex++;
-            this.plants.push(newGrass);
-            this.ui.PlaceEntity(newGrass);
+            this.ediblePlants.push(newGrass);
         }, this.grassGrowInterval);
     }
 
-    public RemovePlant(currentPlant: Plant): void {
-        this.ui.removeEntity(currentPlant);
-        this.plants.splice(this.plants.indexOf(currentPlant), 1);
-    }
-
-    public RemoveAnimal(currentAnimal: Animal): void {
-        this.ui.removeEntity(currentAnimal);
-        this.animals.splice(this.animals.indexOf(currentAnimal), 1);
+    public RemoveEntity(currentEntity: Entity, currentCollection: Array<Entity>): void {
+        this.ui.RemoveEntity(currentEntity);
+        this.ediblePlants.splice(currentCollection.indexOf(currentEntity), 1);
     }
 }
+
+var field = new Field(5, 5);
