@@ -9,7 +9,10 @@ class Field {
     public currentIndex: number;
     public ui: UI;
     private treeAmount: number;
+    private amountOfEdibleSpecies: number;
     private grassAmount: number;
+    private wheatAmount: number;
+    private mushroomAmount: number;
     private pigAmount: number;
     private cowAmount: number;
     private horseAmount: number;
@@ -18,7 +21,7 @@ class Field {
     private foxAmount: number;
     private humanAmount: number;
     private treeGrowInterval: number;
-    private grassGrowInterval: number;
+    private ediblePlantGrowInterval: number;
 
     constructor(width: number, height: number) {
         this.currentIndex = 0;
@@ -30,7 +33,10 @@ class Field {
         this.carnivoreAnimals = [];
         this.omnivoreAnimals = [];
         this.treeAmount = 100;
-        this.grassAmount = 2000;
+        this.amountOfEdibleSpecies = 3;
+        this.grassAmount = 750;
+        this.wheatAmount = 500;
+        this.mushroomAmount = 250;
         this.pigAmount = 150;
         this.cowAmount = 125;
         this.horseAmount = 100;
@@ -39,7 +45,7 @@ class Field {
         this.foxAmount = 50;
         this.humanAmount = 20;
         this.treeGrowInterval = 5000;
-        this.grassGrowInterval = 10;
+        this.ediblePlantGrowInterval = 10;
 
         if (width === parseInt(width.toString()) && height === parseInt(height.toString()) &&
             width > 0 && height > 0) {
@@ -54,7 +60,7 @@ class Field {
 
         this.CreateEntities();
         this.GrowTree();
-        this.GrowGrass();
+        this.GrowEdiblePlant();
     }
 
     private CreateEntities(): void {
@@ -66,6 +72,14 @@ class Field {
 
         for (var i: number = 0; i < this.grassAmount; i++) {
             this.ediblePlants.push(new Grass(this));
+        }
+
+        for (var i: number = 0; i < this.wheatAmount; i++) {
+            this.ediblePlants.push(new Wheat(this));
+        }
+
+        for (var i: number = 0; i < this.mushroomAmount; i++) {
+            this.ediblePlants.push(new Mushroom(this));
         }
 
         this.ediblePlants.forEach((plantItem: Plant) => this.ui.PlaceEntity(plantItem));
@@ -112,11 +126,26 @@ class Field {
         }, this.treeGrowInterval);
     }
 
-    private GrowGrass(): void {
+    private GrowEdiblePlant(): void {
         setInterval(() => {
-            var newGrass: Grass = new Grass(this);
-            newGrass.GrowNextTo();
-        }, this.grassGrowInterval);
+            var randomizer: number = Math.floor(Math.random() * this.amountOfEdibleSpecies);
+            var newEdiblePlant: Plant;
+
+            if (randomizer == 0) {
+                newEdiblePlant = new Grass(this);
+            }
+            else if (randomizer == 1) {
+                newEdiblePlant = new Wheat(this);
+            }
+            else if (randomizer == 2) {
+                newEdiblePlant = new Mushroom(this);
+            }
+            else {
+                newEdiblePlant = new Grass(this);
+            }
+
+            newEdiblePlant.GrowNextTo();
+        }, this.ediblePlantGrowInterval);
     }
 
     public RemoveEntity(currentEntity: Entity, currentCollection: Array<Entity>): void {

@@ -152,16 +152,15 @@ class Animal extends Entity {
     }
     Reproduce(animals) {
         var goal = this.FindGoal(animals);
-        if (goal !== undefined) {
-            console.log(`${this.name}  ${goal.name}`);
-            if (this.location == goal.location) {
-                this.GiveBirth();
-            }
-        }
-        else if (this.health < this.maxHealth * 0.25) {
+        if (this.health < this.maxHealth * 0.25) {
             this.field.ui.UpdateStatus(this, this.statusEating);
             this.eating = true;
             this.reproducing = false;
+        }
+        else if (goal !== undefined) {
+            if (this.location == goal.location) {
+                this.GiveBirth();
+            }
         }
     }
     GiveBirth() {
