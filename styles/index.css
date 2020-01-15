@@ -55,9 +55,29 @@ body {
   transition: top 1.5s, left 1.5s;
 }
 
+#field .cow {
+  -webkit-transition: top 2s, left 2s;
+  transition: top 2s, left 2s;
+}
+
+#field .horse {
+  -webkit-transition: top 0.75s, left 0.75s;
+  transition: top 0.75s, left 0.75s;
+}
+
 #field .bear {
   -webkit-transition: top 0.5s, left 0.5s;
   transition: top 0.5s, left 0.5s;
+}
+
+#field .tiger {
+  -webkit-transition: top 0.3s, left 0.3s;
+  transition: top 0.3s, left 0.3s;
+}
+
+#field .fox {
+  -webkit-transition: top 0.4s, left 0.4s;
+  transition: top 0.4s, left 0.4s;
 }
 
 #field .human {

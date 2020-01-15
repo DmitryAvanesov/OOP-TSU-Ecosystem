@@ -11,7 +11,11 @@ class Field {
     private treeAmount: number;
     private grassAmount: number;
     private pigAmount: number;
+    private cowAmount: number;
+    private horseAmount: number;
     private bearAmount: number;
+    private tigerAmount: number;
+    private foxAmount: number;
     private humanAmount: number;
     private treeGrowInterval: number;
     private grassGrowInterval: number;
@@ -27,9 +31,13 @@ class Field {
         this.omnivoreAnimals = [];
         this.treeAmount = 100;
         this.grassAmount = 2000;
-        this.pigAmount = 200;
-        this.bearAmount = 50;
-        this.humanAmount = 25;
+        this.pigAmount = 150;
+        this.cowAmount = 125;
+        this.horseAmount = 100;
+        this.bearAmount = 25;
+        this.tigerAmount = 10;
+        this.foxAmount = 50;
+        this.humanAmount = 20;
         this.treeGrowInterval = 5000;
         this.grassGrowInterval = 10;
 
@@ -66,10 +74,26 @@ class Field {
             this.herbivoreAnimals.push(new Pig(this));
         }
 
+        for (var i: number = 0; i < this.cowAmount; i++) {
+            this.herbivoreAnimals.push(new Cow(this));
+        }
+
+        for (var i: number = 0; i < this.horseAmount; i++) {
+            this.herbivoreAnimals.push(new Horse(this));
+        }
+
         this.herbivoreAnimals.forEach((animalItem: Animal) => this.ui.PlaceEntity(animalItem));
 
         for (var i: number = 0; i < this.bearAmount; i++) {
             this.carnivoreAnimals.push(new Bear(this));
+        }
+
+        for (var i: number = 0; i < this.tigerAmount; i++) {
+            this.carnivoreAnimals.push(new Tiger(this));
+        }
+
+        for (var i: number = 0; i < this.foxAmount; i++) {
+            this.carnivoreAnimals.push(new Fox(this));
         }
 
         this.carnivoreAnimals.forEach((animalItem: Animal) => this.ui.PlaceEntity(animalItem));

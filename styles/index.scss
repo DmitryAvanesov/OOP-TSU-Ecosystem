@@ -3,7 +3,11 @@ $entity-size: 32px;
 $field-width: $entity-size * 500;
 $field-height: $entity-size * 500;
 $pace-pig: 1.5s;
+$pace-cow: 2s;
+$pace-horse: 0.75s;
 $pace-bear: 0.5s;
+$pace-tiger: 0.3s;
+$pace-fox: 0.4s;
 $pace-human: 1s;
 
 body {
@@ -58,8 +62,24 @@ body {
         transition: top $pace-pig, left $pace-pig;
     }
 
+    .cow {
+        transition: top $pace-cow, left $pace-cow;
+    }
+
+    .horse {
+        transition: top $pace-horse, left $pace-horse;
+    }
+
     .bear {
         transition: top $pace-bear, left $pace-bear;
+    }
+
+    .tiger {
+        transition: top $pace-tiger, left $pace-tiger;
+    }
+
+    .fox {
+        transition: top $pace-fox, left $pace-fox;
     }
 
     .human {

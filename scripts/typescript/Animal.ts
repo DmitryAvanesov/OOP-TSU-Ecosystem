@@ -121,7 +121,7 @@ abstract class Animal extends Entity {
         }
     }
 
-    protected CheckEating() {
+    protected CheckEating(): void {
         this.eatFunction = setInterval(() => {
             if (this.eating && !this.moving) {
                 this.Eat();
@@ -159,36 +159,43 @@ abstract class Animal extends Entity {
             this.strolling = false;
             this.reproducing = true;
 
+            var animals: Array<Animal>;
+
+            if (this instanceof Herbivore) {
+                animals = Object.assign([], this.field.herbivoreAnimals);
+            }
+            else if (this instanceof Carnivore) {
+                animals = Object.assign([], this.field.carnivoreAnimals);
+            }
+            else {
+                animals = Object.assign([], this.field.omnivoreAnimals);
+            }
+    
+            var currentAnimal: number = 0;
+
+            while (currentAnimal < animals.length) {
+                if (animals[currentAnimal].name != this.name) {
+                    animals.splice(currentAnimal, 1);
+                }
+                else {
+                    currentAnimal++;
+                }
+            }
+    
+            animals.splice(animals.indexOf(this), 1);
+
             this.reproduceFunction = setInterval(() => {
-                this.Reproduce();
+                this.Reproduce(animals);
             }, this.pace);
         }
     }
 
-    protected Reproduce(): void {
-        var animals: Array<Animal>;
-
-        if (this instanceof Herbivore) {
-            animals = Object.assign([], this.field.herbivoreAnimals);
-        }
-        else if (this instanceof Carnivore) {
-            animals = Object.assign([], this.field.carnivoreAnimals);
-        }
-        else {
-            animals = Object.assign([], this.field.omnivoreAnimals);
-        }
-
-        animals.forEach((animal: Animal) => {
-            if (animal.name != this.name) {
-                animals.splice(animals.indexOf(animal), 1);
-            }
-        });
-
-        animals.splice(animals.indexOf(this), 1);
-
+    protected Reproduce(animals: Array<Animal>): void {
         var goal: Entity | undefined = this.FindGoal(animals);
 
         if (goal !== undefined) {
+            console.log(`${this.name}  ${goal.name}`);
+
             if (this.location == goal.location) {
                 this.GiveBirth();
             }
@@ -200,20 +207,36 @@ abstract class Animal extends Entity {
         }
     }
 
-    private GiveBirth() {
+    private GiveBirth(): void {
         var newAnimal: Animal;
 
-        if (this instanceof Bear) {
+        if (this instanceof Pig) {
+            newAnimal = new Pig(this.field);
+            this.field.herbivoreAnimals.push(newAnimal);
+        }
+        else if (this instanceof Cow) {
+            newAnimal = new Cow(this.field);
+            this.field.herbivoreAnimals.push(newAnimal);
+        }
+        else if (this instanceof Horse) {
+            newAnimal = new Horse(this.field);
+            this.field.herbivoreAnimals.push(newAnimal);
+        }
+        else if (this instanceof Bear) {
             newAnimal = new Bear(this.field);
+            this.field.carnivoreAnimals.push(newAnimal);
+        }
+        else if (this instanceof Tiger) {
+            newAnimal = new Tiger(this.field);
+            this.field.carnivoreAnimals.push(newAnimal);
+        }
+        else if (this instanceof Fox) {
+            newAnimal = new Fox(this.field);
             this.field.carnivoreAnimals.push(newAnimal);
         }
         else if (this instanceof Human) {
             newAnimal = new Human(this.field);
             this.field.omnivoreAnimals.push(newAnimal);
-        }
-        else if (this instanceof Pig) {
-            newAnimal = new Pig(this.field);
-            this.field.herbivoreAnimals.push(newAnimal);
         }
         else {
             newAnimal = new Pig(this.field);

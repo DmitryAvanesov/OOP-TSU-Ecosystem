@@ -125,30 +125,35 @@ class Animal extends Entity {
             this.field.ui.UpdateStatus(this, this.statusReproducing);
             this.strolling = false;
             this.reproducing = true;
+            var animals;
+            if (this instanceof Herbivore) {
+                animals = Object.assign([], this.field.herbivoreAnimals);
+            }
+            else if (this instanceof Carnivore) {
+                animals = Object.assign([], this.field.carnivoreAnimals);
+            }
+            else {
+                animals = Object.assign([], this.field.omnivoreAnimals);
+            }
+            var currentAnimal = 0;
+            while (currentAnimal < animals.length) {
+                if (animals[currentAnimal].name != this.name) {
+                    animals.splice(currentAnimal, 1);
+                }
+                else {
+                    currentAnimal++;
+                }
+            }
+            animals.splice(animals.indexOf(this), 1);
             this.reproduceFunction = setInterval(() => {
-                this.Reproduce();
+                this.Reproduce(animals);
             }, this.pace);
         }
     }
-    Reproduce() {
-        var animals;
-        if (this instanceof Herbivore) {
-            animals = Object.assign([], this.field.herbivoreAnimals);
-        }
-        else if (this instanceof Carnivore) {
-            animals = Object.assign([], this.field.carnivoreAnimals);
-        }
-        else {
-            animals = Object.assign([], this.field.omnivoreAnimals);
-        }
-        animals.forEach((animal) => {
-            if (animal.name != this.name) {
-                animals.splice(animals.indexOf(animal), 1);
-            }
-        });
-        animals.splice(animals.indexOf(this), 1);
+    Reproduce(animals) {
         var goal = this.FindGoal(animals);
         if (goal !== undefined) {
+            console.log(`${this.name}  ${goal.name}`);
             if (this.location == goal.location) {
                 this.GiveBirth();
             }
@@ -161,17 +166,33 @@ class Animal extends Entity {
     }
     GiveBirth() {
         var newAnimal;
-        if (this instanceof Bear) {
+        if (this instanceof Pig) {
+            newAnimal = new Pig(this.field);
+            this.field.herbivoreAnimals.push(newAnimal);
+        }
+        else if (this instanceof Cow) {
+            newAnimal = new Cow(this.field);
+            this.field.herbivoreAnimals.push(newAnimal);
+        }
+        else if (this instanceof Horse) {
+            newAnimal = new Horse(this.field);
+            this.field.herbivoreAnimals.push(newAnimal);
+        }
+        else if (this instanceof Bear) {
             newAnimal = new Bear(this.field);
+            this.field.carnivoreAnimals.push(newAnimal);
+        }
+        else if (this instanceof Tiger) {
+            newAnimal = new Tiger(this.field);
+            this.field.carnivoreAnimals.push(newAnimal);
+        }
+        else if (this instanceof Fox) {
+            newAnimal = new Fox(this.field);
             this.field.carnivoreAnimals.push(newAnimal);
         }
         else if (this instanceof Human) {
             newAnimal = new Human(this.field);
             this.field.omnivoreAnimals.push(newAnimal);
-        }
-        else if (this instanceof Pig) {
-            newAnimal = new Pig(this.field);
-            this.field.herbivoreAnimals.push(newAnimal);
         }
         else {
             newAnimal = new Pig(this.field);
