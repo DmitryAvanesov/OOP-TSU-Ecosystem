@@ -8,11 +8,4 @@ class Human extends Omnivore {
         this.pace = 1000;
         this.CheckEating();
     }
-    CheckEating() {
-        this.eatFunction = setInterval(() => {
-            if (this.eating && !this.moving) {
-                this.LookForFood();
-            }
-        }, this.pace);
-    }
 }

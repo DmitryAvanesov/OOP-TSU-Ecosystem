@@ -8,11 +8,4 @@ class Bear extends Carnivore {
         this.pace = 500;
         this.CheckEating();
     }
-    CheckEating() {
-        this.eatFunction = setInterval(() => {
-            if (this.eating && !this.moving) {
-                this.LookForFood();
-            }
-        }, this.pace);
-    }
 }

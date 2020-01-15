@@ -9,11 +9,4 @@ class Pig extends Herbivore {
         this.pace = 1500;
         this.CheckEating();
     }
-    CheckEating() {
-        this.eatFunction = setInterval(() => {
-            if (this.eating && !this.moving) {
-                this.LookForFood();
-            }
-        }, this.pace);
-    }
 }

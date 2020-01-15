@@ -5,7 +5,7 @@ class Animal extends Entity {
         this.health = 100;
         this.maxHealth = 100;
         this.pace = 3000;
-        this.starveInterval = 6000;
+        this.starveInterval = 12000;
         this.strollInterval = 8000;
         this.moving = false;
         this.strolling = true;
@@ -80,8 +80,25 @@ class Animal extends Entity {
             this.field.RemoveEntity(this, this.field.omnivoreAnimals);
         }
     }
-    Eat(entities) {
+    CheckEating() {
+        this.eatFunction = setInterval(() => {
+            if (this.eating && !this.moving) {
+                this.Eat();
+            }
+        }, this.pace);
+    }
+    Eat() {
         this.field.ui.UpdateStatus(this, this.statusEating);
+        var entities;
+        if (this instanceof Herbivore) {
+            entities = this.field.ediblePlants;
+        }
+        else if (this instanceof Carnivore) {
+            entities = this.field.herbivoreAnimals;
+        }
+        else {
+            entities = this.field.ediblePlants.concat(this.field.herbivoreAnimals);
+        }
         var minDistance = this.field.cells.length + this.field.cells[0].length;
         var curDistance;
         var goal;

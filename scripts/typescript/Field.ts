@@ -25,13 +25,13 @@ class Field {
         this.herbivoreAnimals = [];
         this.carnivoreAnimals = [];
         this.omnivoreAnimals = [];
-        this.treeAmount = 0;
-        this.grassAmount = 1;
-        this.pigAmount = 1;
-        this.bearAmount = 1;
-        this.humanAmount = 0;
+        this.treeAmount = 100;
+        this.grassAmount = 2000;
+        this.pigAmount = 250;
+        this.bearAmount = 50;
+        this.humanAmount = 25;
         this.treeGrowInterval = 5000;
-        this.grassGrowInterval = 5500;
+        this.grassGrowInterval = 10;
 
         if (width === parseInt(width.toString()) && height === parseInt(height.toString()) &&
             width > 0 && height > 0) {
@@ -108,4 +108,4 @@ class Field {
     }
 }
 
-var field = new Field(10, 10);
+var field = new Field(500, 500);

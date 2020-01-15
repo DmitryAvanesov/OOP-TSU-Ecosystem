@@ -18,7 +18,7 @@ abstract class Animal extends Entity {
     constructor(currentField: Field) {
         super(currentField);
 
-        this.starveInterval = 6000;
+        this.starveInterval = 12000;
         this.strollInterval = 8000;
         this.moving = false;
         this.strolling = true;
@@ -110,11 +110,28 @@ abstract class Animal extends Entity {
         }
     }
 
-    protected abstract CheckEating(): void;
-    protected abstract LookForFood(): void;
+    protected CheckEating() {
+        this.eatFunction = setInterval(() => {
+            if (this.eating && !this.moving) {
+                this.Eat();
+            }
+        }, this.pace);
+    }
 
-    protected Eat(entities: Array<Entity>): void {
+    protected Eat(): void {
         this.field.ui.UpdateStatus(this, this.statusEating);
+
+        var entities: Array<Entity>;
+
+        if (this instanceof Herbivore) {
+            entities = this.field.ediblePlants;
+        }
+        else if (this instanceof Carnivore) {
+            entities = this.field.herbivoreAnimals;
+        }
+        else {
+            entities = (<Array<Entity>>this.field.ediblePlants).concat(this.field.herbivoreAnimals);
+        }
 
         var minDistance: number = this.field.cells.length + this.field.cells[0].length;
         var curDistance: number;
