@@ -86,7 +86,7 @@ abstract class Animal extends Entity {
             this.health--;
             this.field.ui.UpdateHealthbar(this);
 
-            if (!this.reproducing && this.health < this.maxHealth / 2) {
+            if (!this.reproducing && this.health < this.maxHealth * 0.5) {
                 this.field.ui.UpdateStatus(this, this.statusEating);
                 this.strolling = false;
                 this.eating = true;
@@ -145,7 +145,7 @@ abstract class Animal extends Entity {
         var goal: Entity | undefined = this.FindGoal(entities);
 
         if (goal !== undefined) {
-            if (this.location == goal.location) { 
+            if (this.location == goal.location) {
                 this.health = Math.min(this.health + goal.foodValue, this.maxHealth);
                 this.field.ui.UpdateHealthbar(this);
                 goal.Die();
@@ -189,9 +189,14 @@ abstract class Animal extends Entity {
         var goal: Entity | undefined = this.FindGoal(animals);
 
         if (goal !== undefined) {
-            if (this.location == goal.location) { 
+            if (this.location == goal.location) {
                 this.GiveBirth();
             }
+        }
+        else if (this.health < this.maxHealth * 0.25) {
+            this.field.ui.UpdateStatus(this, this.statusEating);
+            this.eating = true;
+            this.reproducing = false;
         }
     }
 
