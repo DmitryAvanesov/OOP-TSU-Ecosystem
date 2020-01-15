@@ -1,7 +1,7 @@
 $field-color: #9EF79E;
 $entity-size: 32px;
-$field-width: $entity-size * 100;
-$field-height: $entity-size * 100;
+$field-width: $entity-size * 200;
+$field-height: $entity-size * 200;
 $pace-pig: 1.5s;
 $pace-bear: 0.5s;
 $pace-human: 1s;
@@ -24,6 +24,7 @@ body {
 
         .healthbar {
             position: absolute;
+            z-index: 2;
             left: 1px;
             bottom: 4px;
             width: 30px;
@@ -39,7 +40,7 @@ body {
 
         .status {
             position: absolute;
-            z-index: 1;
+            z-index: 2;
             left: 0;
             bottom: 12px;
             width: $entity-size;

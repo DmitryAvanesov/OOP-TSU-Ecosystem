@@ -27,7 +27,6 @@ class Plant extends Entity {
         this.field.ui.PlaceEntity(this);
     }
     Die() {
-        console.log(`My pos is ${this.location.row}:${this.location.col}`);
         if (this.edible) {
             this.field.RemoveEntity(this, this.field.ediblePlants);
         }

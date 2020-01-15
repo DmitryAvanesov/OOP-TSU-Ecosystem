@@ -34,8 +34,6 @@ abstract class Plant extends Entity {
     }
 
     public Die() {
-        console.log(`My pos is ${this.location.row}:${this.location.col}`);
-
         if (this.edible) {
             this.field.RemoveEntity(this, this.field.ediblePlants);
         }

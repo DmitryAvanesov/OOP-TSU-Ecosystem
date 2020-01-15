@@ -50,14 +50,18 @@ abstract class Animal extends Entity {
 
         var newRow: number;
         var newCol: number;
+        var count: number = 0;
 
         do {
             newRow = this.location.row + (Math.floor(Math.random() * 3) - 1);
             newCol = this.location.col + (Math.floor(Math.random() * 3) - 1);
+            count++;
         }
-        while (newRow < 0 || newRow >= this.field.cells.length || newCol < 0 || newCol >= this.field.cells[0].length || this.field.cells[newRow][newCol].occupied);
+        while (count < 9 && (newRow < 0 || newRow >= this.field.cells.length || newCol < 0 || newCol >= this.field.cells[0].length || this.field.cells[newRow][newCol].occupied));
 
-        this.Move(this.field.cells[newRow][newCol]);
+        if (!this.field.cells[newRow][newCol].occupied) {
+            this.Move(this.field.cells[newRow][newCol]);
+        }
     }
 
     protected Move(goalLocation: Cell): void {
@@ -79,7 +83,7 @@ abstract class Animal extends Entity {
                 this.strolling = false;
                 this.eating = true;
             }
-            else if (this.health == this.maxHealth) {
+            else if (this.maxHealth - this.health <= 1) {
                 this.eating = false;
                 this.strolling = true;
             }
@@ -150,7 +154,7 @@ abstract class Animal extends Entity {
 
             var goodCellSecond: Cell =
                 this.field.cells[this.location.row + stepY][this.location.col];
-                
+
             if (!bestCell.occupied || bestCell == goal.location) {
                 this.Move(bestCell);
             }
@@ -165,6 +169,10 @@ abstract class Animal extends Entity {
             }
 
             if (this.location == goal.location) {
+                if (this instanceof Bear) {
+                    console.log(`${goal.name}`);
+                }
+
                 this.health = Math.min(this.health + goal.foodValue, this.maxHealth);
                 this.field.ui.UpdateHealthbar(this);
                 goal.Die();

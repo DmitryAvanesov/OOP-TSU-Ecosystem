@@ -28,10 +28,10 @@ class Field {
         this.treeAmount = 0;
         this.grassAmount = 1;
         this.pigAmount = 1;
-        this.bearAmount = 0;
+        this.bearAmount = 1;
         this.humanAmount = 0;
-        this.treeGrowInterval = 100000000;
-        this.grassGrowInterval = 2000;
+        this.treeGrowInterval = 5000;
+        this.grassGrowInterval = 5500;
 
         if (width === parseInt(width.toString()) && height === parseInt(height.toString()) &&
             width > 0 && height > 0) {
@@ -104,8 +104,8 @@ class Field {
 
     public RemoveEntity(currentEntity: Entity, currentCollection: Array<Entity>): void {
         this.ui.RemoveEntity(currentEntity);
-        this.ediblePlants.splice(currentCollection.indexOf(currentEntity), 1);
+        currentCollection.splice(currentCollection.indexOf(currentEntity), 1);
     }
 }
 
-var field = new Field(15, 15);
+var field = new Field(10, 10);
