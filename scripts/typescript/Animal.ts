@@ -1,19 +1,23 @@
 abstract class Animal extends Entity {
-    public health: number = 100;
-    public maxHealth: number = 100;
-    public pace: number = 3000;
+    public health: number = 0;
+    public maxHealth: number = 0;
+    public pace: number = 0;
     private starveInterval: number;
     private strollInterval: number;
+    protected reproductionProbability: number = 0;
     public moving: boolean;
     protected strolling: boolean;
     protected eating: boolean;
+    protected reproducing: boolean;
 
-    private strollFunction: number;
-    private starveFunction: number;
-    protected eatFunction: number;
+    private strollFunction: number = 0;
+    private starveFunction: number = 0;
+    protected eatFunction: number = 0;
+    private reproduceFunction: number = 0;
 
     private statusStrolling: string;
     private statusEating: string;
+    private statusReproducing: string;
 
     constructor(currentField: Field) {
         super(currentField);
@@ -23,16 +27,21 @@ abstract class Animal extends Entity {
         this.moving = false;
         this.strolling = true;
         this.eating = false;
-
-        this.strollFunction = 0;
-        this.starveFunction = 0;
-        this.eatFunction = 0;
+        this.reproducing = false;
 
         this.statusStrolling = "Strolling";
         this.statusEating = "Eating";
+        this.statusReproducing = "Reproducing";
 
         this.CheckStrolling();
         this.Starve();
+    }
+
+    public PlaceNextToParents(cell: Cell) {
+        this.location.occupied = false;
+        this.location = cell;
+        this.location.occupied = true;
+        this.field.ui.PlaceEntity(this);
     }
 
     private CheckStrolling(): void {
@@ -77,15 +86,17 @@ abstract class Animal extends Entity {
             this.health--;
             this.field.ui.UpdateHealthbar(this);
 
-            if (this.health < this.maxHealth / 2) {
+            if (!this.reproducing && this.health < this.maxHealth / 2) {
                 this.field.ui.UpdateStatus(this, this.statusEating);
                 this.strolling = false;
                 this.eating = true;
             }
-            else if (this.maxHealth - this.health <= 1) {
+            else if (!this.reproducing && this.maxHealth - this.health <= 1) {
                 this.field.ui.UpdateStatus(this, this.statusStrolling);
                 this.eating = false;
+                this.reproducing = false;
                 this.strolling = true;
+                this.CheckReproducing();
             }
 
             if (this.health == 0) {
@@ -131,7 +142,7 @@ abstract class Animal extends Entity {
             entities = (<Array<Entity>>this.field.ediblePlants).concat(this.field.herbivoreAnimals);
         }
 
-        var goal = this.FindGoal(entities);
+        var goal: Entity | undefined = this.FindGoal(entities);
 
         if (goal !== undefined) {
             if (this.location == goal.location) { 
@@ -140,6 +151,75 @@ abstract class Animal extends Entity {
                 goal.Die();
             }
         }
+    }
+
+    protected CheckReproducing(): void {
+        if (Math.random() < this.reproductionProbability) {
+            this.field.ui.UpdateStatus(this, this.statusReproducing);
+            this.strolling = false;
+            this.reproducing = true;
+
+            this.reproduceFunction = setInterval(() => {
+                this.Reproduce();
+            }, this.pace);
+        }
+    }
+
+    protected Reproduce(): void {
+        var animals: Array<Animal>;
+
+        if (this instanceof Herbivore) {
+            animals = Object.assign([], this.field.herbivoreAnimals);
+        }
+        else if (this instanceof Carnivore) {
+            animals = Object.assign([], this.field.carnivoreAnimals);
+        }
+        else {
+            animals = Object.assign([], this.field.omnivoreAnimals);
+        }
+
+        animals.forEach((animal: Animal) => {
+            if (animal.name != this.name) {
+                animals.splice(animals.indexOf(animal), 1);
+            }
+        });
+
+        animals.splice(animals.indexOf(this), 1);
+
+        var goal: Entity | undefined = this.FindGoal(animals);
+
+        if (goal !== undefined) {
+            if (this.location == goal.location) { 
+                this.GiveBirth();
+            }
+        }
+    }
+
+    private GiveBirth() {
+        var newAnimal: Animal;
+
+        if (this instanceof Bear) {
+            newAnimal = new Bear(this.field);
+            this.field.carnivoreAnimals.push(newAnimal);
+        }
+        else if (this instanceof Human) {
+            newAnimal = new Human(this.field);
+            this.field.omnivoreAnimals.push(newAnimal);
+        }
+        else if (this instanceof Pig) {
+            newAnimal = new Pig(this.field);
+            this.field.herbivoreAnimals.push(newAnimal);
+        }
+        else {
+            newAnimal = new Pig(this.field);
+        }
+
+        newAnimal.PlaceNextToParents(this.location);
+
+        this.field.ui.UpdateStatus(this, this.statusEating);
+        this.eating = true;
+        this.reproducing = false;
+        clearInterval(this.reproduceFunction);
     }
 
     private FindGoal(entities: Array<Entity>): Entity | undefined {

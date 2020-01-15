@@ -6,6 +6,7 @@ class Human extends Omnivore {
         this.maxHealth = 15;
         this.health = this.maxHealth;
         this.pace = 1000;
+        this.reproductionProbability = 0.05;
 
         this.CheckEating();
     }

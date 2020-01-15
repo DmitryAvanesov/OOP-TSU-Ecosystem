@@ -2,21 +2,31 @@
 class Animal extends Entity {
     constructor(currentField) {
         super(currentField);
-        this.health = 100;
-        this.maxHealth = 100;
-        this.pace = 3000;
+        this.health = 0;
+        this.maxHealth = 0;
+        this.pace = 0;
+        this.reproductionProbability = 0;
+        this.strollFunction = 0;
+        this.starveFunction = 0;
+        this.eatFunction = 0;
+        this.reproduceFunction = 0;
         this.starveInterval = 12000;
         this.strollInterval = 8000;
         this.moving = false;
         this.strolling = true;
         this.eating = false;
-        this.strollFunction = 0;
-        this.starveFunction = 0;
-        this.eatFunction = 0;
+        this.reproducing = false;
         this.statusStrolling = "Strolling";
         this.statusEating = "Eating";
+        this.statusReproducing = "Reproducing";
         this.CheckStrolling();
         this.Starve();
+    }
+    PlaceNextToParents(cell) {
+        this.location.occupied = false;
+        this.location = cell;
+        this.location.occupied = true;
+        this.field.ui.PlaceEntity(this);
     }
     CheckStrolling() {
         this.strollFunction = setTimeout(() => {
@@ -52,15 +62,17 @@ class Animal extends Entity {
         this.starveFunction = setInterval(() => {
             this.health--;
             this.field.ui.UpdateHealthbar(this);
-            if (this.health < this.maxHealth / 2) {
+            if (!this.reproducing && this.health < this.maxHealth / 2) {
                 this.field.ui.UpdateStatus(this, this.statusEating);
                 this.strolling = false;
                 this.eating = true;
             }
-            else if (this.maxHealth - this.health <= 1) {
+            else if (!this.reproducing && this.maxHealth - this.health <= 1) {
                 this.field.ui.UpdateStatus(this, this.statusStrolling);
                 this.eating = false;
+                this.reproducing = false;
                 this.strolling = true;
+                this.CheckReproducing();
             }
             if (this.health == 0) {
                 this.Die();
@@ -107,6 +119,63 @@ class Animal extends Entity {
                 goal.Die();
             }
         }
+    }
+    CheckReproducing() {
+        if (Math.random() < this.reproductionProbability) {
+            this.field.ui.UpdateStatus(this, this.statusReproducing);
+            this.strolling = false;
+            this.reproducing = true;
+            this.reproduceFunction = setInterval(() => {
+                this.Reproduce();
+            }, this.pace);
+        }
+    }
+    Reproduce() {
+        var animals;
+        if (this instanceof Herbivore) {
+            animals = Object.assign([], this.field.herbivoreAnimals);
+        }
+        else if (this instanceof Carnivore) {
+            animals = Object.assign([], this.field.carnivoreAnimals);
+        }
+        else {
+            animals = Object.assign([], this.field.omnivoreAnimals);
+        }
+        animals.forEach((animal) => {
+            if (animal.name != this.name) {
+                animals.splice(animals.indexOf(animal), 1);
+            }
+        });
+        animals.splice(animals.indexOf(this), 1);
+        var goal = this.FindGoal(animals);
+        if (goal !== undefined) {
+            if (this.location == goal.location) {
+                this.GiveBirth();
+            }
+        }
+    }
+    GiveBirth() {
+        var newAnimal;
+        if (this instanceof Bear) {
+            newAnimal = new Bear(this.field);
+            this.field.carnivoreAnimals.push(newAnimal);
+        }
+        else if (this instanceof Human) {
+            newAnimal = new Human(this.field);
+            this.field.omnivoreAnimals.push(newAnimal);
+        }
+        else if (this instanceof Pig) {
+            newAnimal = new Pig(this.field);
+            this.field.herbivoreAnimals.push(newAnimal);
+        }
+        else {
+            newAnimal = new Pig(this.field);
+        }
+        newAnimal.PlaceNextToParents(this.location);
+        this.field.ui.UpdateStatus(this, this.statusEating);
+        this.eating = true;
+        this.reproducing = false;
+        clearInterval(this.reproduceFunction);
     }
     FindGoal(entities) {
         var minDistance = this.field.cells.length + this.field.cells[0].length;

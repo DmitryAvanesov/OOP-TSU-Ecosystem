@@ -7,7 +7,7 @@ abstract class Entity {
 
     constructor(currentField: Field) {
         this.field = currentField;
-        this.index = currentField.currentIndex;
+        this.index = this.field.currentIndex++;
 
         do {
             this.location = currentField.cells

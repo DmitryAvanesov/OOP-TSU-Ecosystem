@@ -9,13 +9,13 @@ class Field {
         this.herbivoreAnimals = [];
         this.carnivoreAnimals = [];
         this.omnivoreAnimals = [];
-        this.treeAmount = 100;
-        this.grassAmount = 1500;
-        this.pigAmount = 250;
-        this.bearAmount = 50;
-        this.humanAmount = 20;
-        this.treeGrowInterval = 5000;
-        this.grassGrowInterval = 10;
+        this.treeAmount = 1;
+        this.grassAmount = 1;
+        this.pigAmount = 2;
+        this.bearAmount = 0;
+        this.humanAmount = 0;
+        this.treeGrowInterval = 5000000;
+        this.grassGrowInterval = 3000;
         if (width === parseInt(width.toString()) && height === parseInt(height.toString()) &&
             width > 0 && height > 0) {
             for (var i = 0; i < height; i++) {
@@ -32,27 +32,22 @@ class Field {
     CreateEntities() {
         for (var i = 0; i < this.treeAmount; i++) {
             this.trees.push(new Tree(this));
-            this.currentIndex++;
         }
         this.trees.forEach((treeItem) => this.ui.PlaceEntity(treeItem));
         for (var i = 0; i < this.grassAmount; i++) {
             this.ediblePlants.push(new Grass(this));
-            this.currentIndex++;
         }
         this.ediblePlants.forEach((plantItem) => this.ui.PlaceEntity(plantItem));
         for (var i = 0; i < this.pigAmount; i++) {
             this.herbivoreAnimals.push(new Pig(this));
-            this.currentIndex++;
         }
         this.herbivoreAnimals.forEach((animalItem) => this.ui.PlaceEntity(animalItem));
         for (var i = 0; i < this.bearAmount; i++) {
             this.carnivoreAnimals.push(new Bear(this));
-            this.currentIndex++;
         }
         this.carnivoreAnimals.forEach((animalItem) => this.ui.PlaceEntity(animalItem));
         for (var i = 0; i < this.humanAmount; i++) {
             this.omnivoreAnimals.push(new Human(this));
-            this.currentIndex++;
         }
         this.omnivoreAnimals.forEach((animalItem) => this.ui.PlaceEntity(animalItem));
     }
@@ -60,14 +55,12 @@ class Field {
         setInterval(() => {
             var newTree = new Tree(this);
             newTree.GrowNextTo();
-            this.currentIndex++;
         }, this.treeGrowInterval);
     }
     GrowGrass() {
         setInterval(() => {
             var newGrass = new Grass(this);
             newGrass.GrowNextTo();
-            this.currentIndex++;
         }, this.grassGrowInterval);
     }
     RemoveEntity(currentEntity, currentCollection) {
@@ -75,4 +68,4 @@ class Field {
         currentCollection.splice(currentCollection.indexOf(currentEntity), 1);
     }
 }
-var field = new Field(500, 500);
+var field = new Field(10, 10);
