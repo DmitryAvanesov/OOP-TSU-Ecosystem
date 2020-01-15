@@ -6,6 +6,9 @@ class Plant extends Entity {
     }
     GrowNextTo() {
         var sameTypeArray;
+        var randomPlant;
+        var newRow;
+        var newCol;
         if (this instanceof Tree) {
             sameTypeArray = this.field.trees;
         }
@@ -14,13 +17,13 @@ class Plant extends Entity {
         }
         this.location.occupied = false;
         do {
-            var randomPlant = sameTypeArray[Math.floor(Math.random() * sameTypeArray.length)];
-            var newRow = randomPlant.location.row + (Math.floor(Math.random() * 3) - 1);
-            var newCol = randomPlant.location.col + (Math.floor(Math.random() * 3) - 1);
-            this.location.row = newRow;
-            this.location.col = newCol;
+            randomPlant = sameTypeArray[Math.floor(Math.random() * sameTypeArray.length)];
+            newRow = randomPlant.location.row + (Math.floor(Math.random() * 3) - 1);
+            newCol = randomPlant.location.col + (Math.floor(Math.random() * 3) - 1);
         } while (newRow < 0 || newRow >= this.field.cells.length || newCol < 0 || newCol >= this.field.cells[0].length || this.field.cells[newRow][newCol].occupied);
+        this.location = this.field.cells[newRow][newCol];
         this.location.occupied = true;
+        sameTypeArray.push(this);
         this.field.ui.PlaceEntity(this);
     }
     Die() {

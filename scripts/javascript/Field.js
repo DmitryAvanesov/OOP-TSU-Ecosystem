@@ -10,12 +10,12 @@ class Field {
         this.carnivoreAnimals = [];
         this.omnivoreAnimals = [];
         this.treeAmount = 0;
-        this.grassAmount = 10;
+        this.grassAmount = 1;
         this.pigAmount = 1;
         this.bearAmount = 0;
         this.humanAmount = 0;
         this.treeGrowInterval = 100000000;
-        this.grassGrowInterval = 150000000;
+        this.grassGrowInterval = 2000;
         if (width === parseInt(width.toString()) && height === parseInt(height.toString()) &&
             width > 0 && height > 0) {
             for (var i = 0; i < height; i++) {
@@ -61,7 +61,6 @@ class Field {
             var newTree = new Tree(this);
             newTree.GrowNextTo();
             this.currentIndex++;
-            this.trees.push(newTree);
         }, this.treeGrowInterval);
     }
     GrowGrass() {
@@ -69,7 +68,6 @@ class Field {
             var newGrass = new Grass(this);
             newGrass.GrowNextTo();
             this.currentIndex++;
-            this.ediblePlants.push(newGrass);
         }, this.grassGrowInterval);
     }
     RemoveEntity(currentEntity, currentCollection) {
@@ -77,4 +75,4 @@ class Field {
         this.ediblePlants.splice(currentCollection.indexOf(currentEntity), 1);
     }
 }
-var field = new Field(10, 10);
+var field = new Field(15, 15);

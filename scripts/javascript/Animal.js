@@ -53,7 +53,7 @@ class Animal extends Entity {
                 this.strolling = false;
                 this.eating = true;
             }
-            else if (this.maxHealth - this.health <= 1) {
+            else if (this.health == this.maxHealth) {
                 this.eating = false;
                 this.strolling = true;
             }
@@ -77,10 +77,9 @@ class Animal extends Entity {
         }
     }
     Eat(entities) {
-        var _a, _b;
         this.field.ui.UpdateStatus(this, this.statusEating);
         var minDistance = this.field.cells.length + this.field.cells[0].length;
-        var curDistance = 0;
+        var curDistance;
         var goal;
         var stepX = 0;
         var stepY = 0;
@@ -91,7 +90,6 @@ class Animal extends Entity {
                 minDistance = curDistance;
             }
         });
-        console.log(`${(_a = goal) === null || _a === void 0 ? void 0 : _a.location.row}:${(_b = goal) === null || _b === void 0 ? void 0 : _b.location.col}  ${minDistance}`);
         if (goal !== undefined) {
             if (goal.location.row < this.location.row) {
                 stepY--;
