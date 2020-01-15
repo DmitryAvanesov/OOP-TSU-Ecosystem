@@ -46,8 +46,6 @@ abstract class Animal extends Entity {
     }
 
     private Stroll(): void {
-        this.field.ui.UpdateStatus(this, this.statusStrolling);
-
         var newRow: number;
         var newCol: number;
         var count: number = 0;
@@ -80,10 +78,12 @@ abstract class Animal extends Entity {
             this.field.ui.UpdateHealthbar(this);
 
             if (this.health < this.maxHealth / 2) {
+                this.field.ui.UpdateStatus(this, this.statusEating);
                 this.strolling = false;
                 this.eating = true;
             }
             else if (this.maxHealth - this.health <= 1) {
+                this.field.ui.UpdateStatus(this, this.statusStrolling);
                 this.eating = false;
                 this.strolling = true;
             }
@@ -119,8 +119,6 @@ abstract class Animal extends Entity {
     }
 
     protected Eat(): void {
-        this.field.ui.UpdateStatus(this, this.statusEating);
-
         var entities: Array<Entity>;
 
         if (this instanceof Herbivore) {
@@ -133,6 +131,18 @@ abstract class Animal extends Entity {
             entities = (<Array<Entity>>this.field.ediblePlants).concat(this.field.herbivoreAnimals);
         }
 
+        var goal = this.FindGoal(entities);
+
+        if (goal !== undefined) {
+            if (this.location == goal.location) { 
+                this.health = Math.min(this.health + goal.foodValue, this.maxHealth);
+                this.field.ui.UpdateHealthbar(this);
+                goal.Die();
+            }
+        }
+    }
+
+    private FindGoal(entities: Array<Entity>): Entity | undefined {
         var minDistance: number = this.field.cells.length + this.field.cells[0].length;
         var curDistance: number;
         var goal: Entity | undefined;
@@ -184,16 +194,8 @@ abstract class Animal extends Entity {
             else {
                 this.Stroll();
             }
-
-            if (this.location == goal.location) {
-                if (this instanceof Bear) {
-                    console.log(`${goal.name}`);
-                }
-
-                this.health = Math.min(this.health + goal.foodValue, this.maxHealth);
-                this.field.ui.UpdateHealthbar(this);
-                goal.Die();
-            }
         }
+
+        return goal;
     }
 }

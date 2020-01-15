@@ -26,10 +26,10 @@ class Field {
         this.carnivoreAnimals = [];
         this.omnivoreAnimals = [];
         this.treeAmount = 100;
-        this.grassAmount = 2000;
+        this.grassAmount = 1500;
         this.pigAmount = 250;
         this.bearAmount = 50;
-        this.humanAmount = 25;
+        this.humanAmount = 20;
         this.treeGrowInterval = 5000;
         this.grassGrowInterval = 10;
 
