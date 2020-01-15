@@ -50,13 +50,11 @@ class Animal extends Entity {
         }
     }
     Move(goalLocation) {
-        if (!this.moving) {
-            this.location.occupied = false;
-            goalLocation.occupied = true;
-            this.moving = true;
-            this.field.ui.Move(this, goalLocation);
-            this.location = goalLocation;
-        }
+        this.location.occupied = false;
+        goalLocation.occupied = true;
+        this.moving = true;
+        this.field.ui.Move(this, goalLocation);
+        this.location = goalLocation;
     }
     Starve() {
         this.starveFunction = setInterval(() => {

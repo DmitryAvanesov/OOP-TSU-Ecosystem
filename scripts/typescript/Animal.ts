@@ -72,13 +72,11 @@ abstract class Animal extends Entity {
     }
 
     protected Move(goalLocation: Cell): void {
-        if (!this.moving) {
-            this.location.occupied = false;
+        this.location.occupied = false;
             goalLocation.occupied = true;
             this.moving = true;
             this.field.ui.Move(this, goalLocation);
             this.location = goalLocation;
-        }
     }
 
     private Starve(): void {
