@@ -39,6 +39,7 @@ body {
 
         .status {
             position: absolute;
+            z-index: 1;
             left: 0;
             bottom: 12px;
             width: $entity-size;

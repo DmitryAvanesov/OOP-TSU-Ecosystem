@@ -80,18 +80,18 @@ class Animal extends Entity {
         var _a, _b;
         this.field.ui.UpdateStatus(this, this.statusEating);
         var minDistance = this.field.cells.length + this.field.cells[0].length;
-        var curDistance;
+        var curDistance = 0;
         var goal;
         var stepX = 0;
         var stepY = 0;
         entities.forEach((entity) => {
-            curDistance = this.location.row - entity.location.row + this.location.col - entity.location.col;
+            curDistance = Math.abs(this.location.row - entity.location.row) + Math.abs(this.location.col - entity.location.col);
             if (curDistance < minDistance) {
                 goal = entity;
                 minDistance = curDistance;
             }
         });
-        console.log(`${(_a = goal) === null || _a === void 0 ? void 0 : _a.location.row}:${(_b = goal) === null || _b === void 0 ? void 0 : _b.location.col}`);
+        console.log(`${(_a = goal) === null || _a === void 0 ? void 0 : _a.location.row}:${(_b = goal) === null || _b === void 0 ? void 0 : _b.location.col}  ${minDistance}`);
         if (goal !== undefined) {
             if (goal.location.row < this.location.row) {
                 stepY--;

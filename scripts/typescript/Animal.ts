@@ -113,13 +113,13 @@ abstract class Animal extends Entity {
         this.field.ui.UpdateStatus(this, this.statusEating);
 
         var minDistance: number = this.field.cells.length + this.field.cells[0].length;
-        var curDistance: number;
+        var curDistance: number = 0;
         var goal: Entity | undefined;
         var stepX: number = 0;
         var stepY: number = 0;
 
         entities.forEach((entity: Entity) => {
-            curDistance = this.location.row - entity.location.row + this.location.col - entity.location.col;
+            curDistance = Math.abs(this.location.row - entity.location.row) + Math.abs(this.location.col - entity.location.col);
 
             if (curDistance < minDistance) {
                 goal = entity;
@@ -127,7 +127,7 @@ abstract class Animal extends Entity {
             }
         });
 
-        console.log(`${goal?.location.row}:${goal?.location.col}`);
+        console.log(`${goal?.location.row}:${goal?.location.col}  ${minDistance}`);
 
         if (goal !== undefined) {
             if (goal.location.row < this.location.row) {

@@ -9,13 +9,13 @@ class Field {
         this.herbivoreAnimals = [];
         this.carnivoreAnimals = [];
         this.omnivoreAnimals = [];
-        this.treeAmount = 1;
-        this.grassAmount = 1;
+        this.treeAmount = 0;
+        this.grassAmount = 10;
         this.pigAmount = 1;
         this.bearAmount = 0;
         this.humanAmount = 0;
-        this.treeGrowInterval = 10000;
-        this.grassGrowInterval = 1500;
+        this.treeGrowInterval = 100000000;
+        this.grassGrowInterval = 150000000;
         if (width === parseInt(width.toString()) && height === parseInt(height.toString()) &&
             width > 0 && height > 0) {
             for (var i = 0; i < height; i++) {
@@ -77,4 +77,4 @@ class Field {
         this.ediblePlants.splice(currentCollection.indexOf(currentEntity), 1);
     }
 }
-var field = new Field(5, 5);
+var field = new Field(10, 10);
