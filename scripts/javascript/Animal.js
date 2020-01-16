@@ -37,7 +37,7 @@ class Animal extends Entity {
         this.location.occupied = false;
         this.location = cell;
         this.location.occupied = true;
-        this.field.ui.PlaceEntity(this);
+        this.field.ui.PlaceFieldObject(this);
     }
     CheckStrolling() {
         this.strollFunction = setTimeout(() => {

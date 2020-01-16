@@ -8,7 +8,7 @@ class Human extends Omnivore {
         this.maxAge = 30;
         this.pace = 1000;
         this.reproductionProbability = 0;
-        this.ageOfConsent = 1;
+        this.ageOfConsent = 3;
         this.goingToBuild = false;
         this.statusGoingToBuild = "Going to build";
         this.CheckEating();
@@ -53,14 +53,14 @@ class Human extends Omnivore {
     }
     Build() {
         this.house = new House(this.field);
+        console.log("BUILT");
         if (this.partner !== undefined) {
             this.partner.house = this.house;
         }
-        console.log("BUILT");
         this.house.location.occupied = false;
         this.house.location = this.location;
         this.house.location.occupied = true;
-        this.field.ui.PlaceEntity(this.house);
+        this.field.ui.PlaceFieldObject(this.house);
     }
     Stroll() {
         var maxDistanceToHouse = 4;
@@ -92,12 +92,6 @@ class Human extends Omnivore {
             else {
                 super.Stroll();
             }
-        }
-    }
-    Die() {
-        super.Die();
-        if (this.house !== undefined) {
-            this.house.numberOfPeople--;
         }
     }
 }

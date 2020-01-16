@@ -40,7 +40,7 @@ class Field {
         for (var i = 0; i < this.treeAmount; i++) {
             this.trees.push(new Tree(this));
         }
-        this.trees.forEach((treeItem) => this.ui.PlaceEntity(treeItem));
+        this.trees.forEach((treeItem) => this.ui.PlaceFieldObject(treeItem));
         for (var i = 0; i < this.grassAmount; i++) {
             this.ediblePlants.push(new Grass(this));
         }
@@ -50,7 +50,7 @@ class Field {
         for (var i = 0; i < this.mushroomAmount; i++) {
             this.ediblePlants.push(new Mushroom(this));
         }
-        this.ediblePlants.forEach((plantItem) => this.ui.PlaceEntity(plantItem));
+        this.ediblePlants.forEach((plantItem) => this.ui.PlaceFieldObject(plantItem));
         for (var i = 0; i < this.pigAmount; i++) {
             this.herbivoreAnimals.push(new Pig(this));
         }
@@ -60,7 +60,7 @@ class Field {
         for (var i = 0; i < this.horseAmount; i++) {
             this.herbivoreAnimals.push(new Horse(this));
         }
-        this.herbivoreAnimals.forEach((animalItem) => this.ui.PlaceEntity(animalItem));
+        this.herbivoreAnimals.forEach((animalItem) => this.ui.PlaceFieldObject(animalItem));
         for (var i = 0; i < this.bearAmount; i++) {
             this.carnivoreAnimals.push(new Bear(this));
         }
@@ -70,11 +70,11 @@ class Field {
         for (var i = 0; i < this.foxAmount; i++) {
             this.carnivoreAnimals.push(new Fox(this));
         }
-        this.carnivoreAnimals.forEach((animalItem) => this.ui.PlaceEntity(animalItem));
+        this.carnivoreAnimals.forEach((animalItem) => this.ui.PlaceFieldObject(animalItem));
         for (var i = 0; i < this.humanAmount; i++) {
             this.omnivoreAnimals.push(new Human(this));
         }
-        this.omnivoreAnimals.forEach((animalItem) => this.ui.PlaceEntity(animalItem));
+        this.omnivoreAnimals.forEach((animalItem) => this.ui.PlaceFieldObject(animalItem));
     }
     GrowTree() {
         setInterval(() => {

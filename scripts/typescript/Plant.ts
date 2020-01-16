@@ -35,7 +35,7 @@ abstract class Plant extends Entity {
             this.location = this.field.cells[newRow][newCol];
             this.location.occupied = true;
             sameTypeArray.push(this);
-            this.field.ui.PlaceEntity(this);
+            this.field.ui.PlaceFieldObject(this);
         }
     }
 

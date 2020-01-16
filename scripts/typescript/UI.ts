@@ -5,21 +5,21 @@ class UI {
         this.entitySize = 32;
     }
 
-    public PlaceEntity(entity: Entity): void {
+    public PlaceFieldObject(object: FieldObject): void {
         var currentMap: HTMLElement = document.querySelector("#field") as HTMLElement;
         var currentEntity: HTMLElement = document.createElement("div");
 
-        currentEntity.classList.add(`${entity.name}`);
-        currentEntity.id = `${entity.index}`;
-        currentEntity.style.top = `${this.entitySize * entity.location.row}px`;
-        currentEntity.style.left = `${this.entitySize * entity.location.col}px`;
+        currentEntity.classList.add(`${object.name}`);
+        currentEntity.id = `${object.index}`;
+        currentEntity.style.top = `${this.entitySize * object.location.row}px`;
+        currentEntity.style.left = `${this.entitySize * object.location.col}px`;
         currentMap.appendChild(currentEntity);
 
         var currentEntityImage: HTMLElement = document.createElement("img");
         currentEntityImage.classList.add("image");
         
-        if (entity instanceof Human) {
-            if (entity.male) {
+        if (object instanceof Human) {
+            if (object.male) {
                 currentEntityImage.setAttribute("src", `../media/man.png`);
             }
             else {
@@ -27,13 +27,13 @@ class UI {
             }
         }
         else {
-            currentEntityImage.setAttribute("src", `../media/${entity.name}.png`);
+            currentEntityImage.setAttribute("src", `../media/${object.name}.png`);
         }
 
         currentEntity.appendChild(currentEntityImage);
 
-        if (entity instanceof Animal) {
-            this.AddEntityInfo(currentEntity, entity.male);
+        if (object instanceof Animal) {
+            this.AddEntityInfo(currentEntity, object.male);
         }
     }
 
