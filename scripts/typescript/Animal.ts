@@ -2,8 +2,11 @@ abstract class Animal extends Entity {
     public health: number = 0;
     public maxHealth: number = 0;
     public pace: number = 0;
+    public maxAge: number = 0;
+    public age: number = 0;
     private starveInterval: number;
     private strollInterval: number;
+    private matureInterval: number;
     protected reproductionProbability: number = 0;
     public moving: boolean;
     protected strolling: boolean;
@@ -14,6 +17,7 @@ abstract class Animal extends Entity {
     private starveFunction: number = 0;
     protected eatFunction: number = 0;
     private reproduceFunction: number = 0;
+    private matureFunction: number = 0;
 
     private statusStrolling: string;
     private statusEating: string;
@@ -24,6 +28,7 @@ abstract class Animal extends Entity {
 
         this.starveInterval = 12000;
         this.strollInterval = 8000;
+        this.matureInterval = 60000;
         this.moving = false;
         this.strolling = true;
         this.eating = false;
@@ -35,6 +40,7 @@ abstract class Animal extends Entity {
 
         this.CheckStrolling();
         this.Starve();
+        this.Mature();
     }
 
     public PlaceNextToParents(cell: Cell) {
@@ -73,10 +79,10 @@ abstract class Animal extends Entity {
 
     protected Move(goalLocation: Cell): void {
         this.location.occupied = false;
-            goalLocation.occupied = true;
-            this.moving = true;
-            this.field.ui.Move(this, goalLocation);
-            this.location = goalLocation;
+        goalLocation.occupied = true;
+        this.moving = true;
+        this.field.ui.Move(this, goalLocation);
+        this.location = goalLocation;
     }
 
     private Starve(): void {
@@ -97,26 +103,10 @@ abstract class Animal extends Entity {
                 this.CheckReproducing();
             }
 
-            if (this.health == 0) {
+            if (this.health <= 0) {
                 this.Die();
             }
         }, this.starveInterval);
-    }
-
-    public Die(): void {
-        clearInterval(this.starveFunction);
-        clearInterval(this.eatFunction);
-        clearTimeout(this.strollFunction);
-
-        if (this instanceof Herbivore) {
-            this.field.RemoveEntity(this, this.field.herbivoreAnimals);
-        }
-        else if (this instanceof Carnivore) {
-            this.field.RemoveEntity(this, this.field.carnivoreAnimals);
-        }
-        else {
-            this.field.RemoveEntity(this, this.field.omnivoreAnimals);
-        }
     }
 
     protected CheckEating(): void {
@@ -152,7 +142,7 @@ abstract class Animal extends Entity {
     }
 
     protected CheckReproducing(): void {
-        if (Math.random() < this.reproductionProbability) {
+        if (this.age > 0 && Math.random() < this.reproductionProbability) {
             this.field.ui.UpdateStatus(this, this.statusReproducing);
             this.strolling = false;
             this.reproducing = true;
@@ -168,7 +158,7 @@ abstract class Animal extends Entity {
             else {
                 animals = Object.assign([], this.field.omnivoreAnimals);
             }
-    
+
             var currentAnimal: number = 0;
 
             while (currentAnimal < animals.length) {
@@ -179,7 +169,7 @@ abstract class Animal extends Entity {
                     currentAnimal++;
                 }
             }
-    
+
             animals.splice(animals.indexOf(this), 1);
 
             this.reproduceFunction = setInterval(() => {
@@ -302,4 +292,36 @@ abstract class Animal extends Entity {
 
         return goal;
     }
+
+    public Mature(): void {
+        this.matureFunction = setInterval(() => {
+            this.age++;
+
+            if (this.age > this.maxAge) {
+                this.Die();
+            }
+            else {
+                this.field.ui.UpdateAge(this);
+            }
+        }, this.matureInterval);
+    }
+
+    public Die(): void {
+        clearInterval(this.starveFunction);
+        clearInterval(this.eatFunction);
+        clearTimeout(this.strollFunction);
+        clearInterval(this.reproduceFunction);
+        clearInterval(this.matureFunction);
+
+        if (this instanceof Herbivore) {
+            this.field.RemoveEntity(this, this.field.herbivoreAnimals);
+        }
+        else if (this instanceof Carnivore) {
+            this.field.RemoveEntity(this, this.field.carnivoreAnimals);
+        }
+        else {
+            this.field.RemoveEntity(this, this.field.omnivoreAnimals);
+        }
+    }
+
 }

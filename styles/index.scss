@@ -42,14 +42,33 @@ body {
             }
         }
 
-        .status {
+        .info {
             position: absolute;
             z-index: 2;
-            left: 0;
-            bottom: 12px;
-            width: $entity-size;
-            font-size: 9px;
-            text-align: center;
+            left: -$entity-size * 0.5;
+            bottom: 24px;
+            width: $entity-size * 2;
+            font-size: 10px;
+
+            * {
+                display: inline-block;
+                vertical-align: middle;
+                text-align: center;
+            }
+
+            .age {
+                background-color: black;
+                color: white;
+                width: 12px;
+            }
+    
+            .status {
+                background-color: white;
+                color: black;
+                margin-left: 12px;
+                padding: 0 1px;
+                width: 50px;
+            }
         }
 
         .flipped {

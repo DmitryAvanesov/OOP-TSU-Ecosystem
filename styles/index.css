@@ -35,14 +35,33 @@ body {
   background-color: green;
 }
 
-#field * .status {
+#field * .info {
   position: absolute;
   z-index: 2;
-  left: 0;
-  bottom: 12px;
-  width: 32px;
-  font-size: 9px;
+  left: -16px;
+  bottom: 24px;
+  width: 64px;
+  font-size: 10px;
+}
+
+#field * .info * {
+  display: inline-block;
+  vertical-align: middle;
   text-align: center;
+}
+
+#field * .info .age {
+  background-color: black;
+  color: white;
+  width: 12px;
+}
+
+#field * .info .status {
+  background-color: white;
+  color: black;
+  margin-left: 12px;
+  padding: 0 1px;
+  width: 50px;
 }
 
 #field * .flipped {

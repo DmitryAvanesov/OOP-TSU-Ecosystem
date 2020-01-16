@@ -22,13 +22,21 @@ class UI {
     AddEntityInfo(currentAnimal) {
         var healthbar = document.createElement("div");
         var healthbarInner = document.createElement("div");
+        var info = document.createElement("div");
         var status = document.createElement("div");
+        var age = document.createElement("div");
         healthbar.classList.add("healthbar");
         healthbarInner.classList.add("healthbar-inner");
+        info.classList.add("info");
         status.classList.add("status");
+        status.innerHTML = "Strolling";
+        age.classList.add("age");
+        age.innerHTML = "0";
         currentAnimal.appendChild(healthbar);
         healthbar.appendChild(healthbarInner);
-        currentAnimal.appendChild(status);
+        info.appendChild(status);
+        info.appendChild(age);
+        currentAnimal.appendChild(info);
     }
     UpdateHealthbar(animal) {
         var currentHealthbar = document.querySelector(`[id="${animal.index}"] > .healthbar > .healthbar-inner`);
@@ -44,8 +52,12 @@ class UI {
         }
     }
     UpdateStatus(animal, newStatus) {
-        var currentStatus = document.querySelector(`[id="${animal.index}"] > .status`);
+        var currentStatus = document.querySelector(`[id="${animal.index}"] > .info > .status`);
         currentStatus.innerHTML = newStatus;
+    }
+    UpdateAge(animal) {
+        var currentAge = document.querySelector(`[id="${animal.index}"] > .info > .age`);
+        currentAge.innerHTML = animal.age.toString();
     }
     Move(animal, newLocation) {
         var currentAnimal = document.querySelector(`[id="${animal.index}"]`);

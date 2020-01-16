@@ -5,13 +5,17 @@ class Animal extends Entity {
         this.health = 0;
         this.maxHealth = 0;
         this.pace = 0;
+        this.maxAge = 0;
+        this.age = 0;
         this.reproductionProbability = 0;
         this.strollFunction = 0;
         this.starveFunction = 0;
         this.eatFunction = 0;
         this.reproduceFunction = 0;
+        this.matureFunction = 0;
         this.starveInterval = 12000;
         this.strollInterval = 8000;
+        this.matureInterval = 60000;
         this.moving = false;
         this.strolling = true;
         this.eating = false;
@@ -21,6 +25,7 @@ class Animal extends Entity {
         this.statusReproducing = "Reproducing";
         this.CheckStrolling();
         this.Starve();
+        this.Mature();
     }
     PlaceNextToParents(cell) {
         this.location.occupied = false;
@@ -72,24 +77,10 @@ class Animal extends Entity {
                 this.strolling = true;
                 this.CheckReproducing();
             }
-            if (this.health == 0) {
+            if (this.health <= 0) {
                 this.Die();
             }
         }, this.starveInterval);
-    }
-    Die() {
-        clearInterval(this.starveFunction);
-        clearInterval(this.eatFunction);
-        clearTimeout(this.strollFunction);
-        if (this instanceof Herbivore) {
-            this.field.RemoveEntity(this, this.field.herbivoreAnimals);
-        }
-        else if (this instanceof Carnivore) {
-            this.field.RemoveEntity(this, this.field.carnivoreAnimals);
-        }
-        else {
-            this.field.RemoveEntity(this, this.field.omnivoreAnimals);
-        }
     }
     CheckEating() {
         this.eatFunction = setInterval(() => {
@@ -119,7 +110,7 @@ class Animal extends Entity {
         }
     }
     CheckReproducing() {
-        if (Math.random() < this.reproductionProbability) {
+        if (this.age > 0 && Math.random() < this.reproductionProbability) {
             this.field.ui.UpdateStatus(this, this.statusReproducing);
             this.strolling = false;
             this.reproducing = true;
@@ -243,5 +234,32 @@ class Animal extends Entity {
             }
         }
         return goal;
+    }
+    Mature() {
+        this.matureFunction = setInterval(() => {
+            this.age++;
+            if (this.age > this.maxAge) {
+                this.Die();
+            }
+            else {
+                this.field.ui.UpdateAge(this);
+            }
+        }, this.matureInterval);
+    }
+    Die() {
+        clearInterval(this.starveFunction);
+        clearInterval(this.eatFunction);
+        clearTimeout(this.strollFunction);
+        clearInterval(this.reproduceFunction);
+        clearInterval(this.matureFunction);
+        if (this instanceof Herbivore) {
+            this.field.RemoveEntity(this, this.field.herbivoreAnimals);
+        }
+        else if (this instanceof Carnivore) {
+            this.field.RemoveEntity(this, this.field.carnivoreAnimals);
+        }
+        else {
+            this.field.RemoveEntity(this, this.field.omnivoreAnimals);
+        }
     }
 }
