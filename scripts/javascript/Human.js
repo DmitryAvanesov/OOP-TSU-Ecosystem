@@ -7,21 +7,85 @@ class Human extends Omnivore {
         this.health = this.maxHealth;
         this.maxAge = 30;
         this.pace = 1000;
-        this.reproductionProbability = 0.05;
+        this.reproductionProbability = 0;
+        this.ageOfConsent = 1;
+        this.goingToBuild = false;
+        this.statusGoingToBuild = "Going to build";
         this.CheckEating();
     }
     FindPartner() {
-        var contenders = this.field.omnivoreAnimals;
-        var currentContender = 0;
-        while (currentContender < contenders.length) {
-            if (!(contenders[currentContender] instanceof Human) || (this.male && contenders[currentContender].male) || (!this.male && !contenders[currentContender].male)) {
-                contenders.splice(currentContender, 1);
+        if (this.partner === undefined) {
+            var contenders = this.field.omnivoreAnimals;
+            var currentContender = 0;
+            while (currentContender < contenders.length) {
+                if (!(contenders[currentContender] instanceof Human) || (this.male && contenders[currentContender].male) || (!this.male && !contenders[currentContender].male) || contenders[currentContender].age < this.ageOfConsent || contenders[currentContender].partner !== undefined) {
+                    contenders.splice(currentContender, 1);
+                }
+                else {
+                    currentContender++;
+                }
             }
-            else {
-                currentContender++;
+            if (contenders.length > 0) {
+                this.partner = contenders[Math.floor(Math.random() * contenders.length)];
+                console.log(`${this.partner.index}`);
+                this.partner.partner = this;
+                this.FindPlaceForBuilding();
             }
         }
-        this.partner = contenders[Math.floor(Math.random() * contenders.length)];
-        this.partner.partner = this;
+    }
+    FindPlaceForBuilding() {
+        var minAcceptableDistance = 200;
+        var nearestHouse;
+        var minDistance = 1000;
+        this.field.houses.forEach((house) => {
+            var curDistance = Math.abs(house.location.row - this.location.row) + Math.abs(house.location.col - this.location.col);
+            if (curDistance < minDistance) {
+                minDistance = curDistance;
+                nearestHouse = house;
+            }
+        });
+        if (minDistance <= minAcceptableDistance) {
+            this.goingToBuild = true;
+            this.field.ui.UpdateStatus(this, this.statusGoingToBuild);
+        }
+        else {
+            this.Build();
+        }
+    }
+    Build() {
+        this.house = new House(this.field);
+        if (this.partner !== undefined) {
+            this.partner.house = this.house;
+        }
+        this.house.location.occupied = false;
+        this.house.location = this.location;
+        this.house.location.occupied = true;
+    }
+    Stroll() {
+        var maxDistanceToHouse = 4;
+        if (this.house !== undefined) {
+            var distanceToHouse = Math.abs(this.house.location.row - this.location.row) + Math.abs(this.house.location.col - this.location.col);
+            if (distanceToHouse > maxDistanceToHouse) {
+                this.MoveToGoal(this.house);
+            }
+            else {
+                super.Stroll();
+            }
+        }
+        else {
+            if (this.goingToBuild && this.nearestHouse !== undefined) {
+                var distanceToNearestHouse = Math.abs(this.nearestHouse.location.row - this.location.row) + Math.abs(this.nearestHouse.location.col - this.location.col);
+                if (distanceToNearestHouse > maxDistanceToHouse) {
+                    this.MoveToGoal(this.nearestHouse);
+                }
+                else {
+                    this.Build();
+                    this.goingToBuild = false;
+                }
+            }
+            else {
+                super.Stroll();
+            }
+        }
     }
 }

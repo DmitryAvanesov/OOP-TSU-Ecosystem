@@ -69,7 +69,7 @@ abstract class Animal extends Entity {
         }, this.strollInterval * (Math.random() / 5 + 0.9));
     }
 
-    private Stroll(): void {
+    protected Stroll(): void {
         var newRow: number;
         var newCol: number;
         var count: number = 0;
@@ -252,8 +252,6 @@ abstract class Animal extends Entity {
         var minDistance: number = this.field.cells.length + this.field.cells[0].length;
         var curDistance: number;
         var goal: Entity | undefined;
-        var stepX: number = 0;
-        var stepY: number = 0;
 
         entities.forEach((entity: Entity) => {
             curDistance = Math.abs(this.location.row - entity.location.row) + Math.abs(this.location.col - entity.location.col);
@@ -265,44 +263,51 @@ abstract class Animal extends Entity {
         });
 
         if (goal !== undefined) {
-            if (goal.location.row < this.location.row) {
-                stepY--;
-            }
-            else if (goal.location.row > this.location.row) {
-                stepY++;
-            }
-
-            if (goal.location.col < this.location.col) {
-                stepX--;
-            }
-            else if (goal.location.col > this.location.col) {
-                stepX++;
-            }
-
-            var bestCell: Cell =
-                this.field.cells[this.location.row + stepY][this.location.col + stepX];
-
-            var goodCellFirst: Cell =
-                this.field.cells[this.location.row][this.location.col + stepX];
-
-            var goodCellSecond: Cell =
-                this.field.cells[this.location.row + stepY][this.location.col];
-
-            if (!bestCell.occupied || bestCell == goal.location) {
-                this.Move(bestCell);
-            }
-            else if (!goodCellFirst.occupied || goodCellFirst == goal.location) {
-                this.Move(goodCellFirst);
-            }
-            else if (!goodCellSecond.occupied || goodCellSecond == goal.location) {
-                this.Move(goodCellSecond);
-            }
-            else {
-                this.Stroll();
-            }
+            this.MoveToGoal(goal);
         }
 
         return goal;
+    }
+
+    public MoveToGoal(goal: FieldObject): void {
+        var stepX: number = 0;
+        var stepY: number = 0;
+
+        if (goal.location.row < this.location.row) {
+            stepY--;
+        }
+        else if (goal.location.row > this.location.row) {
+            stepY++;
+        }
+
+        if (goal.location.col < this.location.col) {
+            stepX--;
+        }
+        else if (goal.location.col > this.location.col) {
+            stepX++;
+        }
+
+        var bestCell: Cell =
+            this.field.cells[this.location.row + stepY][this.location.col + stepX];
+
+        var goodCellFirst: Cell =
+            this.field.cells[this.location.row][this.location.col + stepX];
+
+        var goodCellSecond: Cell =
+            this.field.cells[this.location.row + stepY][this.location.col];
+
+        if (!bestCell.occupied || bestCell == goal.location) {
+            this.Move(bestCell);
+        }
+        else if (!goodCellFirst.occupied || goodCellFirst == goal.location) {
+            this.Move(goodCellFirst);
+        }
+        else if (!goodCellSecond.occupied || goodCellSecond == goal.location) {
+            this.Move(goodCellSecond);
+        }
+        else {
+            this.Stroll();
+        }
     }
 
     public Mature(): void {
@@ -314,6 +319,10 @@ abstract class Animal extends Entity {
             }
             else {
                 this.field.ui.UpdateAge(this);
+
+                if (this instanceof Human && this.age >= this.ageOfConsent) {
+                    this.FindPartner();
+                }
             }
         }, this.matureInterval);
     }

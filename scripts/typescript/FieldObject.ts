@@ -2,6 +2,7 @@ class FieldObject {
     public field: Field;
     public location: Cell;
     public index: number;
+    public name: string = "";
 
     constructor(currentField: Field) {
         this.field = currentField;

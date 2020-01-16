@@ -1,5 +1,10 @@
 class Human extends Omnivore {
-    private partner: Human | undefined;
+    public partner: Human | undefined;
+    private house: House | undefined;
+    private nearestHouse: House | undefined;
+    public ageOfConsent: number;
+    public goingToBuild: boolean;
+    private statusGoingToBuild: string;
 
     constructor(currentField: Field) {
         super(currentField);
@@ -9,25 +14,101 @@ class Human extends Omnivore {
         this.health = this.maxHealth;
         this.maxAge = 30;
         this.pace = 1000;
-        this.reproductionProbability = 0.05;
+        this.reproductionProbability = 0;
+
+        this.ageOfConsent = 1;
+        this.goingToBuild = false;
+        this.statusGoingToBuild = "Going to build";
 
         this.CheckEating();
     }
 
     public FindPartner() {
-        var contenders: Array<Omnivore> = this.field.omnivoreAnimals;
-        var currentContender: number = 0;
+        if (this.partner === undefined) {
+            var contenders: Array<Omnivore> = this.field.omnivoreAnimals;
+            var currentContender: number = 0;
 
-        while (currentContender < contenders.length) {
-            if (!(contenders[currentContender] instanceof Human) || (this.male && contenders[currentContender].male) || (!this.male && !contenders[currentContender].male)) {
-                contenders.splice(currentContender, 1);
+            while (currentContender < contenders.length) {
+                if (!(contenders[currentContender] instanceof Human) || (this.male && contenders[currentContender].male) || (!this.male && !contenders[currentContender].male) || contenders[currentContender].age < this.ageOfConsent || (contenders[currentContender] as Human).partner !== undefined) {
+                    contenders.splice(currentContender, 1);
+                }
+                else {
+                    currentContender++;
+                }
             }
-            else {
-                currentContender++;
+
+            if (contenders.length > 0) {
+                this.partner = contenders[Math.floor(Math.random() * contenders.length)] as Human;
+                console.log(`${this.partner.index}`);
+                this.partner.partner = this;
+                this.FindPlaceForBuilding();
             }
         }
+    }
 
-        this.partner = contenders[Math.floor(Math.random() * contenders.length)] as Human;
-        this.partner.partner = this;
+    private FindPlaceForBuilding() {
+        var minAcceptableDistance: number = 200;
+        var nearestHouse: House;
+        var minDistance: number = 1000;
+
+        this.field.houses.forEach((house: House) => {
+            var curDistance: number = Math.abs(house.location.row - this.location.row) + Math.abs(house.location.col - this.location.col);
+
+            if (curDistance < minDistance) {
+                minDistance = curDistance;
+                nearestHouse = house;
+            }
+        });
+
+        if (minDistance <= minAcceptableDistance) {
+            this.goingToBuild = true;
+            this.field.ui.UpdateStatus(this, this.statusGoingToBuild);
+        }
+        else {
+            this.Build();
+        }
+    }
+
+    private Build() {
+        this.house = new House(this.field);
+
+        if (this.partner !== undefined) {
+            this.partner.house = this.house;
+        }
+
+        this.house.location.occupied = false;
+        this.house.location = this.location;
+        this.house.location.occupied = true;
+    }
+
+    protected Stroll() {
+        var maxDistanceToHouse: number = 4;
+
+        if (this.house !== undefined) {
+            var distanceToHouse: number = Math.abs(this.house.location.row - this.location.row) + Math.abs(this.house.location.col - this.location.col);
+
+            if (distanceToHouse > maxDistanceToHouse) {
+                this.MoveToGoal(this.house);
+            }
+            else {
+                super.Stroll();
+            }
+        }
+        else {
+            if (this.goingToBuild && this.nearestHouse !== undefined) {
+                var distanceToNearestHouse: number = Math.abs(this.nearestHouse.location.row - this.location.row) + Math.abs(this.nearestHouse.location.col - this.location.col);
+
+                if (distanceToNearestHouse > maxDistanceToHouse) {
+                    this.MoveToGoal(this.nearestHouse);
+                }
+                else {
+                    this.Build();
+                    this.goingToBuild = false;
+                }
+            }
+            else {
+                super.Stroll();
+            }
+        }
     }
 }

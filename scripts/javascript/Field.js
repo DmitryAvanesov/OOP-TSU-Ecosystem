@@ -9,11 +9,12 @@ class Field {
         this.herbivoreAnimals = [];
         this.carnivoreAnimals = [];
         this.omnivoreAnimals = [];
+        this.houses = [];
         this.treeAmount = 100;
         this.amountOfEdibleSpecies = 3;
-        this.grassAmount = 1000;
-        this.wheatAmount = 200;
-        this.mushroomAmount = 100;
+        this.grassAmount = 500;
+        this.wheatAmount = 400;
+        this.mushroomAmount = 300;
         this.pigAmount = 150;
         this.cowAmount = 100;
         this.horseAmount = 75;
@@ -22,7 +23,7 @@ class Field {
         this.foxAmount = 20;
         this.humanAmount = 20;
         this.treeGrowInterval = 1000;
-        this.ediblePlantGrowInterval = 10;
+        this.ediblePlantGrowInterval = 1;
         if (width === parseInt(width.toString()) && height === parseInt(height.toString()) && width > 0 && height > 0) {
             for (var i = 0; i < height; i++) {
                 this.cells.push([]);

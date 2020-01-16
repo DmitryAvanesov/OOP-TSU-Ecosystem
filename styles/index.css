@@ -71,10 +71,10 @@ body {
 #field * .info .status {
   position: relative;
   top: 12px;
-  left: -8px;
+  left: -16px;
   background-color: white;
   color: black;
-  width: 48px;
+  width: 64px;
 }
 
 #field * .flipped {

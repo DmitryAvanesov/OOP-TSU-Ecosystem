@@ -4,6 +4,8 @@ class House extends FieldObject {
     constructor(currentField: Field) {
         super(currentField);
 
-        this.numberOfPeople = 0;
+        this.name = "house";
+
+        this.numberOfPeople = 2;
     }
 }

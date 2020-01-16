@@ -1,6 +1,7 @@
 "use strict";
 class FieldObject {
     constructor(currentField) {
+        this.name = "";
         this.field = currentField;
         this.index = this.field.currentIndex++;
         do {
