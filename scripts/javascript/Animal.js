@@ -243,7 +243,17 @@ class Animal extends Entity {
             this.Move(goodCellSecond);
         }
         else {
-            this.Stroll();
+            var newRow;
+            var newCol;
+            var count = 0;
+            do {
+                newRow = this.location.row + (Math.floor(Math.random() * 3) - 1);
+                newCol = this.location.col + (Math.floor(Math.random() * 3) - 1);
+                count++;
+            } while (count < 9 && (newRow < 0 || newRow >= this.field.cells.length || newCol < 0 || newCol >= this.field.cells[0].length || this.field.cells[newRow][newCol].occupied));
+            if (!this.field.cells[newRow][newCol].occupied) {
+                this.Move(this.field.cells[newRow][newCol]);
+            }
         }
     }
     Mature() {

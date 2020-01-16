@@ -25,7 +25,7 @@ class Human extends Omnivore {
 
     public FindPartner() {
         if (this.partner === undefined) {
-            var contenders: Array<Omnivore> = this.field.omnivoreAnimals;
+            var contenders: Array<Omnivore> = Object.assign([], this.field.omnivoreAnimals);
             var currentContender: number = 0;
 
             while (currentContender < contenders.length) {
@@ -39,7 +39,6 @@ class Human extends Omnivore {
 
             if (contenders.length > 0) {
                 this.partner = contenders[Math.floor(Math.random() * contenders.length)] as Human;
-                console.log(`${this.partner.index}`);
                 this.partner.partner = this;
                 this.FindPlaceForBuilding();
             }
@@ -76,9 +75,13 @@ class Human extends Omnivore {
             this.partner.house = this.house;
         }
 
+        console.log("BUILT");
+
         this.house.location.occupied = false;
         this.house.location = this.location;
         this.house.location.occupied = true;
+
+        this.field.ui.PlaceEntity(this.house);
     }
 
     protected Stroll() {
@@ -87,7 +90,12 @@ class Human extends Omnivore {
         if (this.house !== undefined) {
             var distanceToHouse: number = Math.abs(this.house.location.row - this.location.row) + Math.abs(this.house.location.col - this.location.col);
 
-            if (distanceToHouse > maxDistanceToHouse) {
+            if (distanceToHouse > maxDistanceToHouse * maxDistanceToHouse) {
+                this.location.occupied = false;
+                this.location = this.house.location;
+                this.location.occupied = true;
+            }
+            else if (distanceToHouse > maxDistanceToHouse) {
                 this.MoveToGoal(this.house);
             }
             else {
@@ -109,6 +117,14 @@ class Human extends Omnivore {
             else {
                 super.Stroll();
             }
+        }
+    }
+
+    public Die() {
+        super.Die();
+
+        if (this.house !== undefined) {
+            this.house.numberOfPeople--;
         }
     }
 }

@@ -15,7 +15,7 @@ class Human extends Omnivore {
     }
     FindPartner() {
         if (this.partner === undefined) {
-            var contenders = this.field.omnivoreAnimals;
+            var contenders = Object.assign([], this.field.omnivoreAnimals);
             var currentContender = 0;
             while (currentContender < contenders.length) {
                 if (!(contenders[currentContender] instanceof Human) || (this.male && contenders[currentContender].male) || (!this.male && !contenders[currentContender].male) || contenders[currentContender].age < this.ageOfConsent || contenders[currentContender].partner !== undefined) {
@@ -27,7 +27,6 @@ class Human extends Omnivore {
             }
             if (contenders.length > 0) {
                 this.partner = contenders[Math.floor(Math.random() * contenders.length)];
-                console.log(`${this.partner.index}`);
                 this.partner.partner = this;
                 this.FindPlaceForBuilding();
             }
@@ -57,15 +56,22 @@ class Human extends Omnivore {
         if (this.partner !== undefined) {
             this.partner.house = this.house;
         }
+        console.log("BUILT");
         this.house.location.occupied = false;
         this.house.location = this.location;
         this.house.location.occupied = true;
+        this.field.ui.PlaceEntity(this.house);
     }
     Stroll() {
         var maxDistanceToHouse = 4;
         if (this.house !== undefined) {
             var distanceToHouse = Math.abs(this.house.location.row - this.location.row) + Math.abs(this.house.location.col - this.location.col);
-            if (distanceToHouse > maxDistanceToHouse) {
+            if (distanceToHouse > maxDistanceToHouse * maxDistanceToHouse) {
+                this.location.occupied = false;
+                this.location = this.house.location;
+                this.location.occupied = true;
+            }
+            else if (distanceToHouse > maxDistanceToHouse) {
                 this.MoveToGoal(this.house);
             }
             else {
@@ -86,6 +92,12 @@ class Human extends Omnivore {
             else {
                 super.Stroll();
             }
+        }
+    }
+    Die() {
+        super.Die();
+        if (this.house !== undefined) {
+            this.house.numberOfPeople--;
         }
     }
 }

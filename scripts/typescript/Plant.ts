@@ -20,7 +20,7 @@ abstract class Plant extends Entity {
 
         this.location.occupied = false;
 
-        var numberOfAttempts: number = 5;
+        var numberOfAttempts: number = 9;
         var count: number = 0;
 
         do {
