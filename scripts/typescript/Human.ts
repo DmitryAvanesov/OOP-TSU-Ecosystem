@@ -1,4 +1,6 @@
 class Human extends Omnivore {
+    private partner: Human | undefined;
+
     constructor(currentField: Field) {
         super(currentField);
 

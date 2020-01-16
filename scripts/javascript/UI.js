@@ -13,7 +13,17 @@ class UI {
         currentMap.appendChild(currentEntity);
         var currentEntityImage = document.createElement("img");
         currentEntityImage.classList.add("image");
-        currentEntityImage.setAttribute("src", `../media/${entity.name}.png`);
+        if (entity instanceof Human) {
+            if (entity.male) {
+                currentEntityImage.setAttribute("src", `../media/man.png`);
+            }
+            else {
+                currentEntityImage.setAttribute("src", `../media/woman.png`);
+            }
+        }
+        else {
+            currentEntityImage.setAttribute("src", `../media/${entity.name}.png`);
+        }
         currentEntity.appendChild(currentEntityImage);
         if (entity instanceof Animal) {
             this.AddEntityInfo(currentEntity, entity.male);

@@ -40,9 +40,9 @@ class Field {
         this.pigAmount = 150;
         this.cowAmount = 100;
         this.horseAmount = 75;
-        this.bearAmount = 25;
+        this.bearAmount = 15;
         this.tigerAmount = 10;
-        this.foxAmount = 50;
+        this.foxAmount = 20;
         this.humanAmount = 20;
         this.treeGrowInterval = 1000;
         this.ediblePlantGrowInterval = 10;
