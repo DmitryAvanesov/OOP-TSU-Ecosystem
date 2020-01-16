@@ -10,4 +10,18 @@ class Human extends Omnivore {
         this.reproductionProbability = 0.05;
         this.CheckEating();
     }
+    FindPartner() {
+        var contenders = this.field.omnivoreAnimals;
+        var currentContender = 0;
+        while (currentContender < contenders.length) {
+            if (!(contenders[currentContender] instanceof Human) || (this.male && contenders[currentContender].male) || (!this.male && !contenders[currentContender].male)) {
+                contenders.splice(currentContender, 1);
+            }
+            else {
+                currentContender++;
+            }
+        }
+        this.partner = contenders[Math.floor(Math.random() * contenders.length)];
+        this.partner.partner = this;
+    }
 }

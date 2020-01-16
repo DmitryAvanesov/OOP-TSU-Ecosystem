@@ -13,4 +13,21 @@ class Human extends Omnivore {
 
         this.CheckEating();
     }
+
+    public FindPartner() {
+        var contenders: Array<Omnivore> = this.field.omnivoreAnimals;
+        var currentContender: number = 0;
+
+        while (currentContender < contenders.length) {
+            if (!(contenders[currentContender] instanceof Human) || (this.male && contenders[currentContender].male) || (!this.male && !contenders[currentContender].male)) {
+                contenders.splice(currentContender, 1);
+            }
+            else {
+                currentContender++;
+            }
+        }
+
+        this.partner = contenders[Math.floor(Math.random() * contenders.length)] as Human;
+        this.partner.partner = this;
+    }
 }
