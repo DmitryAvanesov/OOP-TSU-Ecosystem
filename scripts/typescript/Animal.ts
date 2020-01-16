@@ -4,6 +4,8 @@ abstract class Animal extends Entity {
     public pace: number = 0;
     public maxAge: number = 0;
     public age: number = 0;
+    public male: boolean;
+
     private starveInterval: number;
     private strollInterval: number;
     private matureInterval: number;
@@ -25,6 +27,13 @@ abstract class Animal extends Entity {
 
     constructor(currentField: Field) {
         super(currentField);
+
+        if (Math.random() < 0.5) {
+            this.male = true;
+        }
+        else {
+            this.male = false;
+        }
 
         this.starveInterval = 12000;
         this.strollInterval = 8000;
@@ -100,7 +109,10 @@ abstract class Animal extends Entity {
                 this.eating = false;
                 this.reproducing = false;
                 this.strolling = true;
-                this.CheckReproducing();
+
+                if (this.male) {
+                    this.CheckReproducing();
+                }
             }
 
             if (this.health <= 0) {
@@ -162,7 +174,7 @@ abstract class Animal extends Entity {
             var currentAnimal: number = 0;
 
             while (currentAnimal < animals.length) {
-                if (animals[currentAnimal].name != this.name) {
+                if (animals[currentAnimal].name != this.name || animals[currentAnimal].male) {
                     animals.splice(currentAnimal, 1);
                 }
                 else {
@@ -181,7 +193,7 @@ abstract class Animal extends Entity {
     protected Reproduce(animals: Array<Animal>): void {
         var goal: Entity | undefined = this.FindGoal(animals);
 
-        if (this.health < this.maxHealth * 0.25) {
+        if (this.health < this.maxHealth * 0.5) {
             this.field.ui.UpdateStatus(this, this.statusEating);
             this.eating = true;
             this.reproducing = false;

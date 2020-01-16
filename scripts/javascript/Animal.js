@@ -13,6 +13,12 @@ class Animal extends Entity {
         this.eatFunction = 0;
         this.reproduceFunction = 0;
         this.matureFunction = 0;
+        if (Math.random() < 0.5) {
+            this.male = true;
+        }
+        else {
+            this.male = false;
+        }
         this.starveInterval = 12000;
         this.strollInterval = 8000;
         this.matureInterval = 60000;
@@ -75,7 +81,9 @@ class Animal extends Entity {
                 this.eating = false;
                 this.reproducing = false;
                 this.strolling = true;
-                this.CheckReproducing();
+                if (this.male) {
+                    this.CheckReproducing();
+                }
             }
             if (this.health <= 0) {
                 this.Die();
@@ -126,7 +134,7 @@ class Animal extends Entity {
             }
             var currentAnimal = 0;
             while (currentAnimal < animals.length) {
-                if (animals[currentAnimal].name != this.name) {
+                if (animals[currentAnimal].name != this.name || animals[currentAnimal].male) {
                     animals.splice(currentAnimal, 1);
                 }
                 else {
@@ -141,7 +149,7 @@ class Animal extends Entity {
     }
     Reproduce(animals) {
         var goal = this.FindGoal(animals);
-        if (this.health < this.maxHealth * 0.25) {
+        if (this.health < this.maxHealth * 0.5) {
             this.field.ui.UpdateStatus(this, this.statusEating);
             this.eating = true;
             this.reproducing = false;

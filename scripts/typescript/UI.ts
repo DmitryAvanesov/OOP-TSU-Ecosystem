@@ -21,29 +21,41 @@ class UI {
         currentEntity.appendChild(currentEntityImage);
 
         if (entity instanceof Animal) {
-            this.AddEntityInfo(currentEntity);
+            this.AddEntityInfo(currentEntity, entity.male);
         }
     }
 
-    private AddEntityInfo(currentAnimal: Element): void {
+    private AddEntityInfo(currentAnimal: Element, male: boolean): void {
         var healthbar: HTMLElement = document.createElement("div");
         var healthbarInner: HTMLElement = document.createElement("div");
         var info: HTMLElement = document.createElement("div");
         var status: HTMLElement = document.createElement("div");
         var age: HTMLElement = document.createElement("div");
+        var gender: HTMLElement = document.createElement("div");
 
         healthbar.classList.add("healthbar");
         healthbarInner.classList.add("healthbar-inner");
         info.classList.add("info");
+
         status.classList.add("status");
         status.innerHTML = "Strolling";
+
         age.classList.add("age");
         age.innerHTML = "0";
 
+        gender.classList.add("gender");
+        if (male) {
+            gender.innerHTML = "M";   
+        }
+        else {
+            gender.innerHTML = "F";
+        }
+
         currentAnimal.appendChild(healthbar);
         healthbar.appendChild(healthbarInner);
-        info.appendChild(status);
         info.appendChild(age);
+        info.appendChild(gender);
+        info.appendChild(status);
         currentAnimal.appendChild(info);
     }
 

@@ -16,7 +16,7 @@ class Plant extends Entity {
             sameTypeArray = this.field.ediblePlants;
         }
         this.location.occupied = false;
-        var numberOfAttempts = 10;
+        var numberOfAttempts = 5;
         var count = 0;
         do {
             randomPlant = sameTypeArray[Math.floor(Math.random() * sameTypeArray.length)];

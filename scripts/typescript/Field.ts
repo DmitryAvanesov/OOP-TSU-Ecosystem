@@ -34,21 +34,20 @@ class Field {
         this.omnivoreAnimals = [];
         this.treeAmount = 100;
         this.amountOfEdibleSpecies = 3;
-        this.grassAmount = 750;
-        this.wheatAmount = 500;
-        this.mushroomAmount = 250;
+        this.grassAmount = 1000;
+        this.wheatAmount = 200;
+        this.mushroomAmount = 100;
         this.pigAmount = 150;
-        this.cowAmount = 125;
-        this.horseAmount = 100;
+        this.cowAmount = 100;
+        this.horseAmount = 75;
         this.bearAmount = 25;
         this.tigerAmount = 10;
         this.foxAmount = 50;
         this.humanAmount = 20;
-        this.treeGrowInterval = 5000;
+        this.treeGrowInterval = 1000;
         this.ediblePlantGrowInterval = 10;
 
-        if (width === parseInt(width.toString()) && height === parseInt(height.toString()) &&
-            width > 0 && height > 0) {
+        if (width === parseInt(width.toString()) && height === parseInt(height.toString()) && width > 0 && height > 0) {
             for (var i: number = 0; i < height; i++) {
                 this.cells.push([]);
 

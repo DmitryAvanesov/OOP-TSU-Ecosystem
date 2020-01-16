@@ -10,6 +10,10 @@ $pace-tiger: 0.3s;
 $pace-fox: 0.4s;
 $pace-human: 1s;
 
+* {
+    box-sizing: border-box;
+}
+
 body {
     user-select: none;
 }
@@ -45,29 +49,37 @@ body {
         .info {
             position: absolute;
             z-index: 2;
-            left: -$entity-size * 0.5;
-            bottom: 24px;
+            left: 0;
+            bottom: 22px;
             width: $entity-size * 2;
             font-size: 10px;
 
             * {
                 display: inline-block;
-                vertical-align: middle;
                 text-align: center;
+                padding: 0 1px;
             }
 
             .age {
                 background-color: black;
                 color: white;
-                width: 12px;
+                width: 15px;
+            }
+
+            .gender {
+                background-color: black;
+                color: white;
+                width: 15px;
+                margin-left: 17px;
             }
     
             .status {
+                position: relative;
+                top: 12px;
+                left: -8px;
                 background-color: white;
                 color: black;
-                margin-left: 12px;
-                padding: 0 1px;
-                width: 50px;
+                width: 48px;
             }
         }
 

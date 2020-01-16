@@ -9,7 +9,7 @@ abstract class Plant extends Entity {
         var sameTypeArray: Array<Plant>;      
         var randomPlant: Plant;
         var newRow: number;
-        var newCol: number
+        var newCol: number;
 
         if (this instanceof Tree) {
             sameTypeArray = this.field.trees;
@@ -20,7 +20,7 @@ abstract class Plant extends Entity {
 
         this.location.occupied = false;
 
-        var numberOfAttempts: number = 10;
+        var numberOfAttempts: number = 5;
         var count: number = 0;
 
         do {
