@@ -4,6 +4,8 @@ class UI {
         this.entitySize = 32;
         this.genderMaleColor = "#02A3FE";
         this.genderFemaleColor = "#EC49A6";
+        this.speciesIncreaseColor = "#C8FFC8";
+        this.speciesDecreaseColor = "#FFC8C8";
     }
     PlaceFieldObject(object) {
         var currentMap = document.querySelector("#field");
@@ -27,8 +29,11 @@ class UI {
             currentEntityImage.setAttribute("src", `../media/${object.name}.png`);
         }
         currentEntity.appendChild(currentEntityImage);
-        if (object instanceof Animal) {
-            this.AddEntityInfo(currentEntity, object);
+        if (object instanceof Entity) {
+            this.UpdateStats(object);
+            if (object instanceof Animal) {
+                this.AddEntityInfo(currentEntity, object);
+            }
         }
     }
     AddEntityInfo(currentAnimal, animal) {
@@ -80,6 +85,18 @@ class UI {
         var currentAge = document.querySelector(`[id="${animal.index}"] > .info > .age`);
         currentAge.innerHTML = `${animal.age}/${animal.maxAge} years`;
     }
+    UpdateStats(entity) {
+        var _a;
+        var currentStat = document.querySelector(`[id="${entity.name}"]`);
+        var newCount = entity.field.stats.get(entity.name);
+        if (newCount > parseInt(currentStat.innerHTML)) {
+            currentStat.style.backgroundColor = this.speciesIncreaseColor;
+        }
+        else if (newCount < parseInt(currentStat.innerHTML)) {
+            currentStat.style.backgroundColor = this.speciesDecreaseColor;
+        }
+        currentStat.innerHTML = (_a = entity.field.stats.get(entity.name)) === null || _a === void 0 ? void 0 : _a.toString();
+    }
     Move(animal, newLocation) {
         var currentAnimal = document.querySelector(`[id="${animal.index}"]`);
         var currentAnimalImage = document.querySelector(`[id="${animal.index}"] > .image`);
@@ -95,6 +112,7 @@ class UI {
     }
     RemoveEntity(entity) {
         var currentEntity = document.querySelector(`[id="${entity.index}"]`) || document.createElement("img");
+        this.UpdateStats(entity);
         currentEntity.remove();
     }
 }

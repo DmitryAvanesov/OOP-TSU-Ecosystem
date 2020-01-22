@@ -10,6 +10,27 @@ body {
           user-select: none;
 }
 
+#stats {
+  position: fixed;
+  z-index: 2;
+  left: 0;
+  top: 0;
+  width: 550px;
+  background-color: white;
+  color: black;
+  text-align: center;
+  margin: 8px 0 0 8px;
+  border-collapse: collapse;
+}
+
+#stats tr, #stats td {
+  border: 1px black solid;
+}
+
+#stats:hover {
+  opacity: 0.1;
+}
+
 #field {
   width: 16000px;
   height: 16000px;
@@ -102,13 +123,13 @@ body {
 }
 
 #field .tiger {
-  -webkit-transition: top 0.25s, left 0.25s;
-  transition: top 0.25s, left 0.25s;
+  -webkit-transition: top 0.2s, left 0.2s;
+  transition: top 0.2s, left 0.2s;
 }
 
 #field .fox {
-  -webkit-transition: top 0.2s, left 0.2s;
-  transition: top 0.2s, left 0.2s;
+  -webkit-transition: top 0.25s, left 0.25s;
+  transition: top 0.25s, left 0.25s;
 }
 
 #field .human {

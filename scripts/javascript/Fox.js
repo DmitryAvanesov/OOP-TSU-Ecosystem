@@ -7,7 +7,7 @@ class Fox extends Carnivore {
         this.health = this.maxHealth;
         this.maxAge = 10;
         this.age = Math.floor(Math.random() * this.maxAge);
-        this.pace = 200;
+        this.pace = 250;
         this.reproductionProbability = 0.1;
         this.CheckEating();
     }

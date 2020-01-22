@@ -2,11 +2,15 @@ class UI {
     private entitySize: number;
     private genderMaleColor: string;
     private genderFemaleColor: string;
+    private speciesIncreaseColor: string;
+    private speciesDecreaseColor: string;
 
     constructor() {
         this.entitySize = 32;
         this.genderMaleColor = "#02A3FE";
         this.genderFemaleColor = "#EC49A6";
+        this.speciesIncreaseColor = "#C8FFC8";
+        this.speciesDecreaseColor = "#FFC8C8";
     }
 
     public PlaceFieldObject(object: FieldObject): void {
@@ -36,8 +40,12 @@ class UI {
 
         currentEntity.appendChild(currentEntityImage);
 
-        if (object instanceof Animal) {
-            this.AddEntityInfo(currentEntity, object);
+        if (object instanceof Entity) {
+            this.UpdateStats(object);
+
+            if (object instanceof Animal) {
+                this.AddEntityInfo(currentEntity, object);
+            }
         }
     }
 
@@ -76,10 +84,8 @@ class UI {
     }
 
     public UpdateHealthbar(animal: Animal): void {
-        var currentHealthbar: HTMLElement = document.querySelector(
-            `[id="${animal.index}"] > .healthbar > .healthbar-inner`) as HTMLElement;
-
-        currentHealthbar.style.width = `${animal.health / animal.maxHealth * 100}%`;
+        var currentHealthbar: HTMLElement = document.querySelector(`[id="${animal.index}"] > .healthbar > .healthbar-inner`) as HTMLElement;
+         currentHealthbar.style.width = `${animal.health / animal.maxHealth * 100}%`;
 
         if (animal.health > animal.maxHealth / 2) {
             currentHealthbar.style.backgroundColor = "green";
@@ -92,23 +98,32 @@ class UI {
         }
     }
 
-    public UpdateStatus(animal: Animal, newStatus: string) {
-        var currentStatus: HTMLElement = document.querySelector(
-            `[id="${animal.index}"] > .info > .status`) as HTMLElement;
-
+    public UpdateStatus(animal: Animal, newStatus: string): void {
+        var currentStatus: HTMLElement = document.querySelector(`[id="${animal.index}"] > .info > .status`) as HTMLElement;
         currentStatus.innerHTML = newStatus;
     }
 
-    public UpdateAge(animal: Animal) {
-        var currentAge: HTMLElement = document.querySelector(
-            `[id="${animal.index}"] > .info > .age`) as HTMLElement;
-
+    public UpdateAge(animal: Animal): void {
+        var currentAge: HTMLElement = document.querySelector(`[id="${animal.index}"] > .info > .age`) as HTMLElement;
         currentAge.innerHTML = `${animal.age}/${animal.maxAge} years`;
     }
 
+    public UpdateStats(entity: Entity): void {
+        var currentStat: HTMLElement = document.querySelector(`[id="${entity.name}"]`) as HTMLElement;
+        var newCount: number = entity.field.stats.get(entity.name) as number;
+
+        if (newCount > parseInt(currentStat.innerHTML)) {
+            currentStat.style.backgroundColor = this.speciesIncreaseColor;
+        }
+        else if (newCount < parseInt(currentStat.innerHTML)) {
+            currentStat.style.backgroundColor = this.speciesDecreaseColor;
+        }
+
+        currentStat.innerHTML = entity.field.stats.get(entity.name)?.toString() as string;
+    }
+
     public Move(animal: Animal, newLocation: Cell): void {
-        var currentAnimal: HTMLElement = document.querySelector(
-            `[id="${animal.index}"]`) as HTMLElement;
+        var currentAnimal: HTMLElement = document.querySelector(`[id="${animal.index}"]`) as HTMLElement;
         var currentAnimalImage: HTMLElement = document.querySelector(`[id="${animal.index}"] > .image`) as HTMLElement;
 
         currentAnimal.style.top = `${this.entitySize * newLocation.row}px`;
@@ -126,6 +141,7 @@ class UI {
 
     public RemoveEntity(entity: Entity): void {
         var currentEntity: HTMLElement = document.querySelector(`[id="${entity.index}"]`) || document.createElement("img");
+        this.UpdateStats(entity);
         currentEntity.remove();
     }
 }

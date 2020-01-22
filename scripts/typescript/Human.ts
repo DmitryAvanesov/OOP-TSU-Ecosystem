@@ -72,8 +72,6 @@ class Human extends Omnivore {
     private Build() {
         this.house = new House(this.field);
 
-        console.log("BUILT");
-
         if (this.partner !== undefined) {
             this.partner.house = this.house;
         }

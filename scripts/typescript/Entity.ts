@@ -5,5 +5,7 @@ abstract class Entity extends FieldObject {
         super(currentField);
     }
 
-    public abstract Die(): void;
+    public Die(): void {
+        this.field.stats.set(this.name, (this.field.stats.get(this.name) as number) - 1);
+    };
 }

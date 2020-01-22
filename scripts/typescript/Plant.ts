@@ -46,5 +46,7 @@ abstract class Plant extends Entity {
         else {
             this.field.RemoveEntity(this, this.field.trees);
         }
+
+        super.Die();
     }
 }

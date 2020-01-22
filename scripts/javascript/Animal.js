@@ -114,13 +114,6 @@ class Animal extends Entity {
                 this.health = Math.min(this.health + goal.foodValue, this.maxHealth);
                 this.field.ui.UpdateHealthbar(this);
                 goal.Die();
-                this.field.ui.UpdateStatus(this, this.statusStrolling);
-                this.eating = false;
-                this.reproducing = false;
-                this.strolling = true;
-                if (this.male) {
-                    this.CheckReproducing();
-                }
             }
         }
     }
@@ -160,6 +153,7 @@ class Animal extends Entity {
             this.field.ui.UpdateStatus(this, this.statusEating);
             this.eating = true;
             this.reproducing = false;
+            clearInterval(this.reproduceFunction);
         }
         else if (goal !== undefined) {
             if (this.location == goal.location) {
@@ -201,6 +195,7 @@ class Animal extends Entity {
             newAnimal = new Pig(this.field);
         }
         newAnimal.PlaceNextToParents(this.location);
+        this.field.stats.set(this.name, this.field.stats.get(this.name) + 1);
         this.field.ui.UpdateStatus(this, this.statusEating);
         this.eating = true;
         this.reproducing = false;
@@ -292,5 +287,6 @@ class Animal extends Entity {
         else {
             this.field.RemoveEntity(this, this.field.omnivoreAnimals);
         }
+        super.Die();
     }
 }

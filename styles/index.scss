@@ -6,8 +6,8 @@ $pace-pig: 0.45s;
 $pace-cow: 0.5s;
 $pace-horse: 0.35s;
 $pace-bear: 0.4s;
-$pace-tiger: 0.25s;
-$pace-fox: 0.2s;
+$pace-tiger: 0.2s;
+$pace-fox: 0.25s;
 $pace-human: 0.3s;
 
 * {
@@ -16,6 +16,27 @@ $pace-human: 0.3s;
 
 body {
     user-select: none;
+}
+
+#stats {
+    position: fixed;
+    z-index: 2;
+    left: 0;
+    top: 0;
+    width: 550px;
+    background-color: white;
+    color: black;
+    text-align: center;
+    margin: 8px 0 0 8px;
+    border-collapse: collapse;
+
+    tr, td {
+        border: 1px black solid;
+    }
+}
+
+#stats:hover {
+    opacity: 0.1;
 }
 
 #field {

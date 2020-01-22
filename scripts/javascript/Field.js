@@ -3,6 +3,7 @@ class Field {
     constructor(width, height) {
         this.currentIndex = 0;
         this.ui = new UI();
+        this.stats = new Map();
         this.cells = [];
         this.trees = [];
         this.ediblePlants = [];
@@ -10,8 +11,8 @@ class Field {
         this.carnivoreAnimals = [];
         this.omnivoreAnimals = [];
         this.houses = [];
-        this.treeAmount = 100;
         this.amountOfEdibleSpecies = 3;
+        this.treeAmount = 100;
         this.grassAmount = 500;
         this.wheatAmount = 400;
         this.mushroomAmount = 300;
@@ -22,6 +23,17 @@ class Field {
         this.tigerAmount = 10;
         this.foxAmount = 20;
         this.humanAmount = 20;
+        this.stats.set("tree", this.grassAmount);
+        this.stats.set("grass", this.grassAmount);
+        this.stats.set("wheat", this.wheatAmount);
+        this.stats.set("mushroom", this.mushroomAmount);
+        this.stats.set("pig", this.pigAmount);
+        this.stats.set("cow", this.cowAmount);
+        this.stats.set("horse", this.horseAmount);
+        this.stats.set("bear", this.bearAmount);
+        this.stats.set("fox", this.foxAmount);
+        this.stats.set("tiger", this.tigerAmount);
+        this.stats.set("human", this.humanAmount);
         this.treeGrowInterval = 1000;
         this.ediblePlantGrowInterval = 0;
         if (width === parseInt(width.toString()) && height === parseInt(height.toString()) && width > 0 && height > 0) {
@@ -80,25 +92,30 @@ class Field {
         setInterval(() => {
             var newTree = new Tree(this);
             newTree.GrowNextTo();
+            this.stats.set(newTree.name, this.stats.get(newTree.name) + 1);
         }, this.treeGrowInterval);
     }
     GrowEdiblePlant() {
         setInterval(() => {
-            var randomizer = Math.floor(Math.random() * this.amountOfEdibleSpecies);
-            var newEdiblePlant;
-            if (randomizer == 0) {
-                newEdiblePlant = new Grass(this);
+            var amountOfNewPlants = 10;
+            for (var i = 0; i < amountOfNewPlants; i++) {
+                var randomizer = Math.floor(Math.random() * this.amountOfEdibleSpecies);
+                var newEdiblePlant;
+                if (randomizer == 0) {
+                    newEdiblePlant = new Grass(this);
+                }
+                else if (randomizer == 1) {
+                    newEdiblePlant = new Wheat(this);
+                }
+                else if (randomizer == 2) {
+                    newEdiblePlant = new Mushroom(this);
+                }
+                else {
+                    newEdiblePlant = new Grass(this);
+                }
+                newEdiblePlant.GrowNextTo();
+                this.stats.set(newEdiblePlant.name, this.stats.get(newEdiblePlant.name) + 1);
             }
-            else if (randomizer == 1) {
-                newEdiblePlant = new Wheat(this);
-            }
-            else if (randomizer == 2) {
-                newEdiblePlant = new Mushroom(this);
-            }
-            else {
-                newEdiblePlant = new Grass(this);
-            }
-            newEdiblePlant.GrowNextTo();
         }, this.ediblePlantGrowInterval);
     }
     RemoveEntity(currentEntity, currentCollection) {

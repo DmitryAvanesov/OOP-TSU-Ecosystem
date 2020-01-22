@@ -17,6 +17,7 @@ class House extends FieldObject {
             child.location = this.location;
             child.location.occupied = true;
             this.field.ui.PlaceFieldObject(child);
+            this.field.stats.set(child.name, this.field.stats.get(child.name) as number + 1);
         }, this.makeChildInterval);
     }
 }
