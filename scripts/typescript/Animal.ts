@@ -35,9 +35,9 @@ abstract class Animal extends Entity {
             this.male = false;
         }
 
-        this.starveInterval = 12000;
-        this.strollInterval = 8000;
-        this.matureInterval = 60000;
+        this.starveInterval = 15000;
+        this.strollInterval = 3000;
+        this.matureInterval = 30000;
         this.moving = false;
         this.strolling = true;
         this.eating = false;
@@ -123,7 +123,7 @@ abstract class Animal extends Entity {
 
     protected CheckEating(): void {
         this.eatFunction = setInterval(() => {
-            if (this.eating && !this.moving) {
+            if (this.eating) {
                 this.Eat();
             }
         }, this.pace);

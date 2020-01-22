@@ -121,9 +121,7 @@ class UI {
             currentAnimalImage.classList.remove("flipped");
         }
 
-        setTimeout(() => {
-            animal.moving = false;
-        }, animal.pace);
+        animal.moving = false;
     }
 
     public RemoveEntity(entity: Entity): void {

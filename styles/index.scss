@@ -1,16 +1,14 @@
 $field-color: #9EF79E;
-$gender-male-color: #02A3FE;
-$gender-female-color: #EC49A6;
 $entity-size: 32px;
 $field-width: $entity-size * 500;
 $field-height: $entity-size * 500;
-$pace-pig: 1.5s;
-$pace-cow: 2s;
-$pace-horse: 0.75s;
-$pace-bear: 0.5s;
-$pace-tiger: 0.3s;
-$pace-fox: 0.4s;
-$pace-human: 1s;
+$pace-pig: 0.45s;
+$pace-cow: 0.5s;
+$pace-horse: 0.35s;
+$pace-bear: 0.4s;
+$pace-tiger: 0.25s;
+$pace-fox: 0.2s;
+$pace-human: 0.3s;
 
 * {
     box-sizing: border-box;

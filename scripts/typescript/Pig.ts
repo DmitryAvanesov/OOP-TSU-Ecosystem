@@ -7,7 +7,8 @@ class Pig extends Herbivore {
         this.maxHealth = 10;
         this.health = this.maxHealth;
         this.maxAge = 5;
-        this.pace = 1500;
+        this.age = Math.floor(Math.random() * this.maxAge);
+        this.pace = 450;
         this.reproductionProbability = 0.75;
 
         this.CheckEating();

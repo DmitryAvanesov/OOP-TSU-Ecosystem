@@ -13,7 +13,8 @@ class Human extends Omnivore {
         this.maxHealth = 15;
         this.health = this.maxHealth;
         this.maxAge = 30;
-        this.pace = 1000;
+        this.age = Math.floor(Math.random() * this.maxAge);
+        this.pace = 300;
         this.reproductionProbability = 0;
 
         this.ageOfConsent = 3;

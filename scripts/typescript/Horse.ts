@@ -7,7 +7,8 @@ class Horse extends Herbivore {
         this.maxHealth = 10;
         this.health = this.maxHealth;
         this.maxAge = 10;
-        this.pace = 750;
+        this.age = Math.floor(Math.random() * this.maxAge);
+        this.pace = 350;
         this.reproductionProbability = 0.5;
 
         this.CheckEating();

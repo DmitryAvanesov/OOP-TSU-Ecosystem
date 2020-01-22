@@ -91,9 +91,7 @@ class UI {
         else if (newLocation.col > animal.location.col) {
             currentAnimalImage.classList.remove("flipped");
         }
-        setTimeout(() => {
-            animal.moving = false;
-        }, animal.pace);
+        animal.moving = false;
     }
     RemoveEntity(entity) {
         var currentEntity = document.querySelector(`[id="${entity.index}"]`) || document.createElement("img");
