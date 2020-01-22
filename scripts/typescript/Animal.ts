@@ -21,9 +21,9 @@ abstract class Animal extends Entity {
     private reproduceFunction: number = 0;
     private matureFunction: number = 0;
 
-    private statusStrolling: string;
-    private statusEating: string;
-    private statusReproducing: string;
+    protected statusStrolling: string;
+    protected statusEating: string;
+    protected statusReproducing: string;
 
     constructor(currentField: Field) {
         super(currentField);

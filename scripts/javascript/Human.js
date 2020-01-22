@@ -6,7 +6,6 @@ class Human extends Omnivore {
         this.maxHealth = 15;
         this.health = this.maxHealth;
         this.maxAge = 30;
-        this.age = Math.floor(Math.random() * this.maxAge);
         this.pace = 300;
         this.reproductionProbability = 0;
         this.ageOfConsent = 3;
@@ -34,14 +33,13 @@ class Human extends Omnivore {
         }
     }
     FindPlaceForBuilding() {
-        var minAcceptableDistance = 200;
-        var nearestHouse;
+        var minAcceptableDistance = 250;
         var minDistance = 1000;
         this.field.houses.forEach((house) => {
             var curDistance = Math.abs(house.location.row - this.location.row) + Math.abs(house.location.col - this.location.col);
             if (curDistance < minDistance) {
                 minDistance = curDistance;
-                nearestHouse = house;
+                this.nearestHouse = house;
             }
         });
         if (minDistance <= minAcceptableDistance) {
@@ -61,9 +59,11 @@ class Human extends Omnivore {
         this.house.location = this.location;
         this.house.location.occupied = true;
         this.field.ui.PlaceFieldObject(this.house);
+        this.eating = true;
+        this.field.ui.UpdateStatus(this, this.statusEating);
     }
     Stroll() {
-        var maxDistanceToHouse = 4;
+        var maxDistanceToHouse = 10;
         if (this.house !== undefined) {
             var distanceToHouse = Math.abs(this.house.location.row - this.location.row) + Math.abs(this.house.location.col - this.location.col);
             if (distanceToHouse > maxDistanceToHouse * maxDistanceToHouse) {
@@ -83,6 +83,7 @@ class Human extends Omnivore {
                 var distanceToNearestHouse = Math.abs(this.nearestHouse.location.row - this.location.row) + Math.abs(this.nearestHouse.location.col - this.location.col);
                 if (distanceToNearestHouse > maxDistanceToHouse) {
                     this.MoveToGoal(this.nearestHouse);
+                    setTimeout(() => this.Stroll(), this.pace);
                 }
                 else {
                     this.Build();

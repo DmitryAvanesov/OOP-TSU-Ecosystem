@@ -7,7 +7,6 @@ class Cow extends Herbivore {
         this.maxHealth = 15;
         this.health = this.maxHealth;
         this.maxAge = 10;
-        this.age = Math.floor(Math.random() * this.maxAge);
         this.pace = 500;
         this.reproductionProbability = 0.6;
 

@@ -4,6 +4,7 @@ class House extends FieldObject {
     constructor(currentField: Field) {
         super(currentField);
 
+        this.field.houses.push(this);
         this.name = "house";
         this.makeChildInterval = 120000;
 

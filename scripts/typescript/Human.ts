@@ -13,7 +13,6 @@ class Human extends Omnivore {
         this.maxHealth = 15;
         this.health = this.maxHealth;
         this.maxAge = 30;
-        this.age = Math.floor(Math.random() * this.maxAge);
         this.pace = 300;
         this.reproductionProbability = 0;
 
@@ -47,8 +46,7 @@ class Human extends Omnivore {
     }
 
     private FindPlaceForBuilding() {
-        var minAcceptableDistance: number = 200;
-        var nearestHouse: House;
+        var minAcceptableDistance: number = 250;
         var minDistance: number = 1000;
 
         this.field.houses.forEach((house: House) => {
@@ -56,7 +54,7 @@ class Human extends Omnivore {
 
             if (curDistance < minDistance) {
                 minDistance = curDistance;
-                nearestHouse = house;
+                this.nearestHouse = house;
             }
         });
 
@@ -81,10 +79,13 @@ class Human extends Omnivore {
         this.house.location.occupied = true;
 
         this.field.ui.PlaceFieldObject(this.house);
+
+        this.eating = true;
+        this.field.ui.UpdateStatus(this, this.statusEating);
     }
 
     protected Stroll() {
-        var maxDistanceToHouse: number = 4;
+        var maxDistanceToHouse: number = 10;
 
         if (this.house !== undefined) {
             var distanceToHouse: number = Math.abs(this.house.location.row - this.location.row) + Math.abs(this.house.location.col - this.location.col);
@@ -107,6 +108,7 @@ class Human extends Omnivore {
 
                 if (distanceToNearestHouse > maxDistanceToHouse) {
                     this.MoveToGoal(this.nearestHouse);
+                    setTimeout(() => this.Stroll(), this.pace);
                 }
                 else {
                     this.Build();

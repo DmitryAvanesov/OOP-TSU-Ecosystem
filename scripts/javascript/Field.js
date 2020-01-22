@@ -19,9 +19,9 @@ class Field {
         this.pigAmount = 150;
         this.cowAmount = 100;
         this.horseAmount = 75;
-        this.bearAmount = 15;
-        this.tigerAmount = 10;
-        this.foxAmount = 20;
+        this.bearAmount = 20;
+        this.tigerAmount = 15;
+        this.foxAmount = 25;
         this.humanAmount = 20;
         this.stats.set("tree", this.grassAmount);
         this.stats.set("grass", this.grassAmount);
@@ -64,27 +64,41 @@ class Field {
         }
         this.ediblePlants.forEach((plantItem) => this.ui.PlaceFieldObject(plantItem));
         for (var i = 0; i < this.pigAmount; i++) {
-            this.herbivoreAnimals.push(new Pig(this));
+            var newAnimal = new Pig(this);
+            newAnimal.age = Math.floor(Math.random() * newAnimal.maxAge);
+            this.herbivoreAnimals.push(newAnimal);
         }
         for (var i = 0; i < this.cowAmount; i++) {
-            this.herbivoreAnimals.push(new Cow(this));
+            var newAnimal = new Cow(this);
+            newAnimal.age = Math.floor(Math.random() * newAnimal.maxAge);
+            this.herbivoreAnimals.push(newAnimal);
         }
         for (var i = 0; i < this.horseAmount; i++) {
-            this.herbivoreAnimals.push(new Horse(this));
+            var newAnimal = new Horse(this);
+            newAnimal.age = Math.floor(Math.random() * newAnimal.maxAge);
+            this.herbivoreAnimals.push(newAnimal);
         }
         this.herbivoreAnimals.forEach((animalItem) => this.ui.PlaceFieldObject(animalItem));
         for (var i = 0; i < this.bearAmount; i++) {
-            this.carnivoreAnimals.push(new Bear(this));
+            var newAnimal = new Bear(this);
+            newAnimal.age = Math.floor(Math.random() * newAnimal.maxAge);
+            this.carnivoreAnimals.push(newAnimal);
         }
         for (var i = 0; i < this.tigerAmount; i++) {
-            this.carnivoreAnimals.push(new Tiger(this));
+            var newAnimal = new Tiger(this);
+            newAnimal.age = Math.floor(Math.random() * newAnimal.maxAge);
+            this.carnivoreAnimals.push(newAnimal);
         }
         for (var i = 0; i < this.foxAmount; i++) {
-            this.carnivoreAnimals.push(new Fox(this));
+            var newAnimal = new Fox(this);
+            newAnimal.age = Math.floor(Math.random() * newAnimal.maxAge);
+            this.carnivoreAnimals.push(newAnimal);
         }
         this.carnivoreAnimals.forEach((animalItem) => this.ui.PlaceFieldObject(animalItem));
         for (var i = 0; i < this.humanAmount; i++) {
-            this.omnivoreAnimals.push(new Human(this));
+            var newAnimal = new Human(this);
+            newAnimal.age = Math.floor(Math.random() * newAnimal.maxAge);
+            this.omnivoreAnimals.push(newAnimal);
         }
         this.omnivoreAnimals.forEach((animalItem) => this.ui.PlaceFieldObject(animalItem));
     }
