@@ -1,8 +1,12 @@
 class UI {
     private entitySize: number;
+    private genderMaleColor: string;
+    private genderFemaleColor: string;
 
     constructor() {
         this.entitySize = 32;
+        this.genderMaleColor = "#02A3FE";
+        this.genderFemaleColor = "#EC49A6";
     }
 
     public PlaceFieldObject(object: FieldObject): void {
@@ -33,11 +37,11 @@ class UI {
         currentEntity.appendChild(currentEntityImage);
 
         if (object instanceof Animal) {
-            this.AddEntityInfo(currentEntity, object.male);
+            this.AddEntityInfo(currentEntity, object);
         }
     }
 
-    private AddEntityInfo(currentAnimal: Element, male: boolean): void {
+    private AddEntityInfo(currentAnimal: Element, animal: Animal): void {
         var healthbar: HTMLElement = document.createElement("div");
         var healthbarInner: HTMLElement = document.createElement("div");
         var info: HTMLElement = document.createElement("div");
@@ -53,14 +57,14 @@ class UI {
         status.innerHTML = "Strolling";
 
         age.classList.add("age");
-        age.innerHTML = "0";
+        age.innerHTML = `${animal.age}/${animal.maxAge} years`;
 
         gender.classList.add("gender");
-        if (male) {
-            gender.innerHTML = "M";   
+        if (animal.male) {
+            gender.style.backgroundColor = this.genderMaleColor; 
         }
         else {
-            gender.innerHTML = "F";
+            gender.style.backgroundColor = this.genderFemaleColor; 
         }
 
         currentAnimal.appendChild(healthbar);
@@ -99,7 +103,7 @@ class UI {
         var currentAge: HTMLElement = document.querySelector(
             `[id="${animal.index}"] > .info > .age`) as HTMLElement;
 
-        currentAge.innerHTML = animal.age.toString();
+        currentAge.innerHTML = `${animal.age}/${animal.maxAge} years`;
     }
 
     public Move(animal: Animal, newLocation: Cell): void {

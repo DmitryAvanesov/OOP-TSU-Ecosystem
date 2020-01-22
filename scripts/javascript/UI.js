@@ -2,6 +2,8 @@
 class UI {
     constructor() {
         this.entitySize = 32;
+        this.genderMaleColor = "#02A3FE";
+        this.genderFemaleColor = "#EC49A6";
     }
     PlaceFieldObject(object) {
         var currentMap = document.querySelector("#field");
@@ -26,10 +28,10 @@ class UI {
         }
         currentEntity.appendChild(currentEntityImage);
         if (object instanceof Animal) {
-            this.AddEntityInfo(currentEntity, object.male);
+            this.AddEntityInfo(currentEntity, object);
         }
     }
-    AddEntityInfo(currentAnimal, male) {
+    AddEntityInfo(currentAnimal, animal) {
         var healthbar = document.createElement("div");
         var healthbarInner = document.createElement("div");
         var info = document.createElement("div");
@@ -42,13 +44,13 @@ class UI {
         status.classList.add("status");
         status.innerHTML = "Strolling";
         age.classList.add("age");
-        age.innerHTML = "0";
+        age.innerHTML = `${animal.age}/${animal.maxAge} years`;
         gender.classList.add("gender");
-        if (male) {
-            gender.innerHTML = "M";
+        if (animal.male) {
+            gender.style.backgroundColor = this.genderMaleColor;
         }
         else {
-            gender.innerHTML = "F";
+            gender.style.backgroundColor = this.genderFemaleColor;
         }
         currentAnimal.appendChild(healthbar);
         healthbar.appendChild(healthbarInner);
@@ -76,7 +78,7 @@ class UI {
     }
     UpdateAge(animal) {
         var currentAge = document.querySelector(`[id="${animal.index}"] > .info > .age`);
-        currentAge.innerHTML = animal.age.toString();
+        currentAge.innerHTML = `${animal.age}/${animal.maxAge} years`;
     }
     Move(animal, newLocation) {
         var currentAnimal = document.querySelector(`[id="${animal.index}"]`);

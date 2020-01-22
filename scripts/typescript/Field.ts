@@ -48,7 +48,7 @@ class Field {
         this.foxAmount = 20;
         this.humanAmount = 20;
         this.treeGrowInterval = 1000;
-        this.ediblePlantGrowInterval = 1;
+        this.ediblePlantGrowInterval = 0;
 
         if (width === parseInt(width.toString()) && height === parseInt(height.toString()) && width > 0 && height > 0) {
             for (var i: number = 0; i < height; i++) {

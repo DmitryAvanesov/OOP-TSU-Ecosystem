@@ -1,4 +1,6 @@
 $field-color: #9EF79E;
+$gender-male-color: #02A3FE;
+$gender-female-color: #EC49A6;
 $entity-size: 32px;
 $field-width: $entity-size * 500;
 $field-height: $entity-size * 500;
@@ -49,7 +51,7 @@ body {
         .info {
             position: absolute;
             z-index: 2;
-            left: 0;
+            left: -16px;
             bottom: 22px;
             width: $entity-size * 2;
             font-size: 10px;
@@ -63,20 +65,19 @@ body {
             .age {
                 background-color: black;
                 color: white;
-                width: 15px;
+                width: 52px;
+                height: 12px;
             }
 
             .gender {
-                background-color: black;
-                color: white;
-                width: 15px;
-                margin-left: 17px;
+                width: 12px;
+                height: 12px;
+                margin-left: 52px;
             }
     
             .status {
                 position: relative;
                 top: 12px;
-                left: -16px;
                 background-color: white;
                 color: black;
                 width: 64px;

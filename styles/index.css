@@ -43,7 +43,7 @@ body {
 #field * .info {
   position: absolute;
   z-index: 2;
-  left: 0;
+  left: -16px;
   bottom: 22px;
   width: 64px;
   font-size: 10px;
@@ -58,20 +58,19 @@ body {
 #field * .info .age {
   background-color: black;
   color: white;
-  width: 15px;
+  width: 52px;
+  height: 12px;
 }
 
 #field * .info .gender {
-  background-color: black;
-  color: white;
-  width: 15px;
-  margin-left: 17px;
+  width: 12px;
+  height: 12px;
+  margin-left: 52px;
 }
 
 #field * .info .status {
   position: relative;
   top: 12px;
-  left: -16px;
   background-color: white;
   color: black;
   width: 64px;
