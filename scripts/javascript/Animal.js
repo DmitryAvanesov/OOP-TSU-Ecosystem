@@ -95,7 +95,7 @@ class Animal extends Entity {
             if (this.eating) {
                 this.Eat();
             }
-        }, this.pace);
+        }, 0);
     }
     Eat() {
         var entities;
@@ -114,6 +114,13 @@ class Animal extends Entity {
                 this.health = Math.min(this.health + goal.foodValue, this.maxHealth);
                 this.field.ui.UpdateHealthbar(this);
                 goal.Die();
+                this.field.ui.UpdateStatus(this, this.statusStrolling);
+                this.eating = false;
+                this.reproducing = false;
+                this.strolling = true;
+                if (this.male) {
+                    this.CheckReproducing();
+                }
             }
         }
     }
@@ -144,7 +151,7 @@ class Animal extends Entity {
             animals.splice(animals.indexOf(this), 1);
             this.reproduceFunction = setInterval(() => {
                 this.Reproduce(animals);
-            }, this.pace);
+            }, 0);
         }
     }
     Reproduce(animals) {

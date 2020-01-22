@@ -126,7 +126,7 @@ abstract class Animal extends Entity {
             if (this.eating) {
                 this.Eat();
             }
-        }, this.pace);
+        }, 0);
     }
 
     protected Eat(): void {
@@ -149,6 +149,15 @@ abstract class Animal extends Entity {
                 this.health = Math.min(this.health + goal.foodValue, this.maxHealth);
                 this.field.ui.UpdateHealthbar(this);
                 goal.Die();
+
+                this.field.ui.UpdateStatus(this, this.statusStrolling);
+                this.eating = false;
+                this.reproducing = false;
+                this.strolling = true;
+
+                if (this.male) {
+                    this.CheckReproducing();
+                }
             }
         }
     }
@@ -186,7 +195,7 @@ abstract class Animal extends Entity {
 
             this.reproduceFunction = setInterval(() => {
                 this.Reproduce(animals);
-            }, this.pace);
+            }, 0);
         }
     }
 
