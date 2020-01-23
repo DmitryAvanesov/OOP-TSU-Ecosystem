@@ -6,6 +6,8 @@ class Field {
     public carnivoreAnimals: Array<Carnivore>;
     public omnivoreAnimals: Array<Omnivore>;
     public houses: Array<House>;
+    public farms: Array<Farm>;
+    public warehouses: Array<Warehouse>;
 
     public currentIndex: number;
     public ui: UI;
@@ -36,6 +38,8 @@ class Field {
         this.carnivoreAnimals = [];
         this.omnivoreAnimals = [];
         this.houses = [];
+        this.farms = [];
+        this.warehouses = [];
 
         this.amountOfEdibleSpecies = 3;
         this.treeAmount = 100;

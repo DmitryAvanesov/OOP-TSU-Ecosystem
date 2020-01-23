@@ -11,6 +11,7 @@ class Human extends Omnivore {
         this.ageOfConsent = 3;
         this.goingToBuild = false;
         this.statusGoingToBuild = "Going to build";
+        this.isFarmer = false;
         this.CheckEating();
     }
     FindPartner() {
@@ -74,6 +75,7 @@ class Human extends Omnivore {
         newFarm.location = this.location;
         newFarm.location.occupied = true;
         this.field.ui.PlaceFieldObject(newFarm);
+        this.isFarmer = true;
     }
     Stroll() {
         var maxDistanceToHouse = 10;

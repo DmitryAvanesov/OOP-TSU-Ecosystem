@@ -5,6 +5,7 @@ abstract class Farm extends FieldObject {
     constructor(currentField: Field, currentFarmer: Human) {
         super(currentField);
 
+        this.field.farms.push(this);
         this.name = "farm";
         this.farmer = currentFarmer;
         this.produceInterval = 20000;

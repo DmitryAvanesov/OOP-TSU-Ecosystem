@@ -98,19 +98,22 @@ class Animal extends Entity {
         }, 0);
     }
     Eat() {
-        var entities;
+        var objects;
         if (this instanceof Herbivore) {
-            entities = this.field.ediblePlants;
+            objects = this.field.ediblePlants;
         }
         else if (this instanceof Carnivore) {
-            entities = this.field.herbivoreAnimals;
+            objects = this.field.herbivoreAnimals;
         }
         else {
-            entities = this.field.ediblePlants.concat(this.field.herbivoreAnimals);
+            objects = this.field.ediblePlants.concat(this.field.herbivoreAnimals);
+            if (this instanceof Human && this.field.warehouses.length > 0) {
+                objects = objects.concat(this.field.warehouses);
+            }
         }
-        var goal = this.FindGoal(entities);
-        if (goal !== undefined) {
-            if (this.location == goal.location) {
+        var goal = this.FindGoal(objects);
+        if (goal !== undefined && this.location == goal.location) {
+            if (goal instanceof Entity) {
                 this.health = Math.min(this.health + goal.foodValue, this.maxHealth);
                 this.field.ui.UpdateHealthbar(this);
                 goal.Die();
@@ -206,14 +209,14 @@ class Animal extends Entity {
         var curDistance;
         var goal;
         var maxDistanceHuman = 20;
-        entities.forEach((entity) => {
-            curDistance = Math.abs(this.location.row - entity.location.row) + Math.abs(this.location.col - entity.location.col);
+        entities.forEach((object) => {
+            curDistance = Math.abs(this.location.row - object.location.row) + Math.abs(this.location.col - object.location.col);
             if (curDistance < minDistance) {
-                goal = entity;
+                goal = object;
                 minDistance = curDistance;
             }
         });
-        if (this instanceof Human && minDistance > maxDistanceHuman) {
+        if (this instanceof Human && minDistance > maxDistanceHuman && !this.isFarmer) {
             this.BuildFarm();
         }
         else if (goal !== undefined) {

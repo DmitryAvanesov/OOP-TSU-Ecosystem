@@ -5,6 +5,7 @@ class Human extends Omnivore {
     public ageOfConsent: number;
     public goingToBuild: boolean;
     private statusGoingToBuild: string;
+    public isFarmer: boolean;
 
     constructor(currentField: Field) {
         super(currentField);
@@ -19,6 +20,7 @@ class Human extends Omnivore {
         this.ageOfConsent = 3;
         this.goingToBuild = false;
         this.statusGoingToBuild = "Going to build";
+        this.isFarmer = false;
 
         this.CheckEating();
     }
@@ -98,6 +100,8 @@ class Human extends Omnivore {
         newFarm.location = this.location;
         newFarm.location.occupied = true;
         this.field.ui.PlaceFieldObject(newFarm);
+
+        this.isFarmer = true;
     } 
 
     protected Stroll() {

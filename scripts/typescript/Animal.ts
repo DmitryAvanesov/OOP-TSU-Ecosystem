@@ -130,22 +130,26 @@ abstract class Animal extends Entity {
     }
 
     protected Eat(): void {
-        var entities: Array<Entity>;
+        var objects: Array<FieldObject>;
 
         if (this instanceof Herbivore) {
-            entities = this.field.ediblePlants;
+            objects = this.field.ediblePlants;
         }
         else if (this instanceof Carnivore) {
-            entities = this.field.herbivoreAnimals;
+            objects = this.field.herbivoreAnimals;
         }
         else {
-            entities = (<Array<Entity>>this.field.ediblePlants).concat(this.field.herbivoreAnimals);
+            objects = (<Array<FieldObject>>this.field.ediblePlants).concat(this.field.herbivoreAnimals);
+
+            if (this instanceof Human && this.field.warehouses.length > 0) {
+                objects = (<Array<FieldObject>>objects).concat(this.field.warehouses);
+            }
         }
 
-        var goal: Entity | undefined = this.FindGoal(entities);
+        var goal: FieldObject | undefined = this.FindGoal(objects);
 
-        if (goal !== undefined) {
-            if (this.location == goal.location) {
+        if (goal !== undefined && this.location == goal.location) {
+            if (goal instanceof Entity) {
                 this.health = Math.min(this.health + goal.foodValue, this.maxHealth);
                 this.field.ui.UpdateHealthbar(this);
                 goal.Die();
@@ -191,7 +195,7 @@ abstract class Animal extends Entity {
     }
 
     protected Reproduce(animals: Array<Animal>): void {
-        var goal: Entity | undefined = this.FindGoal(animals);
+        var goal: FieldObject | undefined = this.FindGoal(animals);
 
         if (this.health < this.maxHealth * 0.5) {
             this.field.ui.UpdateStatus(this, this.statusEating);
@@ -250,22 +254,22 @@ abstract class Animal extends Entity {
         clearInterval(this.reproduceFunction);
     }
 
-    private FindGoal(entities: Array<Entity>): Entity | undefined {
+    private FindGoal(entities: Array<FieldObject>): FieldObject | undefined {
         var minDistance: number = this.field.cells.length + this.field.cells[0].length;
         var curDistance: number;
-        var goal: Entity | undefined;
+        var goal: FieldObject | undefined;
         var maxDistanceHuman: number = 20;
 
-        entities.forEach((entity: Entity) => {
-            curDistance = Math.abs(this.location.row - entity.location.row) + Math.abs(this.location.col - entity.location.col);
+        entities.forEach((object: FieldObject) => {
+            curDistance = Math.abs(this.location.row - object.location.row) + Math.abs(this.location.col - object.location.col);
 
             if (curDistance < minDistance) {
-                goal = entity;
+                goal = object;
                 minDistance = curDistance;
             }
         });
 
-        if (this instanceof Human && minDistance > maxDistanceHuman) {
+        if (this instanceof Human && minDistance > maxDistanceHuman && !this.isFarmer) {
             this.BuildFarm();
         }
         else if (goal !== undefined) {

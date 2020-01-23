@@ -11,6 +11,8 @@ class Field {
         this.carnivoreAnimals = [];
         this.omnivoreAnimals = [];
         this.houses = [];
+        this.farms = [];
+        this.warehouses = [];
         this.amountOfEdibleSpecies = 3;
         this.treeAmount = 100;
         this.grassAmount = 500;

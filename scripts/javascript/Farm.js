@@ -2,6 +2,7 @@
 class Farm extends FieldObject {
     constructor(currentField, currentFarmer) {
         super(currentField);
+        this.field.farms.push(this);
         this.name = "farm";
         this.farmer = currentFarmer;
         this.produceInterval = 20000;
