@@ -85,7 +85,7 @@ class Human extends Omnivore {
     FindWarehouse() {
         var nearestWarehouse;
         var minDistance = 1000;
-        var minAcceptableDistance = 30;
+        var minAcceptableDistance = 20;
         var curDistance;
         if (this.field.warehouses.length > 0) {
             this.field.warehouses.forEach((warehouse) => {

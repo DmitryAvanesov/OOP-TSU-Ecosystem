@@ -105,9 +105,9 @@ body {
 #field * .food-value {
   position: absolute;
   z-index: 2;
-  width: 16px;
-  left: 8px;
-  bottom: 12px;
+  width: 32px;
+  left: 0;
+  bottom: 6px;
   background-color: white;
   color: black;
   text-align: center;
