@@ -9,7 +9,7 @@ class Human extends Omnivore {
     private statusBuildingHouse: string;
     private statusHarvesting: string;
     public isFarmer: boolean;
-    private farm: Farm | undefined;
+    public farm: Farm | undefined;
     private foodValueCarrying: number;
 
     constructor(currentField: Field) {
@@ -55,6 +55,18 @@ class Human extends Omnivore {
         }
     }
 
+    private BuildNear(object: FieldObject): void {
+        object.location.occupied = false;
+
+        do {
+            object.location = this.field.cells[this.location.row + Math.floor(Math.random() * 3) - 1][this.location.col + Math.floor(Math.random() * 3) - 1];
+        }
+        while (object.location.occupied);
+
+        object.location.occupied = true;
+        this.field.ui.PlaceFieldObject(object);
+    }
+
     private FindPlaceForBuildingHouse() {
         var minAcceptableDistance: number = 250;
         var minDistance: number = 1000;
@@ -84,11 +96,7 @@ class Human extends Omnivore {
             this.partner.house = this.house;
         }
 
-        this.house.location.occupied = false;
-        this.house.location = this.location;
-        this.house.location.occupied = true;
-
-        this.field.ui.PlaceFieldObject(this.house);
+        this.BuildNear(this.house);
 
         this.strolling = true;
         this.field.ui.UpdateStatus(this, this.statusStrolling);
@@ -102,10 +110,7 @@ class Human extends Omnivore {
             this.farm = new AnimalFarm(this.field, this);
         }
 
-        this.farm.location.occupied = false;
-        this.farm.location = this.location;
-        this.farm.location.occupied = true;
-        this.field.ui.PlaceFieldObject(this.farm);
+        this.BuildNear(this.farm);
 
         this.isFarmer = true;
         this.field.ui.TurnIntoFarmer(this);
@@ -131,19 +136,12 @@ class Human extends Omnivore {
         return nearestWarehouse;
     }
 
-    private BuildWarehouse(): void {
-        var newWarehouse: Warehouse = new Warehouse(this.field);
-
-        newWarehouse.location.occupied = false;
-        newWarehouse.location = this.location;
-        newWarehouse.location.occupied = true;
-        this.field.ui.PlaceFieldObject(newWarehouse);
-    }
-
     protected Stroll() {
         var maxDistanceToHouse: number = 10;
 
         if (this.harvesting) {
+            this.field.ui.UpdateStatus(this, this.statusHarvesting);
+
             if (this.foodValueCarrying == 0) {
                 this.MoveToGoal(this.farm as FieldObject);
 
@@ -155,9 +153,10 @@ class Human extends Omnivore {
             }
             else {
                 this.nearestWarehouse = this.FindWarehouse();
-    
+
                 if (this.nearestWarehouse === undefined) {
-                    this.BuildWarehouse();
+                    var newWarehouse: Warehouse = new Warehouse(this.field);
+                    this.BuildNear(newWarehouse);
                     this.nearestWarehouse = this.FindWarehouse();
                 }
                 else {
@@ -168,14 +167,21 @@ class Human extends Omnivore {
                     this.nearestWarehouse.foodValueAccumulating += this.foodValueCarrying;
                     this.foodValueCarrying = 0;
                     this.field.ui.UpdateWarehouseInfo(this.nearestWarehouse);
+                    
                     this.harvesting = false;
+                    this.eating = true;
+                    this.field.ui.UpdateStatus(this, this.statusEating);
                 }
             }
+
+            setTimeout(() => {
+                this.Stroll();
+            }, this.pace * 2);
         }
         else {
             if (this.house !== undefined) {
                 var distanceToHouse: number = Math.abs(this.house.location.row - this.location.row) + Math.abs(this.house.location.col - this.location.col);
-    
+
                 if (distanceToHouse > maxDistanceToHouse * maxDistanceToHouse) {
                     this.location.occupied = false;
                     this.location = this.house.location;
@@ -191,7 +197,7 @@ class Human extends Omnivore {
             else {
                 if (this.buildingHouse && this.nearestHouse !== undefined) {
                     var distanceToNearestHouse: number = Math.abs(this.nearestHouse.location.row - this.location.row) + Math.abs(this.nearestHouse.location.col - this.location.col);
-    
+
                     if (distanceToNearestHouse > maxDistanceToHouse) {
                         this.MoveToGoal(this.nearestHouse);
                         setTimeout(() => this.Stroll(), this.pace);
@@ -206,5 +212,10 @@ class Human extends Omnivore {
                 }
             }
         }
+    }
+
+    public Die(): void {
+        this.farm?.ChooseNewFarmer();
+        super.Die();
     }
 }

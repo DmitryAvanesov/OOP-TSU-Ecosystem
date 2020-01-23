@@ -1,8 +1,11 @@
 abstract class Entity extends FieldObject {
     public foodValue: number = 0;
+    public farmers: boolean;
 
-    constructor(currentField: Field) {
+    constructor(currentField: Field, isFarmers: boolean = false) {
         super(currentField);
+
+        this.farmers = isFarmers;
     }
 
     public Die(): void {

@@ -1,7 +1,7 @@
 "use strict";
 class Wheat extends Plant {
-    constructor(currentField) {
-        super(currentField);
+    constructor(currentField, isFarmers = false) {
+        super(currentField, isFarmers);
         this.name = "wheat";
         this.edible = true;
         this.foodValue = 5;

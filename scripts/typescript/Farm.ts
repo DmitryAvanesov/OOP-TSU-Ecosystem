@@ -18,16 +18,36 @@ abstract class Farm extends FieldObject {
         setInterval(() => {
             if (this.food === undefined) {
                 this.food = this.ChooseFoodType();
-                
+
                 this.food.location.occupied = false;
                 this.food.location = this.location;
                 this.food.location.occupied = true;
                 this.field.ui.PlaceFieldObject(this.food);
-    
-                this.farmer.harvesting = true;
             }
+
+            this.farmer.harvesting = true;
         }, this.produceInterval);
     }
 
     protected abstract ChooseFoodType(): Entity;
+
+    public ChooseNewFarmer() {
+        var minDistance: number = 1000;
+        var curDistance: number;
+
+        this.field.omnivoreAnimals.forEach((human: Omnivore) => {
+            if (human instanceof Human && !human.isFarmer) {
+                curDistance = Math.abs(this.location.row - human.location.row) + Math.abs(this.location.col - human.location.col);
+                
+                if (curDistance < minDistance) {
+                    this.farmer = human;
+                    minDistance = curDistance;
+                }
+            }
+        });
+
+        this.farmer.isFarmer = true;
+        this.farmer.farm = this;
+        this.field.ui.TurnIntoFarmer(this.farmer);
+    }
 }

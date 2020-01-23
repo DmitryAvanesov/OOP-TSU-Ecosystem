@@ -1,6 +1,6 @@
 "use strict";
 class Animal extends Entity {
-    constructor(currentField) {
+    constructor(currentField, isFarmers = false) {
         super(currentField);
         this.health = 0;
         this.maxHealth = 0;
@@ -29,9 +29,11 @@ class Animal extends Entity {
         this.statusStrolling = "Strolling";
         this.statusEating = "Eating";
         this.statusReproducing = "Reproducing";
-        this.CheckStrolling();
-        this.Starve();
-        this.Mature();
+        if (!isFarmers) {
+            this.CheckStrolling();
+            this.Starve();
+            this.Mature();
+        }
     }
     PlaceNextToParents(cell) {
         this.location.occupied = false;
@@ -108,16 +110,40 @@ class Animal extends Entity {
         else {
             objects = this.field.ediblePlants.concat(this.field.herbivoreAnimals);
             if (this instanceof Human && this.field.warehouses.length > 0) {
-                objects = objects.concat(this.field.warehouses);
+                this.field.warehouses.forEach((warehouse) => {
+                    if (warehouse.foodValueAccumulating > 0) {
+                        objects.push(warehouse);
+                    }
+                });
+            }
+        }
+        var currentObject = 0;
+        while (currentObject < objects.length) {
+            if (objects[currentObject] instanceof Entity && objects[currentObject].farmers) {
+                objects.splice(currentObject, 1);
+            }
+            else {
+                currentObject++;
             }
         }
         var goal = this.FindGoal(objects);
         if (goal !== undefined && this.location == goal.location) {
             if (goal instanceof Entity) {
                 this.health = Math.min(this.health + goal.foodValue, this.maxHealth);
-                this.field.ui.UpdateHealthbar(this);
                 goal.Die();
             }
+            else if (goal instanceof Warehouse) {
+                var foodTaken = Math.min(goal.foodValueAccumulating, this.maxHealth - this.health);
+                goal.foodValueAccumulating -= foodTaken;
+                this.health += foodTaken;
+                this.field.ui.UpdateWarehouseInfo(goal);
+            }
+            if (this.health == this.maxHealth) {
+                this.eating = false;
+                this.strolling = true;
+                this.field.ui.UpdateStatus(this, this.statusStrolling);
+            }
+            this.field.ui.UpdateHealthbar(this);
         }
     }
     CheckReproducing() {
@@ -208,7 +234,7 @@ class Animal extends Entity {
         var minDistance = this.field.cells.length + this.field.cells[0].length;
         var curDistance;
         var goal;
-        var maxDistanceHuman = 20;
+        var maxDistanceHuman = 5;
         entities.forEach((object) => {
             curDistance = Math.abs(this.location.row - object.location.row) + Math.abs(this.location.col - object.location.col);
             if (curDistance < minDistance) {

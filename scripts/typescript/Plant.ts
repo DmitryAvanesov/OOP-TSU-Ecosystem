@@ -1,8 +1,8 @@
 abstract class Plant extends Entity {
     public edible: boolean = false;
 
-    constructor(currentField: Field) {
-        super(currentField);
+    constructor(currentField: Field, isFarmers: boolean) {
+        super(currentField, isFarmers);
     }
 
     public GrowNextTo() {

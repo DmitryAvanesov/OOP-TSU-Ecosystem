@@ -1,7 +1,7 @@
 "use strict";
 class Horse extends Herbivore {
-    constructor(currentField) {
-        super(currentField);
+    constructor(currentField, isFarmers = false) {
+        super(currentField, isFarmers);
         this.name = "horse";
         this.foodValue = 8;
         this.maxHealth = 10;

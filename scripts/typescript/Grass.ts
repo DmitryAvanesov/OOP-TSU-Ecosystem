@@ -1,6 +1,6 @@
 class Grass extends Plant {
-    constructor(currentField: Field) {
-        super(currentField);
+    constructor(currentField: Field, isFarmers: boolean = false) {
+        super(currentField, isFarmers);
 
         this.name = "grass";
         this.edible = true;

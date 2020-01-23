@@ -1,6 +1,6 @@
 class Cow extends Herbivore {
-    constructor(currentField: Field) {
-        super(currentField);
+    constructor(currentField: Field, isFarmers: boolean = false) {
+        super(currentField, isFarmers);
 
         this.name = "cow";
         this.foodValue = 10;

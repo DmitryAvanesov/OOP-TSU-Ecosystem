@@ -1,4 +1,4 @@
-$field-color: #9EF79E;
+$field-color: rgb(160, 206, 160);
 $entity-size: 32px;
 $field-width: $entity-size * 500;
 $field-height: $entity-size * 500;
@@ -112,9 +112,10 @@ body {
             z-index: 2;
             width: 16px;
             left: 8px;
-            bottom: 16px;
+            bottom: 12px;
             background-color: white;
             color: black;
+            text-align: center;
         }
     }
 

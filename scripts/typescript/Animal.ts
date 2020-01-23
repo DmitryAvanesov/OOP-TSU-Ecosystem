@@ -25,7 +25,7 @@ abstract class Animal extends Entity {
     protected statusEating: string;
     protected statusReproducing: string;
 
-    constructor(currentField: Field) {
+    constructor(currentField: Field, isFarmers: boolean = false) {
         super(currentField);
 
         if (Math.random() < 0.5) {
@@ -47,9 +47,11 @@ abstract class Animal extends Entity {
         this.statusEating = "Eating";
         this.statusReproducing = "Reproducing";
 
-        this.CheckStrolling();
-        this.Starve();
-        this.Mature();
+        if (!isFarmers) {
+            this.CheckStrolling();
+            this.Starve();
+            this.Mature();
+        }
     }
 
     public PlaceNextToParents(cell: Cell) {
@@ -142,7 +144,22 @@ abstract class Animal extends Entity {
             objects = (<Array<FieldObject>>this.field.ediblePlants).concat(this.field.herbivoreAnimals);
 
             if (this instanceof Human && this.field.warehouses.length > 0) {
-                objects = (<Array<FieldObject>>objects).concat(this.field.warehouses);
+                this.field.warehouses.forEach((warehouse: Warehouse) => {
+                    if (warehouse.foodValueAccumulating > 0) {
+                        objects.push(warehouse);
+                    }
+                });
+            }
+        }
+
+        var currentObject: number = 0;
+
+        while (currentObject < objects.length) {
+            if (objects[currentObject] instanceof Entity && (objects[currentObject] as Entity).farmers) {
+                objects.splice(currentObject, 1);
+            }
+            else {
+                currentObject++;
             }
         }
 
@@ -151,9 +168,22 @@ abstract class Animal extends Entity {
         if (goal !== undefined && this.location == goal.location) {
             if (goal instanceof Entity) {
                 this.health = Math.min(this.health + goal.foodValue, this.maxHealth);
-                this.field.ui.UpdateHealthbar(this);
                 goal.Die();
             }
+            else if (goal instanceof Warehouse) {
+                var foodTaken: number = Math.min(goal.foodValueAccumulating, this.maxHealth - this.health);
+                goal.foodValueAccumulating -= foodTaken;
+                this.health += foodTaken;
+                this.field.ui.UpdateWarehouseInfo(goal);
+            }
+
+            if (this.health == this.maxHealth) {
+                this.eating = false;
+                this.strolling = true;
+                this.field.ui.UpdateStatus(this, this.statusStrolling);
+            }
+
+            this.field.ui.UpdateHealthbar(this);
         }
     }
 
@@ -258,7 +288,7 @@ abstract class Animal extends Entity {
         var minDistance: number = this.field.cells.length + this.field.cells[0].length;
         var curDistance: number;
         var goal: FieldObject | undefined;
-        var maxDistanceHuman: number = 20;
+        var maxDistanceHuman: number = 5;
 
         entities.forEach((object: FieldObject) => {
             curDistance = Math.abs(this.location.row - object.location.row) + Math.abs(this.location.col - object.location.col);
