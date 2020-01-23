@@ -35,6 +35,20 @@ class UI {
                 this.AddEntityInfo(currentEntity, object);
             }
         }
+        else if (object instanceof Warehouse) {
+            this.AddWarehouseInfo(object);
+        }
+    }
+    AddWarehouseInfo(warehouse) {
+        var currentWarehouse = document.querySelector(`[id="${warehouse.index}"]`);
+        var newFoodValue = document.createElement("div");
+        newFoodValue.classList.add("food-value");
+        newFoodValue.innerHTML = warehouse.foodValueAccumulating.toString();
+        currentWarehouse.appendChild(newFoodValue);
+    }
+    UpdateWarehouseInfo(warehouse) {
+        var currentWarehouseInfo = document.querySelector(`[id="${warehouse.index}"] > .food-value`);
+        currentWarehouseInfo.innerHTML = warehouse.foodValueAccumulating.toString();
     }
     AddEntityInfo(currentAnimal, animal) {
         var healthbar = document.createElement("div");
@@ -109,6 +123,16 @@ class UI {
             currentAnimalImage.classList.remove("flipped");
         }
         animal.moving = false;
+    }
+    TurnIntoFarmer(human) {
+        var currentHumanImage = document.querySelector(`[id="${human.index}"] > .image`);
+        console.log("TURNED");
+        if (human.male) {
+            currentHumanImage.setAttribute("src", `../media/farmer.png`);
+        }
+        else {
+            currentHumanImage.setAttribute("src", `../media/farmeress.png`);
+        }
     }
     RemoveEntity(entity) {
         var currentEntity = document.querySelector(`[id="${entity.index}"]`) || document.createElement("img");

@@ -9,9 +9,12 @@ class Human extends Omnivore {
         this.pace = 300;
         this.reproductionProbability = 0;
         this.ageOfConsent = 3;
-        this.goingToBuild = false;
-        this.statusGoingToBuild = "Going to build";
+        this.buildingHouse = false;
+        this.harvesting = false;
+        this.statusBuildingHouse = "Building a house";
+        this.statusHarvesting = "Harvesting";
         this.isFarmer = false;
+        this.foodValueCarrying = 0;
         this.CheckEating();
     }
     FindPartner() {
@@ -44,8 +47,8 @@ class Human extends Omnivore {
             }
         });
         if (minDistance <= minAcceptableDistance) {
-            this.goingToBuild = true;
-            this.field.ui.UpdateStatus(this, this.statusGoingToBuild);
+            this.buildingHouse = true;
+            this.field.ui.UpdateStatus(this, this.statusBuildingHouse);
         }
         else {
             this.BuildHouse();
@@ -64,49 +67,101 @@ class Human extends Omnivore {
         this.field.ui.UpdateStatus(this, this.statusStrolling);
     }
     BuildFarm() {
-        var newFarm;
         if (Math.random() > 0.5) {
-            newFarm = new PlantFarm(this.field, this);
+            this.farm = new PlantFarm(this.field, this);
         }
         else {
-            newFarm = new AnimalFarm(this.field, this);
+            this.farm = new AnimalFarm(this.field, this);
         }
-        newFarm.location.occupied = false;
-        newFarm.location = this.location;
-        newFarm.location.occupied = true;
-        this.field.ui.PlaceFieldObject(newFarm);
+        this.farm.location.occupied = false;
+        this.farm.location = this.location;
+        this.farm.location.occupied = true;
+        this.field.ui.PlaceFieldObject(this.farm);
         this.isFarmer = true;
+        this.field.ui.TurnIntoFarmer(this);
+    }
+    FindWarehouse() {
+        var nearestWarehouse;
+        var minDistance = 1000;
+        var minAcceptableDistance = 30;
+        var curDistance;
+        if (this.field.warehouses.length > 0) {
+            this.field.warehouses.forEach((warehouse) => {
+                curDistance = Math.abs(warehouse.location.row - this.location.row) + Math.abs(warehouse.location.col - this.location.col);
+                if (curDistance < minDistance && curDistance < minAcceptableDistance) {
+                    nearestWarehouse = warehouse;
+                    minDistance = curDistance;
+                }
+            });
+        }
+        return nearestWarehouse;
+    }
+    BuildWarehouse() {
+        var newWarehouse = new Warehouse(this.field);
+        newWarehouse.location.occupied = false;
+        newWarehouse.location = this.location;
+        newWarehouse.location.occupied = true;
+        this.field.ui.PlaceFieldObject(newWarehouse);
     }
     Stroll() {
+        var _a, _b, _c, _d;
         var maxDistanceToHouse = 10;
-        if (this.house !== undefined) {
-            var distanceToHouse = Math.abs(this.house.location.row - this.location.row) + Math.abs(this.house.location.col - this.location.col);
-            if (distanceToHouse > maxDistanceToHouse * maxDistanceToHouse) {
-                this.location.occupied = false;
-                this.location = this.house.location;
-                this.location.occupied = true;
-            }
-            else if (distanceToHouse > maxDistanceToHouse) {
-                this.MoveToGoal(this.house);
+        if (this.harvesting) {
+            if (this.foodValueCarrying == 0) {
+                this.MoveToGoal(this.farm);
+                if (this.location == ((_a = this.farm) === null || _a === void 0 ? void 0 : _a.location)) {
+                    this.foodValueCarrying = (_b = this.farm.food) === null || _b === void 0 ? void 0 : _b.foodValue;
+                    (_c = this.farm.food) === null || _c === void 0 ? void 0 : _c.Die();
+                    this.farm.food = undefined;
+                }
             }
             else {
-                super.Stroll();
+                this.nearestWarehouse = this.FindWarehouse();
+                if (this.nearestWarehouse === undefined) {
+                    this.BuildWarehouse();
+                    this.nearestWarehouse = this.FindWarehouse();
+                }
+                else {
+                    this.MoveToGoal(this.nearestWarehouse);
+                }
+                if (this.location == ((_d = this.nearestWarehouse) === null || _d === void 0 ? void 0 : _d.location)) {
+                    this.nearestWarehouse.foodValueAccumulating += this.foodValueCarrying;
+                    this.foodValueCarrying = 0;
+                    this.field.ui.UpdateWarehouseInfo(this.nearestWarehouse);
+                    this.harvesting = false;
+                }
             }
         }
         else {
-            if (this.goingToBuild && this.nearestHouse !== undefined) {
-                var distanceToNearestHouse = Math.abs(this.nearestHouse.location.row - this.location.row) + Math.abs(this.nearestHouse.location.col - this.location.col);
-                if (distanceToNearestHouse > maxDistanceToHouse) {
-                    this.MoveToGoal(this.nearestHouse);
-                    setTimeout(() => this.Stroll(), this.pace);
+            if (this.house !== undefined) {
+                var distanceToHouse = Math.abs(this.house.location.row - this.location.row) + Math.abs(this.house.location.col - this.location.col);
+                if (distanceToHouse > maxDistanceToHouse * maxDistanceToHouse) {
+                    this.location.occupied = false;
+                    this.location = this.house.location;
+                    this.location.occupied = true;
+                }
+                else if (distanceToHouse > maxDistanceToHouse) {
+                    this.MoveToGoal(this.house);
                 }
                 else {
-                    this.BuildHouse();
-                    this.goingToBuild = false;
+                    super.Stroll();
                 }
             }
             else {
-                super.Stroll();
+                if (this.buildingHouse && this.nearestHouse !== undefined) {
+                    var distanceToNearestHouse = Math.abs(this.nearestHouse.location.row - this.location.row) + Math.abs(this.nearestHouse.location.col - this.location.col);
+                    if (distanceToNearestHouse > maxDistanceToHouse) {
+                        this.MoveToGoal(this.nearestHouse);
+                        setTimeout(() => this.Stroll(), this.pace);
+                    }
+                    else {
+                        this.BuildHouse();
+                        this.buildingHouse = false;
+                    }
+                }
+                else {
+                    super.Stroll();
+                }
             }
         }
     }

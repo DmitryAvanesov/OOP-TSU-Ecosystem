@@ -1,7 +1,11 @@
 class Warehouse extends FieldObject {
-    constructor(currentField: Field, currentFarmer: Human) {
+    public foodValueAccumulating: number;
+
+    constructor(currentField: Field) {
         super(currentField);
 
+        this.field.warehouses.push(this);
         this.name = "warehouse";
+        this.foodValueAccumulating = 0;
     }
 }

@@ -106,6 +106,16 @@ body {
         .flipped {
             transform: scaleX(-1);
         }
+
+        .food-value {
+            position: absolute;
+            z-index: 2;
+            width: 16px;
+            left: 8px;
+            bottom: 16px;
+            background-color: white;
+            color: black;
+        }
     }
 
 

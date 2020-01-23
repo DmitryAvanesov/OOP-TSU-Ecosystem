@@ -5,16 +5,19 @@ class Farm extends FieldObject {
         this.field.farms.push(this);
         this.name = "farm";
         this.farmer = currentFarmer;
-        this.produceInterval = 20000;
+        this.produceInterval = 30000;
         this.ProduceFood();
     }
     ProduceFood() {
         setInterval(() => {
-            var newFood = this.ChooseFoodType();
-            newFood.location.occupied = false;
-            newFood.location = this.location;
-            newFood.location.occupied = true;
-            this.field.ui.PlaceFieldObject(newFood);
+            if (this.food === undefined) {
+                this.food = this.ChooseFoodType();
+                this.food.location.occupied = false;
+                this.food.location = this.location;
+                this.food.location.occupied = true;
+                this.field.ui.PlaceFieldObject(this.food);
+                this.farmer.harvesting = true;
+            }
         }, this.produceInterval);
     }
 }

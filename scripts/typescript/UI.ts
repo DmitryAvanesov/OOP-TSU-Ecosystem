@@ -47,6 +47,23 @@ class UI {
                 this.AddEntityInfo(currentEntity, object);
             }
         }
+        else if (object instanceof Warehouse) {
+            this.AddWarehouseInfo(object);
+        }
+    }
+
+    private AddWarehouseInfo(warehouse: Warehouse): void {
+        var currentWarehouse: HTMLElement = document.querySelector(`[id="${warehouse.index}"]`) as HTMLElement;
+        var newFoodValue: HTMLElement = document.createElement("div");
+
+        newFoodValue.classList.add("food-value");
+        newFoodValue.innerHTML = warehouse.foodValueAccumulating.toString();
+        currentWarehouse.appendChild(newFoodValue);
+    }
+
+    public UpdateWarehouseInfo(warehouse: Warehouse): void {
+        var currentWarehouseInfo: HTMLElement = document.querySelector(`[id="${warehouse.index}"] > .food-value`) as HTMLElement;
+        currentWarehouseInfo.innerHTML = warehouse.foodValueAccumulating.toString();
     }
 
     private AddEntityInfo(currentAnimal: Element, animal: Animal): void {
@@ -137,6 +154,19 @@ class UI {
         }
 
         animal.moving = false;
+    }
+
+    public TurnIntoFarmer(human: Human): void {
+        var currentHumanImage: HTMLElement = document.querySelector(`[id="${human.index}"] > .image`) as HTMLElement;
+
+        console.log("TURNED");
+
+        if (human.male) {
+            currentHumanImage.setAttribute("src", `../media/farmer.png`);
+        }
+        else {
+            currentHumanImage.setAttribute("src", `../media/farmeress.png`);
+        }
     }
 
     public RemoveEntity(entity: Entity): void {
