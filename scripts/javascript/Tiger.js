@@ -7,7 +7,7 @@ class Tiger extends Carnivore {
         this.health = this.maxHealth;
         this.maxAge = 15;
         this.pace = 200;
-        this.reproductionProbability = 0.3;
+        this.reproductionProbability = 0.35;
         this.CheckEating();
     }
 }

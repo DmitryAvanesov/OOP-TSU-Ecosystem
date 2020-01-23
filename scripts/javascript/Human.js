@@ -28,11 +28,11 @@ class Human extends Omnivore {
             if (contenders.length > 0) {
                 this.partner = contenders[Math.floor(Math.random() * contenders.length)];
                 this.partner.partner = this;
-                this.FindPlaceForBuilding();
+                this.FindPlaceForBuildingHouse();
             }
         }
     }
-    FindPlaceForBuilding() {
+    FindPlaceForBuildingHouse() {
         var minAcceptableDistance = 250;
         var minDistance = 1000;
         this.field.houses.forEach((house) => {
@@ -47,10 +47,10 @@ class Human extends Omnivore {
             this.field.ui.UpdateStatus(this, this.statusGoingToBuild);
         }
         else {
-            this.Build();
+            this.BuildHouse();
         }
     }
-    Build() {
+    BuildHouse() {
         this.house = new House(this.field);
         if (this.partner !== undefined) {
             this.partner.house = this.house;
@@ -59,8 +59,21 @@ class Human extends Omnivore {
         this.house.location = this.location;
         this.house.location.occupied = true;
         this.field.ui.PlaceFieldObject(this.house);
-        this.eating = true;
-        this.field.ui.UpdateStatus(this, this.statusEating);
+        this.strolling = true;
+        this.field.ui.UpdateStatus(this, this.statusStrolling);
+    }
+    BuildFarm() {
+        var newFarm;
+        if (Math.random() > 0.5) {
+            newFarm = new PlantFarm(this.field, this);
+        }
+        else {
+            newFarm = new AnimalFarm(this.field, this);
+        }
+        newFarm.location.occupied = false;
+        newFarm.location = this.location;
+        newFarm.location.occupied = true;
+        this.field.ui.PlaceFieldObject(newFarm);
     }
     Stroll() {
         var maxDistanceToHouse = 10;
@@ -86,7 +99,7 @@ class Human extends Omnivore {
                     setTimeout(() => this.Stroll(), this.pace);
                 }
                 else {
-                    this.Build();
+                    this.BuildHouse();
                     this.goingToBuild = false;
                 }
             }

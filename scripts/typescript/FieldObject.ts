@@ -1,4 +1,4 @@
-class FieldObject {
+abstract class FieldObject {
     public field: Field;
     public location: Cell;
     public index: number;

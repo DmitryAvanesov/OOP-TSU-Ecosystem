@@ -40,12 +40,12 @@ class Human extends Omnivore {
             if (contenders.length > 0) {
                 this.partner = contenders[Math.floor(Math.random() * contenders.length)] as Human;
                 this.partner.partner = this;
-                this.FindPlaceForBuilding();
+                this.FindPlaceForBuildingHouse();
             }
         }
     }
 
-    private FindPlaceForBuilding() {
+    private FindPlaceForBuildingHouse() {
         var minAcceptableDistance: number = 250;
         var minDistance: number = 1000;
 
@@ -63,11 +63,11 @@ class Human extends Omnivore {
             this.field.ui.UpdateStatus(this, this.statusGoingToBuild);
         }
         else {
-            this.Build();
+            this.BuildHouse();
         }
     }
 
-    private Build() {
+    private BuildHouse() {
         this.house = new House(this.field);
 
         if (this.partner !== undefined) {
@@ -80,9 +80,25 @@ class Human extends Omnivore {
 
         this.field.ui.PlaceFieldObject(this.house);
 
-        this.eating = true;
-        this.field.ui.UpdateStatus(this, this.statusEating);
+        this.strolling = true;
+        this.field.ui.UpdateStatus(this, this.statusStrolling);
     }
+
+    public BuildFarm(): void {
+        var newFarm: Farm;
+
+        if (Math.random() > 0.5) {
+            newFarm = new PlantFarm(this.field, this);
+        }
+        else {
+            newFarm = new AnimalFarm(this.field, this);
+        }
+
+        newFarm.location.occupied = false;
+        newFarm.location = this.location;
+        newFarm.location.occupied = true;
+        this.field.ui.PlaceFieldObject(newFarm);
+    } 
 
     protected Stroll() {
         var maxDistanceToHouse: number = 10;
@@ -111,7 +127,7 @@ class Human extends Omnivore {
                     setTimeout(() => this.Stroll(), this.pace);
                 }
                 else {
-                    this.Build();
+                    this.BuildHouse();
                     this.goingToBuild = false;
                 }
             }

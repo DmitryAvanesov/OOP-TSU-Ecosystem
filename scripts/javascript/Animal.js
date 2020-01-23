@@ -205,6 +205,7 @@ class Animal extends Entity {
         var minDistance = this.field.cells.length + this.field.cells[0].length;
         var curDistance;
         var goal;
+        var maxDistanceHuman = 20;
         entities.forEach((entity) => {
             curDistance = Math.abs(this.location.row - entity.location.row) + Math.abs(this.location.col - entity.location.col);
             if (curDistance < minDistance) {
@@ -212,7 +213,10 @@ class Animal extends Entity {
                 minDistance = curDistance;
             }
         });
-        if (goal !== undefined) {
+        if (this instanceof Human && minDistance > maxDistanceHuman) {
+            this.BuildFarm();
+        }
+        else if (goal !== undefined) {
             this.MoveToGoal(goal);
         }
         return goal;
