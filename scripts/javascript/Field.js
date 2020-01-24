@@ -47,6 +47,15 @@ class Field {
     }
     GenerateField(width, height) {
         var generateButton = document.querySelector("#generateButton");
+        this.GenerateUndefined(width, height);
+        generateButton.addEventListener("click", () => {
+            this.GenerateDesert(width, height);
+            generateButton.addEventListener("click", () => {
+                this.GenerateMeadow(width, height);
+            });
+        });
+    }
+    GenerateUndefined(width, height) {
         for (var i = 0; i < width; i++) {
             this.cells.push([]);
             for (var j = 0; j < height; j++) {
@@ -54,33 +63,43 @@ class Field {
             }
         }
         this.ui.GenerateField(this.cells);
-        generateButton.addEventListener("click", () => {
-            var desertSources = [];
-            for (var i = 0; i < Math.floor(width * height * this.desertAmountCoef); i++) {
-                do {
-                    var chosenCell = this.cells[Math.floor(Math.random() * width)][Math.floor(Math.random() * height)];
-                } while (!(chosenCell instanceof CellUndefined));
-                this.cells[chosenCell.row][chosenCell.col] = new CellDesert(chosenCell.row, chosenCell.col);
-                desertSources.push(this.cells[chosenCell.row][chosenCell.col]);
+    }
+    GenerateDesert(width, height) {
+        var desertSources = [];
+        for (var i = 0; i < Math.floor(width * height * this.desertAmountCoef); i++) {
+            do {
+                var chosenCell = this.cells[Math.floor(Math.random() * width)][Math.floor(Math.random() * height)];
+            } while (!(chosenCell instanceof CellUndefined));
+            this.cells[chosenCell.row][chosenCell.col] = new CellDesert(chosenCell.row, chosenCell.col);
+            desertSources.push(this.cells[chosenCell.row][chosenCell.col]);
+        }
+        for (var i = 0; i < Math.floor(width * height * this.desertSizeCoef); i++) {
+            var chosenCell = desertSources[Math.floor(Math.random() * desertSources.length)];
+            var newRow;
+            var newCol;
+            var numberOfAttempts = 9;
+            var count = 0;
+            do {
+                newRow = chosenCell.row + (Math.floor(Math.random() * 3) - 1);
+                newCol = chosenCell.col + (Math.floor(Math.random() * 3) - 1);
+                count++;
+            } while (count < numberOfAttempts && (newRow < 0 || newRow >= this.cells.length || newCol < 0 || newCol >= this.cells[0].length || !(this.cells[newRow][newCol] instanceof CellUndefined)));
+            if (count < numberOfAttempts) {
+                this.cells[newRow][newCol] = new CellDesert(newRow, newCol);
+                desertSources.push(this.cells[newRow][newCol]);
             }
-            for (var i = 0; i < Math.floor(width * height * this.desertSizeCoef); i++) {
-                var chosenCell = desertSources[Math.floor(Math.random() * desertSources.length)];
-                var newRow;
-                var newCol;
-                var numberOfAttempts = 9;
-                var count = 0;
-                do {
-                    newRow = chosenCell.row + (Math.floor(Math.random() * 3) - 1);
-                    newCol = chosenCell.col + (Math.floor(Math.random() * 3) - 1);
-                    count++;
-                } while (count < numberOfAttempts && (newRow < 0 || newRow >= this.cells.length || newCol < 0 || newCol >= this.cells[0].length || !(this.cells[newRow][newCol] instanceof CellUndefined)));
-                if (count < numberOfAttempts) {
-                    this.cells[newRow][newCol] = new CellDesert(newRow, newCol);
-                    desertSources.push(this.cells[newRow][newCol]);
+        }
+        this.ui.GenerateField(this.cells);
+    }
+    GenerateMeadow(width, height) {
+        for (var i = 0; i < width; i++) {
+            for (var j = 0; j < height; j++) {
+                if (this.cells[i][j] instanceof CellUndefined) {
+                    this.cells[i][j] = new CellMeadow(i, j);
                 }
             }
-            this.ui.GenerateField(this.cells);
-        });
+        }
+        this.ui.GenerateField(this.cells);
     }
     CreateEntities() {
         for (var i = 0; i < this.treeAmount; i++) {
