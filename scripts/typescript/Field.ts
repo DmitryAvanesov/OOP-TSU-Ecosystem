@@ -35,6 +35,7 @@ class Field {
     private mountainAmountCoef: number;
     private mountainPartAmountCoef: number;
     private mountainPartLengthCoef: number;
+    private mountainThicknessCoef: number;
 
     constructor(width: number, height: number) {
         this.currentIndex = 0;
@@ -82,9 +83,10 @@ class Field {
         this.lakeCenter = new CellUndefined(0, 0);
         this.lakeDensityCoef = 0.015;
         this.lakeBreadthCoef = 0.00075;
-        this.mountainAmountCoef = 0.0003;
-        this.mountainPartAmountCoef = 0.0003;
+        this.mountainAmountCoef = 0.00002;
+        this.mountainPartAmountCoef = 0.00003;
         this.mountainPartLengthCoef = 0.0001;
+        this.mountainThicknessCoef = 0.015;
 
         this.GenerateField(width, height);
     }
@@ -233,20 +235,50 @@ class Field {
     }
 
     private GenerateMountain(width: number, height: number): void {
+        var mountainCells: Array<CellMountain> = [];
+
         for (var i: number = 0; i < Math.floor(width * height * this.mountainAmountCoef); i++) {
+            var chosenCell: Cell;
+
             do {
-                var chosenCell: Cell = this.cells[Math.floor(Math.random() * this.cells.length)][Math.floor(Math.random() * this.cells[0].length)];
+                chosenCell = this.cells[Math.floor(Math.random() * this.cells.length)][Math.floor(Math.random() * this.cells[0].length)];
             }
             while (!(chosenCell instanceof CellUndefined));
 
-            for (var i: number = 0; i < Math.floor(width * height * this.mountainPartAmountCoef); i++) {
+            for (var j: number = 0; j < Math.floor(width * height * this.mountainPartAmountCoef); j++) {
                 var stepX: number = Math.floor(Math.random() * 3) - 1;
                 var stepY: number = Math.floor(Math.random() * 3) - 1;
     
-                for (var i: number = 0; i < Math.floor(width * height * this.mountainPartLengthCoef); i++) {
+                for (var k: number = 0; k < Math.floor(width * height * this.mountainPartLengthCoef); k++) {
                     this.cells[chosenCell.row][chosenCell.col] = new CellMountain(chosenCell.row, chosenCell.col);
+                    mountainCells.push(this.cells[chosenCell.row][chosenCell.col]);
+                    
+                    if (chosenCell.row + stepX < 0 || chosenCell.row + stepX >= this.cells.length || chosenCell.col + stepY < 0 || chosenCell.col + stepY >= this.cells[0].length) {
+                        break;
+                    }
+
                     chosenCell = this.cells[chosenCell.row + stepX][chosenCell.col + stepY];
                 }
+            }
+        }
+
+        for (var i: number = 0; i < Math.floor(width * height * this.mountainThicknessCoef); i++) {
+            var chosenCell: CellMountain = mountainCells[Math.floor(Math.random() * mountainCells.length)];
+            var newRow: number;
+            var newCol: number;
+            var numberOfAttempts: number = 9;
+            var count: number = 0;
+
+            do {
+                newRow = chosenCell.row + (Math.floor(Math.random() * 3) - 1);
+                newCol = chosenCell.col + (Math.floor(Math.random() * 3) - 1);
+                count++;
+            }
+            while (count < numberOfAttempts && (newRow < 0 || newRow >= this.cells.length || newCol < 0 || newCol >= this.cells[0].length || !(this.cells[newRow][newCol] instanceof CellUndefined)));
+
+            if (count < numberOfAttempts) {
+                this.cells[newRow][newCol] = new CellMountain(newRow, newCol);
+                mountainCells.push(this.cells[newRow][newCol]);
             }
         }
 
