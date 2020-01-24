@@ -1,4 +1,4 @@
-class Cell {
+abstract class Cell {
     public row: number;
     public col: number;
     public occupied: boolean;

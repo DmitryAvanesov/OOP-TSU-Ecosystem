@@ -1,5 +1,11 @@
 class UI {
     private entitySize: number;
+    private cellDesertColor: string;
+    private cellLakeColor: string;
+    private cellMeadowColor: string;
+    private cellMountainColor: string;
+    private cellRiverColor: string;
+    private cellUndefinedColor: string;
     private genderMaleColor: string;
     private genderFemaleColor: string;
     private speciesIncreaseColor: string;
@@ -7,10 +13,49 @@ class UI {
 
     constructor() {
         this.entitySize = 32;
+        this.cellDesertColor = "#E3DD76";
+        this.cellLakeColor = "#5175FF";
+        this.cellMeadowColor = "#ADFCAE";
+        this.cellMountainColor = "#757A7A";
+        this.cellRiverColor = "#97E5FC";
+        this.cellUndefinedColor = "#FFFFFF";
         this.genderMaleColor = "#02A3FE";
         this.genderFemaleColor = "#EC49A6";
         this.speciesIncreaseColor = "#C8FFC8";
         this.speciesDecreaseColor = "#FFC8C8";
+    }
+
+    public GenerateField(cells: Array<Array<Cell>>): void {
+        var fieldCanvas: HTMLCanvasElement = document.getElementById("fieldCanvas") as HTMLCanvasElement;
+        var drawer: CanvasRenderingContext2D = fieldCanvas.getContext("2d") as CanvasRenderingContext2D;
+        drawer.clearRect(0, 0, this.entitySize * cells.length, this.entitySize * cells[0].length);
+        drawer.beginPath();
+
+        cells.forEach((row: Array<Cell>) => {
+            row.forEach((cell: Cell) => {
+                if (cell instanceof CellDesert) {
+                    drawer.fillStyle = this.cellDesertColor;
+                }
+                else if (cell instanceof CellLake) {
+                    drawer.fillStyle = this.cellLakeColor;
+                }
+                else if (cell instanceof CellMeadow) {
+                    drawer.fillStyle = this.cellMeadowColor;
+                }
+                else if (cell instanceof CellMountain) {
+                    drawer.fillStyle = this.cellMountainColor;
+                }
+                else if (cell instanceof CellRiver) {
+                    drawer.fillStyle = this.cellRiverColor;
+                }
+                else {
+                    drawer.fillStyle = this.cellUndefinedColor;
+                }
+
+                drawer.fillRect(this.entitySize * cell.row, this.entitySize * cell.col, this.entitySize, this.entitySize);
+                drawer.stroke();
+            });
+        });
     }
 
     public PlaceFieldObject(object: FieldObject): void {
