@@ -11,7 +11,7 @@ class House extends FieldObject {
         this.MakeChildren();
     }
 
-    private MakeChildren() {
+    private MakeChildren(): void {
         setInterval(() => {
             var child: Human = new Human(this.field);
             child.location.occupied = false;

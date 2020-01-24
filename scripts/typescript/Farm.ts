@@ -31,7 +31,7 @@ abstract class Farm extends FieldObject {
 
     protected abstract ChooseFoodType(): Entity;
 
-    public ChooseNewFarmer() {
+    public ChooseNewFarmer(): void {
         var minDistance: number = 1000;
         var curDistance: number;
 

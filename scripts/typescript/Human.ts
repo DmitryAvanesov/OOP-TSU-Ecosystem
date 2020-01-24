@@ -33,7 +33,7 @@ class Human extends Omnivore {
         this.CheckEating();
     }
 
-    public FindPartner() {
+    public FindPartner(): void {
         if (this.partner === undefined) {
             var contenders: Array<Omnivore> = Object.assign([], this.field.omnivoreAnimals);
             var currentContender: number = 0;
@@ -67,7 +67,7 @@ class Human extends Omnivore {
         this.field.ui.PlaceFieldObject(object);
     }
 
-    private FindPlaceForBuildingHouse() {
+    private FindPlaceForBuildingHouse(): void {
         var minAcceptableDistance: number = 250;
         var minDistance: number = 1000;
 
@@ -89,7 +89,7 @@ class Human extends Omnivore {
         }
     }
 
-    private BuildHouse() {
+    private BuildHouse(): void {
         this.house = new House(this.field);
 
         if (this.partner !== undefined) {
@@ -136,7 +136,7 @@ class Human extends Omnivore {
         return nearestWarehouse;
     }
 
-    protected Stroll() {
+    protected Stroll(): void {
         var maxDistanceToHouse: number = 10;
 
         if (this.harvesting) {

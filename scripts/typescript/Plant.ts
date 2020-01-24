@@ -5,7 +5,7 @@ abstract class Plant extends Entity {
         super(currentField, isFarmers);
     }
 
-    public GrowNextTo() {
+    public GrowNextTo(): void {
         var sameTypeArray: Array<Plant>;      
         var randomPlant: Plant;
         var newRow: number;
@@ -39,7 +39,7 @@ abstract class Plant extends Entity {
         }
     }
 
-    public Die() {
+    public Die(): void {
         if (this.edible) {
             this.field.RemoveEntity(this, this.field.ediblePlants);
         }

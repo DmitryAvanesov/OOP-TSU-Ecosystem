@@ -54,7 +54,7 @@ abstract class Animal extends Entity {
         }
     }
 
-    public PlaceNextToParents(cell: Cell) {
+    public PlaceNextToParents(cell: Cell): void {
         this.location.occupied = false;
         this.location = cell;
         this.location.occupied = true;
