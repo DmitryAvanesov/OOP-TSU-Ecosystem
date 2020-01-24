@@ -177,7 +177,6 @@ class Field {
 
         for (var i: number = 0; i < sortedByRow.length - 1; i++) {
             var curInterval: number = sortedByRow[i + 1].row - sortedByRow[i].row;
-            console.log(curInterval);
 
             if (curInterval > maxInterval) {
                 maxInterval = curInterval;

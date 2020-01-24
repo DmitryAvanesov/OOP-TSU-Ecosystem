@@ -118,7 +118,6 @@ class Field {
         maxInterval = 0;
         for (var i = 0; i < sortedByRow.length - 1; i++) {
             var curInterval = sortedByRow[i + 1].row - sortedByRow[i].row;
-            console.log(curInterval);
             if (curInterval > maxInterval) {
                 maxInterval = curInterval;
                 curRow = Math.floor(sortedByRow[i].row + curInterval * 0.5);
