@@ -3,6 +3,7 @@ class UI {
     constructor() {
         this.entitySize = 32;
         this.cellDesertColor = "#E3DD76";
+        this.cellLakeColor = "#5175FF";
         this.cellMeadowColor = "#ADFCAE";
         this.cellUndefinedColor = "#FFFFFF";
         this.genderMaleColor = "#02A3FE";
@@ -19,6 +20,9 @@ class UI {
             row.forEach((cell) => {
                 if (cell instanceof CellDesert) {
                     drawer.fillStyle = this.cellDesertColor;
+                }
+                else if (cell instanceof CellLake) {
+                    drawer.fillStyle = this.cellLakeColor;
                 }
                 else if (cell instanceof CellMeadow) {
                     drawer.fillStyle = this.cellMeadowColor;

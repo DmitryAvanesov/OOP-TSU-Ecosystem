@@ -39,19 +39,33 @@ class Field {
         this.treeGrowInterval = 1000;
         this.ediblePlantGrowInterval = 1000;
         this.desertAmountCoef = 0.00002;
-        this.desertSizeCoef = 0.3;
+        this.desertSizeCoef = 0.5;
+        this.lakeCenter = new CellUndefined(0, 0);
+        this.lakeDensityCoef = 0.015;
+        this.lakeBreadthCoef = 0.00075;
         this.GenerateField(width, height);
-        this.CreateEntities();
-        this.GrowTree();
-        this.GrowEdiblePlant();
     }
     GenerateField(width, height) {
-        var generateButton = document.querySelector("#generateButton");
+        var generateDesertButton = document.querySelector("#generateButton");
         this.GenerateUndefined(width, height);
-        generateButton.addEventListener("click", () => {
+        generateDesertButton.addEventListener("click", () => {
+            var _a;
             this.GenerateDesert(width, height);
-            generateButton.addEventListener("click", () => {
-                this.GenerateMeadow(width, height);
+            var generateLakeButton = generateDesertButton.cloneNode(true);
+            (_a = generateDesertButton.parentNode) === null || _a === void 0 ? void 0 : _a.replaceChild(generateLakeButton, generateDesertButton);
+            generateLakeButton.addEventListener("click", () => {
+                var _a;
+                this.GenerateLake(width, height);
+                var generateMountainButton = generateLakeButton.cloneNode(true);
+                (_a = generateMountainButton.parentNode) === null || _a === void 0 ? void 0 : _a.replaceChild(generateMountainButton, generateLakeButton);
+                generateMountainButton.addEventListener("click", () => {
+                    this.GenerateMeadow(width, height);
+                    generateDesertButton.addEventListener("click", () => {
+                        this.CreateEntities();
+                        this.GrowTree();
+                        this.GrowEdiblePlant();
+                    });
+                });
             });
         });
     }
@@ -73,6 +87,44 @@ class Field {
             this.cells[chosenCell.row][chosenCell.col] = new CellDesert(chosenCell.row, chosenCell.col);
             desertSources.push(this.cells[chosenCell.row][chosenCell.col]);
         }
+        var maxInterval;
+        var curRow = 0;
+        var curCol = 0;
+        var sortedByRow = desertSources.sort((source1, source2) => {
+            if (source1.row > source2.row) {
+                return 1;
+            }
+            if (source1.row < source2.row) {
+                return -1;
+            }
+            return 0;
+        });
+        var sortedByCol = desertSources.sort((source1, source2) => {
+            if (source1.col > source2.col) {
+                return 1;
+            }
+            if (source1.col < source2.col) {
+                return -1;
+            }
+            return 0;
+        });
+        maxInterval = 0;
+        for (var i = 0; i < sortedByRow.length - 1; i++) {
+            var curInterval = sortedByRow[i + 1].row - sortedByRow[i].row;
+            if (curInterval > maxInterval) {
+                maxInterval = curInterval;
+                curRow = Math.floor(sortedByRow[i].row + curInterval * 0.5);
+            }
+        }
+        maxInterval = 0;
+        for (var i = 0; i < sortedByCol.length - 1; i++) {
+            var curInterval = sortedByCol[i + 1].col - sortedByCol[i].col;
+            if (curInterval > maxInterval) {
+                maxInterval = curInterval;
+                curCol = Math.floor(sortedByCol[i].col + curInterval * 0.5);
+            }
+        }
+        this.lakeCenter = this.cells[curRow][curCol];
         for (var i = 0; i < Math.floor(width * height * this.desertSizeCoef); i++) {
             var chosenCell = desertSources[Math.floor(Math.random() * desertSources.length)];
             var newRow;
@@ -88,6 +140,15 @@ class Field {
                 this.cells[newRow][newCol] = new CellDesert(newRow, newCol);
                 desertSources.push(this.cells[newRow][newCol]);
             }
+        }
+        this.ui.GenerateField(this.cells);
+    }
+    GenerateLake(width, height) {
+        for (var i = 0; i < Math.floor(width * height * this.lakeDensityCoef); i++) {
+            do {
+                var chosenCell = this.cells[this.lakeCenter.row + Math.floor(Math.random() * width * height * this.lakeBreadthCoef)][this.lakeCenter.col + Math.floor(Math.random() * width * height * this.lakeBreadthCoef)];
+            } while (!(chosenCell instanceof CellUndefined));
+            this.cells[chosenCell.row][chosenCell.col] = new CellLake(chosenCell.row, chosenCell.col);
         }
         this.ui.GenerateField(this.cells);
     }
