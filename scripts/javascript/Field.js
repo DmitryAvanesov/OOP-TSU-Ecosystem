@@ -15,9 +15,9 @@ class Field {
         this.warehouses = [];
         this.amountOfEdibleSpecies = 3;
         this.treeAmount = 100;
-        this.grassAmount = 500;
-        this.wheatAmount = 500;
-        this.mushroomAmount = 500;
+        this.grassAmount = 100;
+        this.wheatAmount = 100;
+        this.mushroomAmount = 100;
         this.pigAmount = 200;
         this.cowAmount = 200;
         this.horseAmount = 200;
@@ -37,18 +37,50 @@ class Field {
         this.stats.set("tiger", this.tigerAmount);
         this.stats.set("human", this.humanAmount);
         this.treeGrowInterval = 1000;
-        this.ediblePlantGrowInterval = 0;
-        if (width === parseInt(width.toString()) && height === parseInt(height.toString()) && width > 0 && height > 0) {
-            for (var i = 0; i < height; i++) {
-                this.cells.push([]);
-                for (var j = 0; j < width; j++) {
-                    this.cells[this.cells.length - 1].push(new Cell(i, j));
-                }
-            }
-        }
+        this.ediblePlantGrowInterval = 1000;
+        this.desertAmountCoef = 0.00002;
+        this.desertSizeCoef = 0.3;
+        this.GenerateField(width, height);
         this.CreateEntities();
         this.GrowTree();
         this.GrowEdiblePlant();
+    }
+    GenerateField(width, height) {
+        var generateButton = document.querySelector("#generateButton");
+        for (var i = 0; i < width; i++) {
+            this.cells.push([]);
+            for (var j = 0; j < height; j++) {
+                this.cells[this.cells.length - 1].push(new CellUndefined(i, j));
+            }
+        }
+        this.ui.GenerateField(this.cells);
+        generateButton.addEventListener("click", () => {
+            var desertSources = [];
+            for (var i = 0; i < Math.floor(width * height * this.desertAmountCoef); i++) {
+                do {
+                    var chosenCell = this.cells[Math.floor(Math.random() * width)][Math.floor(Math.random() * height)];
+                } while (!(chosenCell instanceof CellUndefined));
+                this.cells[chosenCell.row][chosenCell.col] = new CellDesert(chosenCell.row, chosenCell.col);
+                desertSources.push(this.cells[chosenCell.row][chosenCell.col]);
+            }
+            for (var i = 0; i < Math.floor(width * height * this.desertSizeCoef); i++) {
+                var chosenCell = desertSources[Math.floor(Math.random() * desertSources.length)];
+                var newRow;
+                var newCol;
+                var numberOfAttempts = 9;
+                var count = 0;
+                do {
+                    newRow = chosenCell.row + (Math.floor(Math.random() * 3) - 1);
+                    newCol = chosenCell.col + (Math.floor(Math.random() * 3) - 1);
+                    count++;
+                } while (count < numberOfAttempts && (newRow < 0 || newRow >= this.cells.length || newCol < 0 || newCol >= this.cells[0].length || !(this.cells[newRow][newCol] instanceof CellUndefined)));
+                if (count < numberOfAttempts) {
+                    this.cells[newRow][newCol] = new CellDesert(newRow, newCol);
+                    desertSources.push(this.cells[newRow][newCol]);
+                }
+            }
+            this.ui.GenerateField(this.cells);
+        });
     }
     CreateEntities() {
         for (var i = 0; i < this.treeAmount; i++) {

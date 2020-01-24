@@ -97,7 +97,7 @@ class Animal extends Entity {
             if (this.eating) {
                 this.Eat();
             }
-        }, 0);
+        }, this.pace);
     }
     Eat() {
         var objects;
@@ -173,7 +173,7 @@ class Animal extends Entity {
             animals.splice(animals.indexOf(this), 1);
             this.reproduceFunction = setInterval(() => {
                 this.Reproduce(animals);
-            }, 0);
+            }, this.pace);
         }
     }
     Reproduce(animals) {

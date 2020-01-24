@@ -2,10 +2,34 @@
 class UI {
     constructor() {
         this.entitySize = 32;
+        this.cellDesertColor = "#E3DD76";
+        this.cellMeadowColor = "#ADFCAE";
+        this.cellUndefinedColor = "#FFFFFF";
         this.genderMaleColor = "#02A3FE";
         this.genderFemaleColor = "#EC49A6";
         this.speciesIncreaseColor = "#C8FFC8";
         this.speciesDecreaseColor = "#FFC8C8";
+    }
+    GenerateField(cells) {
+        var fieldCanvas = document.getElementById("fieldCanvas");
+        var drawer = fieldCanvas.getContext("2d");
+        drawer.clearRect(0, 0, this.entitySize * cells.length, this.entitySize * cells[0].length);
+        drawer.beginPath();
+        cells.forEach((row) => {
+            row.forEach((cell) => {
+                if (cell instanceof CellDesert) {
+                    drawer.fillStyle = this.cellDesertColor;
+                }
+                else if (cell instanceof CellMeadow) {
+                    drawer.fillStyle = this.cellMeadowColor;
+                }
+                else {
+                    drawer.fillStyle = this.cellUndefinedColor;
+                }
+                drawer.fillRect(this.entitySize * cell.row, this.entitySize * cell.col, this.entitySize, this.entitySize);
+                drawer.stroke();
+            });
+        });
     }
     PlaceFieldObject(object) {
         var currentMap = document.querySelector("#field");

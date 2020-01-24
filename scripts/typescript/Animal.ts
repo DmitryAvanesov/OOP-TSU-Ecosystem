@@ -128,7 +128,7 @@ abstract class Animal extends Entity {
             if (this.eating) {
                 this.Eat();
             }
-        }, 0);
+        }, this.pace);
     }
 
     protected Eat(): void {
@@ -220,7 +220,7 @@ abstract class Animal extends Entity {
 
             this.reproduceFunction = setInterval(() => {
                 this.Reproduce(animals);
-            }, 0);
+            }, this.pace);
         }
     }
 
@@ -399,5 +399,4 @@ abstract class Animal extends Entity {
 
         super.Die();
     }
-
 }

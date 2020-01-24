@@ -1,4 +1,3 @@
-$field-color: rgb(160, 206, 160);
 $entity-size: 32px;
 $field-width: $entity-size * 500;
 $field-height: $entity-size * 500;
@@ -16,6 +15,28 @@ $pace-human: 0.3s;
 
 body {
     user-select: none;
+}
+
+#fieldCanvas {
+    z-index: 0;
+    position: absolute;
+    top: 8px;
+    left: 8px;
+}
+
+#generateButton {
+    position: fixed;
+    z-index: 2;
+    top: 16px;
+    right: 16px;
+    width: 75px;
+    height: 30px;
+    background-color: black;
+    color: white;
+    border-radius: 10px;
+    line-height: 30px;
+    text-align: center;
+    cursor: pointer;
 }
 
 #stats {
@@ -43,7 +64,6 @@ body {
     width: $field-width;
     height: $field-height;
     position: relative;
-    background-color: $field-color;
 
     * {
         width: $entity-size;

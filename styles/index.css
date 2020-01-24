@@ -10,6 +10,28 @@ body {
           user-select: none;
 }
 
+#fieldCanvas {
+  z-index: 0;
+  position: absolute;
+  top: 8px;
+  left: 8px;
+}
+
+#generateButton {
+  position: fixed;
+  z-index: 2;
+  top: 16px;
+  right: 16px;
+  width: 75px;
+  height: 30px;
+  background-color: black;
+  color: white;
+  border-radius: 10px;
+  line-height: 30px;
+  text-align: center;
+  cursor: pointer;
+}
+
 #stats {
   position: fixed;
   z-index: 2;
@@ -35,7 +57,6 @@ body {
   width: 16000px;
   height: 16000px;
   position: relative;
-  background-color: #a0cea0;
 }
 
 #field * {
