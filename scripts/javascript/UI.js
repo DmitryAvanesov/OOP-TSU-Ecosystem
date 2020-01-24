@@ -5,6 +5,8 @@ class UI {
         this.cellDesertColor = "#E3DD76";
         this.cellLakeColor = "#5175FF";
         this.cellMeadowColor = "#ADFCAE";
+        this.cellMountainColor = "#757A7A";
+        this.cellRiverColor = "#97E5FC";
         this.cellUndefinedColor = "#FFFFFF";
         this.genderMaleColor = "#02A3FE";
         this.genderFemaleColor = "#EC49A6";
@@ -26,6 +28,12 @@ class UI {
                 }
                 else if (cell instanceof CellMeadow) {
                     drawer.fillStyle = this.cellMeadowColor;
+                }
+                else if (cell instanceof CellMountain) {
+                    drawer.fillStyle = this.cellMountainColor;
+                }
+                else if (cell instanceof CellRiver) {
+                    drawer.fillStyle = this.cellRiverColor;
                 }
                 else {
                     drawer.fillStyle = this.cellUndefinedColor;

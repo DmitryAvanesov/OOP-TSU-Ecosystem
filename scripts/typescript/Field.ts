@@ -32,6 +32,9 @@ class Field {
     private lakeCenter: CellUndefined;
     private lakeDensityCoef: number;
     private lakeBreadthCoef: number;
+    private mountainAmountCoef: number;
+    private mountainPartAmountCoef: number;
+    private mountainPartLengthCoef: number;
 
     constructor(width: number, height: number) {
         this.currentIndex = 0;
@@ -79,6 +82,9 @@ class Field {
         this.lakeCenter = new CellUndefined(0, 0);
         this.lakeDensityCoef = 0.015;
         this.lakeBreadthCoef = 0.00075;
+        this.mountainAmountCoef = 0.0003;
+        this.mountainPartAmountCoef = 0.0003;
+        this.mountainPartLengthCoef = 0.0001;
 
         this.GenerateField(width, height);
     }
@@ -95,10 +101,10 @@ class Field {
             generateLakeButton.addEventListener("click", () => {
                 this.GenerateLake(width, height);
                 var generateMountainButton: HTMLElement = generateLakeButton.cloneNode(true) as HTMLElement;
-                generateMountainButton.parentNode?.replaceChild(generateMountainButton, generateLakeButton);
+                generateLakeButton.parentNode?.replaceChild(generateMountainButton, generateLakeButton);
 
                 generateMountainButton.addEventListener("click", () => {
-                    this.GenerateMeadow(width, height);
+                    this.GenerateMountain(width, height);
 
                     generateDesertButton.addEventListener("click", () => {
                         this.CreateEntities();
@@ -151,6 +157,18 @@ class Field {
             return 0;
         });
 
+        maxInterval = 0;
+
+        for (var i: number = 0; i < sortedByRow.length - 1; i++) {
+            var curInterval: number = sortedByRow[i + 1].row - sortedByRow[i].row;
+            console.log(curInterval);
+
+            if (curInterval > maxInterval) {
+                maxInterval = curInterval;
+                curRow = Math.floor(sortedByRow[i].row + curInterval * 0.5);
+            }
+        }
+
         var sortedByCol: Array<CellDesert> = desertSources.sort((source1: CellDesert, source2: CellDesert) => {
             if (source1.col > source2.col) {
                 return 1;
@@ -162,17 +180,6 @@ class Field {
         
             return 0;
         });
-
-        maxInterval = 0;
-
-        for (var i: number = 0; i < sortedByRow.length - 1; i++) {
-            var curInterval: number = sortedByRow[i + 1].row - sortedByRow[i].row;
-
-            if (curInterval > maxInterval) {
-                maxInterval = curInterval;
-                curRow = Math.floor(sortedByRow[i].row + curInterval * 0.5);
-            }
-        }
 
         maxInterval = 0;
 
@@ -213,11 +220,34 @@ class Field {
     private GenerateLake(width: number, height: number): void {
         for (var i: number = 0; i < Math.floor(width * height * this.lakeDensityCoef); i++) {
             do {
-                var chosenCell: Cell = this.cells[this.lakeCenter.row + Math.floor(Math.random() * width * height * this.lakeBreadthCoef)][this.lakeCenter.col + Math.floor(Math.random() * width * height * this.lakeBreadthCoef)];
+                var newRow: number = this.lakeCenter.row + Math.floor(Math.random() * width * height * this.lakeBreadthCoef);
+                var newCol: number = this.lakeCenter.col + Math.floor(Math.random() * width * height * this.lakeBreadthCoef);
+            }
+            while (newRow < 0 || newRow >= this.cells.length || newCol < 0 || newCol >= this.cells[0].length || !(this.cells[newRow][newCol] instanceof CellUndefined));
+
+            var chosenCell: Cell = this.cells[newRow][newCol];
+            this.cells[chosenCell.row][chosenCell.col] = new CellLake(chosenCell.row, chosenCell.col);
+        }
+
+        this.ui.GenerateField(this.cells);
+    }
+
+    private GenerateMountain(width: number, height: number): void {
+        for (var i: number = 0; i < Math.floor(width * height * this.mountainAmountCoef); i++) {
+            do {
+                var chosenCell: Cell = this.cells[Math.floor(Math.random() * this.cells.length)][Math.floor(Math.random() * this.cells[0].length)];
             }
             while (!(chosenCell instanceof CellUndefined));
 
-            this.cells[chosenCell.row][chosenCell.col] = new CellLake(chosenCell.row, chosenCell.col);
+            for (var i: number = 0; i < Math.floor(width * height * this.mountainPartAmountCoef); i++) {
+                var stepX: number = Math.floor(Math.random() * 3) - 1;
+                var stepY: number = Math.floor(Math.random() * 3) - 1;
+    
+                for (var i: number = 0; i < Math.floor(width * height * this.mountainPartLengthCoef); i++) {
+                    this.cells[chosenCell.row][chosenCell.col] = new CellMountain(chosenCell.row, chosenCell.col);
+                    chosenCell = this.cells[chosenCell.row + stepX][chosenCell.col + stepY];
+                }
+            }
         }
 
         this.ui.GenerateField(this.cells);
