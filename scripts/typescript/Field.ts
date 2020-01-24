@@ -36,6 +36,8 @@ class Field {
     private mountainPartAmountCoef: number;
     private mountainPartLengthCoef: number;
     private mountainThicknessCoef: number;
+    private riverAmountCoef: number;
+    private riverThicknessCoef: number;
 
     constructor(width: number, height: number) {
         this.currentIndex = 0;
@@ -84,9 +86,11 @@ class Field {
         this.lakeDensityCoef = 0.015;
         this.lakeBreadthCoef = 0.00075;
         this.mountainAmountCoef = 0.00002;
-        this.mountainPartAmountCoef = 0.00003;
-        this.mountainPartLengthCoef = 0.0001;
+        this.mountainPartAmountCoef = 0.00004;
+        this.mountainPartLengthCoef = 0.00006;
         this.mountainThicknessCoef = 0.015;
+        this.riverAmountCoef = 0.00005;
+        this.riverThicknessCoef = 0.01;
 
         this.GenerateField(width, height);
     }
@@ -107,11 +111,21 @@ class Field {
 
                 generateMountainButton.addEventListener("click", () => {
                     this.GenerateMountain(width, height);
+                    var generateRiverButton: HTMLElement = generateMountainButton.cloneNode(true) as HTMLElement;
+                    generateMountainButton.parentNode?.replaceChild(generateRiverButton, generateMountainButton);
 
-                    generateDesertButton.addEventListener("click", () => {
-                        this.CreateEntities();
-                        this.GrowTree();
-                        this.GrowEdiblePlant();
+                    generateRiverButton.addEventListener("click", () => {
+                        this.GenerateRiver(width, height);
+                        var generateMeadowButton: HTMLElement = generateRiverButton.cloneNode(true) as HTMLElement;
+                        generateRiverButton.parentNode?.replaceChild(generateMeadowButton, generateRiverButton);
+
+                        generateMeadowButton.addEventListener("click", () => {
+                            this.GenerateMeadow(width, height);
+
+                            this.CreateEntities();
+                            this.GrowTree();
+                            this.GrowEdiblePlant();
+                        });
                     });
                 });
             });
@@ -279,6 +293,79 @@ class Field {
             if (count < numberOfAttempts) {
                 this.cells[newRow][newCol] = new CellMountain(newRow, newCol);
                 mountainCells.push(this.cells[newRow][newCol]);
+            }
+        }
+
+        this.ui.GenerateField(this.cells);
+    }
+
+    private GenerateRiver(width: number, height: number): void {
+        var riverCells: Array<CellRiver> =[];
+        var mountainCell: Cell;
+        var lakeCell: Cell;
+        var currentCell: Cell;
+
+        for (var i: number = 0; i < Math.floor(width * height * this.riverAmountCoef); i++) {
+            do {
+                mountainCell = this.cells[Math.floor(Math.random() * this.cells.length)][Math.floor(Math.random() * this.cells[0].length)];
+            }
+            while (!(mountainCell instanceof CellMountain));
+    
+            do {
+                lakeCell = this.cells[Math.floor(Math.random() * this.cells.length)][Math.floor(Math.random() * this.cells[0].length)];
+            }
+            while (!(lakeCell instanceof CellLake));
+    
+            currentCell = mountainCell;
+    
+            while (currentCell != lakeCell) {
+                this.cells[currentCell.row][currentCell.col] = new CellRiver(currentCell.row, currentCell.col);
+                riverCells.push(this.cells[currentCell.row][currentCell.col]);
+                
+                var newRow: number;
+                var newCol: number;
+    
+                if (lakeCell.row > currentCell.row) {
+                    newRow = currentCell.row + 1;
+                }
+                else if (lakeCell.row < currentCell.row) {
+                    newRow = currentCell.row - 1;
+                }
+                else {
+                    newRow = currentCell.row;
+                }
+    
+                if (lakeCell.col > currentCell.col) {
+                    newCol = currentCell.col + 1;
+                }
+                else if (lakeCell.col < currentCell.col) {
+                    newCol = currentCell.col - 1;
+                }
+                else {
+                    newCol = currentCell.col;
+                }
+    
+                currentCell = this.cells[newRow][newCol];
+            }
+        }
+
+        for (var i: number = 0; i < Math.floor(width * height * this.riverThicknessCoef); i++) {
+            var chosenCell: CellMountain = riverCells[Math.floor(Math.random() * riverCells.length)];
+            var newRow: number;
+            var newCol: number;
+            var numberOfAttempts: number = 9;
+            var count: number = 0;
+
+            do {
+                newRow = chosenCell.row + (Math.floor(Math.random() * 3) - 1);
+                newCol = chosenCell.col + (Math.floor(Math.random() * 3) - 1);
+                count++;
+            }
+            while (count < numberOfAttempts && (newRow < 0 || newRow >= this.cells.length || newCol < 0 || newCol >= this.cells[0].length || !(this.cells[newRow][newCol] instanceof CellUndefined)));
+
+            if (count < numberOfAttempts) {
+                this.cells[newRow][newCol] = new CellRiver(newRow, newCol);
+                riverCells.push(this.cells[newRow][newCol]);
             }
         }
 
