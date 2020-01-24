@@ -25,6 +25,7 @@ abstract class Farm extends FieldObject {
                 this.field.ui.PlaceFieldObject(this.food);
             }
 
+            this.field.stats.set(this.food.name, this.field.stats.get(this.food.name) as number + 1);
             this.farmer.harvesting = true;
         }, this.produceInterval);
     }

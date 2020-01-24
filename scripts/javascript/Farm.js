@@ -17,6 +17,7 @@ class Farm extends FieldObject {
                 this.food.location.occupied = true;
                 this.field.ui.PlaceFieldObject(this.food);
             }
+            this.field.stats.set(this.food.name, this.field.stats.get(this.food.name) + 1);
             this.farmer.harvesting = true;
         }, this.produceInterval);
     }
